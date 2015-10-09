@@ -48,11 +48,11 @@ Name of the project<br>
 Directory in which the configuration is done.<br>
 </div>
 
-<pre><span id="VALlibraries"><span class="keyword">val</span> libraries</span> : <code class="type"><a href="Functoria_dsl.Info.html#TYPEt">t</a> -> Functoria_misc.StringSet.t</code></pre><div class="info ">
+<pre><span id="VALlibraries"><span class="keyword">val</span> libraries</span> : <code class="type"><a href="Functoria_dsl.Info.html#TYPEt">t</a> -> string list</code></pre><div class="info ">
 Ocamlfind libraries needed by the project.<br>
 </div>
 
-<pre><span id="VALpackages"><span class="keyword">val</span> packages</span> : <code class="type"><a href="Functoria_dsl.Info.html#TYPEt">t</a> -> Functoria_misc.StringSet.t</code></pre><div class="info ">
+<pre><span id="VALpackages"><span class="keyword">val</span> packages</span> : <code class="type"><a href="Functoria_dsl.Info.html#TYPEt">t</a> -> string list</code></pre><div class="info ">
 OPAM packages needed by the project.<br>
 </div>
 
@@ -64,4 +64,4 @@ Keys declared by the project.<br>
 Map from key entered in the command line to values.<br>
 </div>
 
-<pre><span id="VALcreate"><span class="keyword">val</span> create</span> : <code class="type">?keys:Functoria_dsl.Key.Set.t -><br>       ?libraries:Functoria_misc.StringSet.t -><br>       ?packages:Functoria_misc.StringSet.t -><br>       keymap:Functoria_dsl.Key.map -><br>       name:string -> root:string -> <a href="Functoria_dsl.Info.html#TYPEt">t</a></code></pre></body></html>
+<pre><span id="VALcreate"><span class="keyword">val</span> create</span> : <code class="type">?keys:Functoria_dsl.Key.Set.t -><br>       ?libraries:string list -><br>       ?packages:string list -><br>       keymap:Functoria_dsl.Key.map -><br>       name:string -> root:string -> <a href="Functoria_dsl.Info.html#TYPEt">t</a></code></pre></body></html>

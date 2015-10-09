@@ -70,13 +70,17 @@ Construct a functor type from a type and an existing functor
 Add some string to <code class="code">main.ml</code>.
 </div>
 </td></tr>
-<tr><td><a href="Functoria.SPECIALIZED.html#VALargv">argv</a> [<a href="Functoria.SPECIALIZED.html">Functoria.SPECIALIZED</a>]</td>
+<tr><td><a href="Functoria.CUSTOM.html#VALargv">argv</a> [<a href="Functoria.CUSTOM.html">Functoria.CUSTOM</a>]</td>
 <td><div class="info">
-The device used to access <code class="code">argv</code>.
+<code class="code">argv</code> is the device used to read the full list of command-line
+      arguments.
 </div>
 </td></tr>
 <tr><td><a href="Functoria.Devices.html#VALargv">argv</a> [<a href="Functoria.Devices.html">Functoria.Devices</a>]</td>
-<td></td></tr>
+<td><div class="info">
+The type for <a href="Functoria.Devices.html#VALargv"><code class="code"><span class="constructor">Functoria</span>.<span class="constructor">Devices</span>.argv</code></a> implementations.
+</div>
+</td></tr>
 <tr><td align="left"><br>B</td></tr>
 <tr><td><a href="Functoria_misc.html#VALblue">blue</a> [<a href="Functoria_misc.html">Functoria_misc</a>]</td>
 <td></td></tr>
@@ -91,10 +95,10 @@ The device used to access <code class="code">argv</code>.
 <td></td></tr>
 <tr><td><a href="Functoria_misc.html#VALcommand_exists">command_exists</a> [<a href="Functoria_misc.html">Functoria_misc</a>]</td>
 <td></td></tr>
-<tr><td><a href="Functoria.SPECIALIZED.html#VALconfig">config</a> [<a href="Functoria.SPECIALIZED.html">Functoria.SPECIALIZED</a>]</td>
+<tr><td><a href="Functoria.CUSTOM.html#VALconfig">config</a> [<a href="Functoria.CUSTOM.html">Functoria.CUSTOM</a>]</td>
 <td><div class="info">
-The device implementing specific configuration for this
-      specialized DSL.
+<code class="code">config jobs</code> is the device configuration the custom DSL, given
+      a list of configuration <code class="code">jobs</code>.
 </div>
 </td></tr>
 <tr><td><a href="Functoria_key.Desc.html#VALconverter">converter</a> [<a href="Functoria_key.Desc.html">Functoria_key.Desc</a>]</td>
@@ -150,7 +154,7 @@ Cut at the first occurence of a given character.
 <td></td></tr>
 <tr><td><a href="Functoria_key.Desc.html#VALdescription">description</a> [<a href="Functoria_key.Desc.html">Functoria_key.Desc</a>]</td>
 <td></td></tr>
-<tr><td><a href="Functoria.SPECIALIZED.html#VALdriver_error">driver_error</a> [<a href="Functoria.SPECIALIZED.html">Functoria.SPECIALIZED</a>]</td>
+<tr><td><a href="Functoria.CUSTOM.html#VALdriver_error">driver_error</a> [<a href="Functoria.CUSTOM.html">Functoria.CUSTOM</a>]</td>
 <td><div class="info">
 <code class="code">driver_error s</code> is the message given to the user when the
       the configurable <code class="code">s</code> doesn't initialize correctly.
@@ -329,7 +333,7 @@ Keys declared by the project.
 </td></tr>
 <tr><td><a href="Functoria.Devices.html#VALkeys">keys</a> [<a href="Functoria.Devices.html">Functoria.Devices</a>]</td>
 <td><div class="info">
-This device takes an <code class="code">argv</code> device, calls cmdliner and sets up keys.
+<code class="code">keys a</code> is job with keys set taking an <code class="code">argv</code> device, calls cmdliner and sets up keys.
 </div>
 </td></tr>
 <tr><td align="left"><br>L</td></tr>
@@ -361,9 +365,9 @@ Ocamlfind libraries needed by the project.
 Name of the project
 </div>
 </td></tr>
-<tr><td><a href="Functoria.SPECIALIZED.html#VALname">name</a> [<a href="Functoria.SPECIALIZED.html">Functoria.SPECIALIZED</a>]</td>
+<tr><td><a href="Functoria.CUSTOM.html#VALname">name</a> [<a href="Functoria.CUSTOM.html">Functoria.CUSTOM</a>]</td>
 <td><div class="info">
-Name of the specialized dsl.
+Name of the custom DSL.
 </div>
 </td></tr>
 <tr><td><a href="Functoria_misc.Univ.html#VALnew_key">new_key</a> [<a href="Functoria_misc.Univ.html">Functoria_misc.Univ</a>]</td>
@@ -377,7 +381,8 @@ Add a newline to <code class="code">main.ml</code>.
 </td></tr>
 <tr><td><a href="Functoria.Devices.html#VALnoop">noop</a> [<a href="Functoria.Devices.html">Functoria.Devices</a>]</td>
 <td><div class="info">
-<code class="code">noop</code> is a job that does nothing, has no dependency and returns <code class="code">()</code>
+<code class="code">noop</code> is a job that does nothing, has no dependency and returns
+      <code class="code">()</code>
 </div>
 </td></tr>
 <tr><td align="left"><br>O</td></tr>
@@ -449,7 +454,7 @@ OPAM packages needed by the project.
 <code class="code">prefix x ~by:s</code> will prefix <code class="code">x</code> by <code class="code">s</code> if <code class="code">s</code> is not the empty string.
 </div>
 </td></tr>
-<tr><td><a href="Functoria.SPECIALIZED.html#VALprelude">prelude</a> [<a href="Functoria.SPECIALIZED.html">Functoria.SPECIALIZED</a>]</td>
+<tr><td><a href="Functoria.CUSTOM.html#VALprelude">prelude</a> [<a href="Functoria.CUSTOM.html">Functoria.CUSTOM</a>]</td>
 <td><div class="info">
 Prelude printed at the beginning of <code class="code">main.ml</code>.
 </div>
@@ -532,7 +537,8 @@ Similar to <a href="Functoria_misc.html#VALprefix"><code class="code"><span clas
 </td></tr>
 <tr><td><a href="Functoria.Devices.html#VALsys_argv">sys_argv</a> [<a href="Functoria.Devices.html">Functoria.Devices</a>]</td>
 <td><div class="info">
-The simplest argv device.
+<code class="code">sys_argv</code> is a device providing command-line arguments by using
+      <code class="code"><span class="constructor">Sys</span>.argv</code>.
 </div>
 </td></tr>
 <tr><td align="left"><br>T</td></tr>
@@ -574,9 +580,9 @@ Create a new type.
 <code class="code">value k</code> is the value which depends on <code class="code">k</code> and will take its content.
 </div>
 </td></tr>
-<tr><td><a href="Functoria.SPECIALIZED.html#VALversion">version</a> [<a href="Functoria.SPECIALIZED.html">Functoria.SPECIALIZED</a>]</td>
+<tr><td><a href="Functoria.CUSTOM.html#VALversion">version</a> [<a href="Functoria.CUSTOM.html">Functoria.CUSTOM</a>]</td>
 <td><div class="info">
-Version of the specialized dsl.
+Version of the custom DSL.
 </div>
 </td></tr>
 <tr><td align="left"><br>W</td></tr>

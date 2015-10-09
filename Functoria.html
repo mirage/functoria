@@ -40,16 +40,12 @@ Core functoria DSL
 Various generic devices.
 </div>
 
-<pre><span class="keyword">module</span> <a href="Functoria.Misc.html">Misc</a>: <code class="type">module type of struct include <a href="Functoria_misc.html">Functoria_misc</a> end</code></pre><div class="info">
-Various helpful functions.
+<pre><span class="keyword">module type</span> <a href="Functoria.CUSTOM.html">CUSTOM</a> = <code class="code"><span class="keyword">sig</span></code> <a href="Functoria.CUSTOM.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info">
+<code class="code"><span class="constructor">CUSTOM</span></code> is the signature for custom DSL.
 </div>
 
-<pre><span class="keyword">module type</span> <a href="Functoria.SPECIALIZED.html">SPECIALIZED</a> = <code class="code"><span class="keyword">sig</span></code> <a href="Functoria.SPECIALIZED.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info">
-A specialized DSL build for specific purposes.
-</div>
-
-<pre><span class="keyword">module</span> <a href="Functoria.Make.html">Make</a> <code class="code">(</code><code class="code"><span class="constructor">P</span></code><code class="code"> : </code><code class="type"><a href="Functoria.SPECIALIZED.html">SPECIALIZED</a></code><code class="code">) </code>: <code class="code"><span class="keyword">sig</span></code> <a href="Functoria.Make.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info">
-Create a configuration engine for a specialized dsl.
+<pre><span class="keyword">module</span> <a href="Functoria.Make.html">Make</a> <code class="code">(</code><code class="code"><span class="constructor">P</span></code><code class="code"> : </code><code class="type"><a href="Functoria.CUSTOM.html">CUSTOM</a></code><code class="code">) </code>: <code class="code"><span class="keyword">sig</span></code> <a href="Functoria.Make.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info">
+Create a configuration engine for a custom DSL.
 </div>
 
 <pre><span class="keyword">module type</span> <a href="Functoria.S.html">S</a> = <code class="type">module type of struct include Dsl end</code></pre>
