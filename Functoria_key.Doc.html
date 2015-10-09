@@ -1,0 +1,48 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="Functoria_key.Desc.html">
+<link rel="next" href="Functoria_key.Set.html">
+<link rel="Up" href="Functoria_key.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of class methods" rel=Appendix href="index_methods.html">
+<link title="Index of classes" rel=Appendix href="index_classes.html">
+<link title="Index of class types" rel=Appendix href="index_class_types.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="Functoria" rel="Chapter" href="Functoria.html">
+<link title="Functoria_misc" rel="Chapter" href="Functoria_misc.html">
+<link title="Functoria_key" rel="Chapter" href="Functoria_key.html">
+<link title="Functoria_dsl" rel="Chapter" href="Functoria_dsl.html">
+<link title="Functoria_runtime" rel="Chapter" href="Functoria_runtime.html">
+<link title="Functoria_info" rel="Chapter" href="Functoria_info.html"><title>Functoria : Functoria_key.Doc</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="Functoria_key.Desc.html" title="Functoria_key.Desc">Previous</a>
+&nbsp;<a class="up" href="Functoria_key.html" title="Functoria_key">Up</a>
+&nbsp;<a class="post" href="Functoria_key.Set.html" title="Functoria_key.Set">Next</a>
+</div>
+<h1>Module <a href="type_Functoria_key.Doc.html">Functoria_key.Doc</a></h1>
+
+<pre><span class="keyword">module</span> Doc: <code class="code"><span class="keyword">sig</span></code> <a href="Functoria_key.Doc.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info module top">
+Documentation of keys.<br>
+</div>
+<hr width="100%">
+
+<pre><span id="TYPEt"><span class="keyword">type</span> <code class="type"></code>t</span> </pre>
+
+
+<pre><span id="VALcreate"><span class="keyword">val</span> create</span> : <code class="type">?docs:string -><br>       ?docv:string -><br>       ?doc:string -> ?env:string -> string list -> <a href="Functoria_key.Doc.html#TYPEt">t</a></code></pre><div class="info ">
+Create a documentation. See <code class="code"><span class="constructor">Cmdliner</span>.<span class="constructor">Arg</span>.info</code> for details.<br>
+</div>
+
+<pre><span id="VALto_cmdliner"><span class="keyword">val</span> to_cmdliner</span> : <code class="type"><a href="Functoria_key.Doc.html#TYPEt">t</a> -> Cmdliner.Arg.info</code></pre>
+<pre><span id="VALemit"><span class="keyword">val</span> emit</span> : <code class="type">Format.formatter -> <a href="Functoria_key.Doc.html#TYPEt">t</a> -> unit</code></pre><div class="info ">
+Emit the documentation as OCaml code.<br>
+</div>
+</body></html>

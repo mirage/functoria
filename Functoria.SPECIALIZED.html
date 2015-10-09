@@ -1,0 +1,70 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="next" href="Functoria.S.html">
+<link rel="Up" href="Functoria.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of class methods" rel=Appendix href="index_methods.html">
+<link title="Index of classes" rel=Appendix href="index_classes.html">
+<link title="Index of class types" rel=Appendix href="index_class_types.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="Functoria" rel="Chapter" href="Functoria.html">
+<link title="Functoria_misc" rel="Chapter" href="Functoria_misc.html">
+<link title="Functoria_key" rel="Chapter" href="Functoria_key.html">
+<link title="Functoria_dsl" rel="Chapter" href="Functoria_dsl.html">
+<link title="Functoria_runtime" rel="Chapter" href="Functoria_runtime.html">
+<link title="Functoria_info" rel="Chapter" href="Functoria_info.html"><title>Functoria : Functoria.SPECIALIZED</title>
+</head>
+<body>
+<div class="navbar">&nbsp;<a class="up" href="Functoria.html" title="Functoria">Up</a>
+&nbsp;<a class="post" href="Functoria.S.html" title="Functoria.S">Next</a>
+</div>
+<h1>Module type <a href="type_Functoria.SPECIALIZED.html">Functoria.SPECIALIZED</a></h1>
+
+<pre><span class="keyword">module type</span> SPECIALIZED = <code class="code"><span class="keyword">sig</span></code> <a href="Functoria.SPECIALIZED.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info modtype top">
+A specialized DSL build for specific purposes.<br>
+</div>
+<hr width="100%">
+
+<pre><span id="VALprelude"><span class="keyword">val</span> prelude</span> : <code class="type">string</code></pre><div class="info ">
+Prelude printed at the beginning of <code class="code">main.ml</code>.
+<p>
+
+      It should put in scope:
+<p>
+<ul>
+<li>a <code class="code">run</code> function of type <code class="code"><span class="keywordsign">'</span>a t <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a</code></li>
+<li>a <code class="code">return</code> function of type <code class="code"><span class="keywordsign">'</span>a <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>a t</code></li>
+<li>a <code class="code">&gt;&gt;=</code> operator of type <code class="code"><span class="keywordsign">'</span>a t <span class="keywordsign">-&gt;</span> (<span class="keywordsign">'</span>a <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>b t) <span class="keywordsign">-&gt;</span> <span class="keywordsign">'</span>b t</code></li>
+</ul>
+<br>
+</div>
+
+<pre><span id="VALname"><span class="keyword">val</span> name</span> : <code class="type">string</code></pre><div class="info ">
+Name of the specialized dsl.<br>
+</div>
+
+<pre><span id="VALversion"><span class="keyword">val</span> version</span> : <code class="type">string</code></pre><div class="info ">
+Version of the specialized dsl.<br>
+</div>
+
+<pre><span id="VALdriver_error"><span class="keyword">val</span> driver_error</span> : <code class="type">string -> string</code></pre><div class="info ">
+<code class="code">driver_error s</code> is the message given to the user when the
+      the configurable <code class="code">s</code> doesn't initialize correctly.<br>
+</div>
+
+<pre><span id="VALargv"><span class="keyword">val</span> argv</span> : <code class="type"><a href="Functoria.Devices.html#TYPEargv">Functoria.Devices.argv</a> Functoria.Dsl.impl</code></pre><div class="info ">
+The device used to access <code class="code">argv</code>.<br>
+</div>
+
+<pre><span id="VALconfig"><span class="keyword">val</span> config</span> : <code class="type">Functoria.Dsl.job Functoria.Dsl.impl list -><br>       Functoria.Dsl.job Functoria.Dsl.impl</code></pre><div class="info ">
+The device implementing specific configuration for this
+      specialized DSL.<br>
+</div>
+</body></html>

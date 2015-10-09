@@ -1,0 +1,76 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="Up" href="Functoria_dsl.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of class methods" rel=Appendix href="index_methods.html">
+<link title="Index of classes" rel=Appendix href="index_classes.html">
+<link title="Index of class types" rel=Appendix href="index_class_types.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="Functoria" rel="Chapter" href="Functoria.html">
+<link title="Functoria_misc" rel="Chapter" href="Functoria_misc.html">
+<link title="Functoria_key" rel="Chapter" href="Functoria_key.html">
+<link title="Functoria_dsl" rel="Chapter" href="Functoria_dsl.html">
+<link title="Functoria_runtime" rel="Chapter" href="Functoria_runtime.html">
+<link title="Functoria_info" rel="Chapter" href="Functoria_info.html"><title>Functoria : Functoria_dsl.configurable</title>
+</head>
+<body>
+<div class="navbar">&nbsp;<a class="up" href="Functoria_dsl.html" title="Functoria_dsl">Up</a>
+&nbsp;</div>
+<h1>Class type <a href="type_Functoria_dsl.configurable.html">Functoria_dsl.configurable</a></h1>
+
+<pre><span id="TYPEconfigurable"><span class="keyword">class type</span> <code class="type">['ty]</code> configurable</span> = <code class="code"><span class="keyword">object</span></code> <a href="Functoria_dsl.configurable-c.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info classtype top">
+Signature for configurable devices.<br>
+</div>
+<hr width="100%">
+
+<pre><span id="METHODty"><span class="keyword">method</span> ty</span> : <code class="type">'ty <a href="Functoria_dsl.html#TYPEtyp">typ</a></code></pre><div class="info ">
+Type of the device.<br>
+</div>
+
+<pre><span id="METHODname"><span class="keyword">method</span> name</span> : <code class="type">string</code></pre><div class="info ">
+Return the unique variable name holding the state of the device.<br>
+</div>
+
+<pre><span id="METHODmodule_name"><span class="keyword">method</span> module_name</span> : <code class="type">string</code></pre><div class="info ">
+Return the name of the module implementing the device.<br>
+</div>
+
+<pre><span id="METHODpackages"><span class="keyword">method</span> packages</span> : <code class="type">string list Key.value</code></pre><div class="info ">
+Return the list of OPAM packages which needs to be installed to
+      use the device.<br>
+</div>
+
+<pre><span id="METHODlibraries"><span class="keyword">method</span> libraries</span> : <code class="type">string list Key.value</code></pre><div class="info ">
+Return the list of ocamlfind libraries to link with the
+      application to use the device.<br>
+</div>
+
+<pre><span id="METHODkeys"><span class="keyword">method</span> keys</span> : <code class="type">Key.t list</code></pre><div class="info ">
+Return the list of keys to configure the device.<br>
+</div>
+
+<pre><span id="METHODconnect"><span class="keyword">method</span> connect</span> : <code class="type"><a href="Functoria_dsl.Info.html#TYPEt">Info.t</a> -> string -> string list -> string</code></pre><div class="info ">
+Return the function call to connect at runtime with the device.<br>
+</div>
+
+<pre><span id="METHODconfigure"><span class="keyword">method</span> configure</span> : <code class="type"><a href="Functoria_dsl.Info.html#TYPEt">Info.t</a> -> (unit, string) Rresult.result</code></pre><div class="info ">
+Configure the device.<br>
+</div>
+
+<pre><span id="METHODclean"><span class="keyword">method</span> clean</span> : <code class="type"><a href="Functoria_dsl.Info.html#TYPEt">Info.t</a> -> (unit, string) Rresult.result</code></pre><div class="info ">
+Clean all the files generated to use the device.<br>
+</div>
+
+<pre><span id="METHODdependencies"><span class="keyword">method</span> dependencies</span> : <code class="type"><a href="Functoria_dsl.html#TYPEany_impl">any_impl</a> list</code></pre><div class="info ">
+The list of dependencies that must be initalized before this
+      device. You must use <a href="Functoria_dsl.html#VALhidden"><code class="code"><span class="constructor">Functoria_dsl</span>.hidden</code></a> to pass an arbitrary
+      implementation.<br>
+</div>
+</body></html>

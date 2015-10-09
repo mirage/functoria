@@ -1,0 +1,49 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="Functoria_dsl.html">
+<link rel="next" href="Functoria_info.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of class methods" rel=Appendix href="index_methods.html">
+<link title="Index of classes" rel=Appendix href="index_classes.html">
+<link title="Index of class types" rel=Appendix href="index_class_types.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="Functoria" rel="Chapter" href="Functoria.html">
+<link title="Functoria_misc" rel="Chapter" href="Functoria_misc.html">
+<link title="Functoria_key" rel="Chapter" href="Functoria_key.html">
+<link title="Functoria_dsl" rel="Chapter" href="Functoria_dsl.html">
+<link title="Functoria_runtime" rel="Chapter" href="Functoria_runtime.html">
+<link title="Functoria_info" rel="Chapter" href="Functoria_info.html"><title>Functoria : Functoria_runtime</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="Functoria_dsl.html" title="Functoria_dsl">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="Functoria_info.html" title="Functoria_info">Next</a>
+</div>
+<h1>Module <a href="type_Functoria_runtime.html">Functoria_runtime</a></h1>
+
+<pre><span class="keyword">module</span> Functoria_runtime: <code class="code"><span class="keyword">sig</span></code> <a href="Functoria_runtime.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info module top">
+Runtime<br>
+</div>
+<hr width="100%">
+
+<pre><span class="keyword">module</span> <a href="Functoria_runtime.Converter.html">Converter</a>: <code class="code"><span class="keyword">sig</span></code> <a href="Functoria_runtime.Converter.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info">
+Cmdliner converter.
+</div>
+
+<pre><span class="keyword">module</span> <a href="Functoria_runtime.Key.html">Key</a>: <code class="code"><span class="keyword">sig</span></code> <a href="Functoria_runtime.Key.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info">
+Runtime Key module.
+</div>
+
+<pre><span id="VALwith_argv"><span class="keyword">val</span> with_argv</span> : <code class="type">unit Cmdliner.Term.t list -><br>       string -> string array -> [> `Error of string | `Ok of unit ]</code></pre><div class="info ">
+<code class="code">with_argv keys s argv</code> uses the given key terms to parse the given <code class="code">argv</code>.
+    <code class="code">s</code> is the name of the cmdline executable.<br>
+</div>
+</body></html>
