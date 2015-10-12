@@ -26,51 +26,64 @@
 <h1>Class type <a href="type_Functoria_dsl.configurable.html">Functoria_dsl.configurable</a></h1>
 
 <pre><span id="TYPEconfigurable"><span class="keyword">class type</span> <code class="type">['ty]</code> configurable</span> = <code class="code"><span class="keyword">object</span></code> <a href="Functoria_dsl.configurable-c.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info classtype top">
-Signature for configurable devices.<br>
+Signature for configurable module implementations. A
+    <code class="code">configurable</code> is a module implementation which contains a runtime
+    state which can be set either at configuration time (by the
+    application builder) or at runtime, using command-line
+    arguments.<br>
 </div>
 <hr width="100%">
 
 <pre><span id="METHODty"><span class="keyword">method</span> ty</span> : <code class="type">'ty <a href="Functoria_dsl.html#TYPEtyp">typ</a></code></pre><div class="info ">
-Type of the device.<br>
+<code class="code">ty</code> is the module type of the configurable.<br>
 </div>
 
 <pre><span id="METHODname"><span class="keyword">method</span> name</span> : <code class="type">string</code></pre><div class="info ">
-Return the unique variable name holding the state of the device.<br>
+<code class="code">name</code> is the unique variable name holding the runtime state of
+      the configurable.<br>
 </div>
 
 <pre><span id="METHODmodule_name"><span class="keyword">method</span> module_name</span> : <code class="type">string</code></pre><div class="info ">
-Return the name of the module implementing the device.<br>
+<code class="code">module_name</code> is the name of the module implementing the
+      configurable.<br>
 </div>
 
 <pre><span id="METHODpackages"><span class="keyword">method</span> packages</span> : <code class="type">string list Key.value</code></pre><div class="info ">
-Return the list of OPAM packages which needs to be installed to
-      use the device.<br>
+<code class="code">packages</code> is the list of OPAM packages which needs to be
+      installed before compiling the configurable.<br>
 </div>
 
 <pre><span id="METHODlibraries"><span class="keyword">method</span> libraries</span> : <code class="type">string list Key.value</code></pre><div class="info ">
-Return the list of ocamlfind libraries to link with the
-      application to use the device.<br>
-</div>
-
-<pre><span id="METHODkeys"><span class="keyword">method</span> keys</span> : <code class="type">Key.t list</code></pre><div class="info ">
-Return the list of keys to configure the device.<br>
+<code class="code">libaries</code> is the list of OCamlfind libraries to include and
+      link with the configurable.<br>
 </div>
 
 <pre><span id="METHODconnect"><span class="keyword">method</span> connect</span> : <code class="type"><a href="Functoria_dsl.Info.html#TYPEt">Info.t</a> -> string -> string list -> string</code></pre><div class="info ">
-Return the function call to connect at runtime with the device.<br>
+<code class="code">connect info <span class="keyword">mod</span> args</code> is the code to execute in order to
+      initialize the state associated with the module <code class="code"><span class="keyword">mod</span></code> (usually
+      calling <code class="code"><span class="keyword">mod</span>.connect</code>) with the arguments <code class="code">args</code>, in the context
+      of the project information <code class="code">info</code>.<br>
 </div>
 
 <pre><span id="METHODconfigure"><span class="keyword">method</span> configure</span> : <code class="type"><a href="Functoria_dsl.Info.html#TYPEt">Info.t</a> -> (unit, string) Rresult.result</code></pre><div class="info ">
-Configure the device.<br>
+<code class="code">configure info</code> is the code to execute in order to configure
+      the device. This might involve generating more OCaml code,
+      running bash scripts, etc.<br>
 </div>
 
 <pre><span id="METHODclean"><span class="keyword">method</span> clean</span> : <code class="type"><a href="Functoria_dsl.Info.html#TYPEt">Info.t</a> -> (unit, string) Rresult.result</code></pre><div class="info ">
-Clean all the files generated to use the device.<br>
+<code class="code">clean info</code> is the code to clean-up what have beend generated
+      by <a href="Functoria_dsl.configurable-c.html#METHODconfigure"><code class="code"><span class="constructor">Functoria_dsl</span>.configurable.configure</code></a>.<br>
 </div>
 
-<pre><span id="METHODdependencies"><span class="keyword">method</span> dependencies</span> : <code class="type"><a href="Functoria_dsl.html#TYPEany_impl">any_impl</a> list</code></pre><div class="info ">
-The list of dependencies that must be initalized before this
-      device. You must use <a href="Functoria_dsl.html#VALhidden"><code class="code"><span class="constructor">Functoria_dsl</span>.hidden</code></a> to pass an arbitrary
-      implementation.<br>
+<pre><span id="METHODkeys"><span class="keyword">method</span> keys</span> : <code class="type">Key.t list</code></pre><div class="info ">
+<code class="code">keys</code> is the list of command-line keys to set-up the
+      configurable.<br>
+</div>
+
+<pre><span id="METHODdependencies"><span class="keyword">method</span> dependencies</span> : <code class="type"><a href="Functoria_dsl.html#TYPEabstract_impl">abstract_impl</a> list</code></pre><div class="info ">
+<code class="code">dependencies</code> is the list of <a href="Functoria_dsl.html#TYPEabstract_impl"> abstract
+      implementations</a> that must be initalized before calling
+      <a href="Functoria_dsl.configurable-c.html#METHODconnect"><code class="code"><span class="constructor">Functoria_dsl</span>.configurable.connect</code></a>.<br>
 </div>
 </body></html>

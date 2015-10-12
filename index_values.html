@@ -51,6 +51,11 @@ Construct a functor type from a type and an existing functor
 </div>
 </td></tr>
 <tr><td align="left"><br>A</td></tr>
+<tr><td><a href="Functoria_dsl.html#VALabstract">abstract</a> [<a href="Functoria_dsl.html">Functoria_dsl</a>]</td>
+<td><div class="info">
+<code class="code">abstract t</code> is <code class="code">t</code> but with its type variable abstracted.
+</div>
+</td></tr>
 <tr><td><a href="Functoria_key.Setters.html#VALadd">add</a> [<a href="Functoria_key.Setters.html">Functoria_key.Setters</a>]</td>
 <td><div class="info">
 <code class="code">add k f setters</code> Add a new setter to <code class="code">setters</code>.
@@ -178,7 +183,7 @@ Cut at the first occurence of a given character.
 <tr><td align="left"><br>E</td></tr>
 <tr><td><a href="Functoria_key.html#VALemit">emit</a> [<a href="Functoria_key.html">Functoria_key</a>]</td>
 <td><div class="info">
-<code class="code">emit fmt k</code> prints the OCaml code needed to define <code class="code">k</code>.
+<code class="code">emit p fmt k</code> prints the OCaml code needed to define <code class="code">k</code>.
 </div>
 </td></tr>
 <tr><td><a href="Functoria_key.html#VALemit_call">emit_call</a> [<a href="Functoria_key.html">Functoria_key</a>]</td>
@@ -196,18 +201,24 @@ Cut at the first occurence of a given character.
 <tr><td><a href="Functoria_misc.Univ.html#VALempty">empty</a> [<a href="Functoria_misc.Univ.html">Functoria_misc.Univ</a>]</td>
 <td></td></tr>
 <tr><td><a href="Functoria_dsl.html#VALequal">equal</a> [<a href="Functoria_dsl.html">Functoria_dsl</a>]</td>
-<td></td></tr>
+<td><div class="info">
+<code class="code">equal</code> is the equality over implementations.
+</div>
+</td></tr>
 <tr><td><a href="Functoria_misc.html#VALerr_cmdliner">err_cmdliner</a> [<a href="Functoria_misc.html">Functoria_misc</a>]</td>
 <td></td></tr>
 <tr><td><a href="Functoria_misc.html#VALerror">error</a> [<a href="Functoria_misc.html">Functoria_misc</a>]</td>
 <td></td></tr>
 <tr><td><a href="Functoria_key.html#VALeval">eval</a> [<a href="Functoria_key.html">Functoria_key</a>]</td>
 <td><div class="info">
-<code class="code">eval map v</code> resolves <code class="code">v</code>, using default values if necessary.
+<code class="code">eval p v</code> resolves <code class="code">v</code>, using default values if necessary.
 </div>
 </td></tr>
 <tr><td><a href="Functoria_dsl.html#VALexplode">explode</a> [<a href="Functoria_dsl.html">Functoria_dsl</a>]</td>
-<td></td></tr>
+<td><div class="info">
+<code class="code">explode i</code> inspects the contents of <code class="code">i</code>.
+</div>
+</td></tr>
 <tr><td><a href="Functoria.Devices.html#VALexport_info">export_info</a> [<a href="Functoria.Devices.html">Functoria.Devices</a>]</td>
 <td><div class="info">
 Export all the information available at configure time to runtime.
@@ -235,8 +246,8 @@ Export all the information available at configure time to runtime.
 </td></tr>
 <tr><td><a href="Functoria_dsl.html#VALforeign">foreign</a> [<a href="Functoria_dsl.html">Functoria_dsl</a>]</td>
 <td><div class="info">
-<code class="code">foreign name typ</code> states that the module named by <code class="code">name</code> has the
-    module type <code class="code">typ</code>.
+<code class="code">foreign name typ</code> is the module <code class="code">name</code>, having with the
+    odule type <code class="code">typ</code>.
 </div>
 </td></tr>
 <tr><td align="left"><br>G</td></tr>
@@ -253,7 +264,7 @@ Export all the information available at configure time to runtime.
 </td></tr>
 <tr><td><a href="Functoria_key.html#VALget">get</a> [<a href="Functoria_key.html">Functoria_key</a>]</td>
 <td><div class="info">
-<code class="code">get map k</code> resolves <code class="code">k</code>, using default values if necessary.
+<code class="code">get p k</code> resolves <code class="code">k</code>, using default values if necessary.
 </div>
 </td></tr>
 <tr><td><a href="Functoria.Make.html#VALget_base_keymap">get_base_keymap</a> [<a href="Functoria.Make.html">Functoria.Make</a>]</td>
@@ -269,12 +280,7 @@ Export all the information available at configure time to runtime.
 <tr><td align="left"><br>H</td></tr>
 <tr><td><a href="Functoria_dsl.html#VALhash">hash</a> [<a href="Functoria_dsl.html">Functoria_dsl</a>]</td>
 <td><div class="info">
-Hash an implementation.
-</div>
-</td></tr>
-<tr><td><a href="Functoria_dsl.html#VALhidden">hidden</a> [<a href="Functoria_dsl.html">Functoria_dsl</a>]</td>
-<td><div class="info">
-<code class="code">hiddent t</code> is <code class="code">t</code> but with a hidden type variable.
+<code class="code">hash</code> is the hash function on implementations.
 </div>
 </td></tr>
 <tr><td align="left"><br>I</td></tr>
@@ -291,7 +297,7 @@ Hash an implementation.
 </td></tr>
 <tr><td><a href="Functoria_dsl.html#VALimpl">impl</a> [<a href="Functoria_dsl.html">Functoria_dsl</a>]</td>
 <td><div class="info">
-Create an implementation based on a specified device.
+<code class="code">impl c</code> is the implementation of the configurable <code class="code">c</code>.
 </div>
 </td></tr>
 <tr><td><a href="Functoria_misc.html#VALin_dir">in_dir</a> [<a href="Functoria_misc.html">Functoria_misc</a>]</td>
@@ -337,8 +343,8 @@ Define cross-stage information for an argument.
 </td></tr>
 <tr><td><a href="Functoria_key.html#VALis_resolved">is_resolved</a> [<a href="Functoria_key.html">Functoria_key</a>]</td>
 <td><div class="info">
-<code class="code">is_reduced map v</code> returns <code class="code"><span class="keyword">true</span></code> iff all the dependencies of <code class="code">v</code> have
-    been resolved.
+<code class="code">is_resolved p v</code> returns <code class="code"><span class="keyword">true</span></code> iff all the dependencies of <code class="code">v</code>
+    have been resolved.
 </div>
 </td></tr>
 <tr><td><a href="Functoria_key.html#VALis_runtime">is_runtime</a> [<a href="Functoria_key.html">Functoria_key</a>]</td>
@@ -349,15 +355,10 @@ Define cross-stage information for an argument.
 <tr><td align="left"><br>J</td></tr>
 <tr><td><a href="Functoria_dsl.html#VALjob">job</a> [<a href="Functoria_dsl.html">Functoria_dsl</a>]</td>
 <td><div class="info">
-Representation of a job.
+<code class="code">jpb</code> is the signature for user's application main module.
 </div>
 </td></tr>
 <tr><td align="left"><br>K</td></tr>
-<tr><td><a href="Functoria_dsl.Info.html#VALkeymap">keymap</a> [<a href="Functoria_dsl.Info.html">Functoria_dsl.Info</a>]</td>
-<td><div class="info">
-Map from key entered in the command line to values.
-</div>
-</td></tr>
 <tr><td><a href="Functoria_dsl.Info.html#VALkeys">keys</a> [<a href="Functoria_dsl.Info.html">Functoria_dsl.Info</a>]</td>
 <td><div class="info">
 Keys declared by the project.
@@ -395,7 +396,7 @@ Ocamlfind libraries needed by the project.
 <tr><td align="left"><br>N</td></tr>
 <tr><td><a href="Functoria_dsl.Info.html#VALname">name</a> [<a href="Functoria_dsl.Info.html">Functoria_dsl.Info</a>]</td>
 <td><div class="info">
-Name of the project
+<code class="code">name t</code> is the name of the application.
 </div>
 </td></tr>
 <tr><td><a href="Functoria.CUSTOM.html#VALname">name</a> [<a href="Functoria.CUSTOM.html">Functoria.CUSTOM</a>]</td>
@@ -458,10 +459,16 @@ The version of the current OCaml compiler.
 OPAM packages needed by the project.
 </div>
 </td></tr>
+<tr><td><a href="Functoria_dsl.Info.html#VALparsed">parsed</a> [<a href="Functoria_dsl.Info.html">Functoria_dsl.Info</a>]</td>
+<td><div class="info">
+<code class="code">parsed t</code> is a value representing the command-line argument
+      being parsed.
+</div>
+</td></tr>
 <tr><td><a href="Functoria_key.html#VALpeek">peek</a> [<a href="Functoria_key.html">Functoria_key</a>]</td>
 <td><div class="info">
-<code class="code">peek map v</code> returns <code class="code"><span class="constructor">Some</span> x</code> if <code class="code">v</code> has been resolved to <code class="code">x</code>
-    and <code class="code"><span class="constructor">None</span></code> otherwise.
+<code class="code">peek p v</code> returns <code class="code"><span class="constructor">Some</span> x</code> if <code class="code">v</code> has been resolved to <code class="code">x</code> and
+    <code class="code"><span class="constructor">None</span></code> otherwise.
 </div>
 </td></tr>
 <tr><td><a href="Functoria_key.html#VALpipe">pipe</a> [<a href="Functoria_key.html">Functoria_key</a>]</td>
@@ -479,9 +486,9 @@ OPAM packages needed by the project.
 <code class="code">pp_deps fmt v</code> prints the name of the dependencies of <code class="code">v</code>.
 </div>
 </td></tr>
-<tr><td><a href="Functoria_key.html#VALpp_map">pp_map</a> [<a href="Functoria_key.html">Functoria_key</a>]</td>
+<tr><td><a href="Functoria_key.html#VALpp_parsed">pp_parsed</a> [<a href="Functoria_key.html">Functoria_key</a>]</td>
 <td><div class="info">
-<code class="code">pp_map map fmt set</code> prints the keys in <code class="code">set</code> with the values in <code class="code">map</code>.
+<code class="code">pp_parsed map fmt set</code> prints the keys in <code class="code">set</code> with the values in <code class="code">map</code>.
 </div>
 </td></tr>
 <tr><td><a href="Functoria_misc.html#VALprefix">prefix</a> [<a href="Functoria_misc.html">Functoria_misc</a>]</td>
@@ -605,7 +612,7 @@ Similar to <a href="Functoria_misc.html#VALprefix"><code class="code"><span clas
 </td></tr>
 <tr><td><a href="Functoria_dsl.html#VALtyp">typ</a> [<a href="Functoria_dsl.html">Functoria_dsl</a>]</td>
 <td><div class="info">
-Create a new type.
+<code class="code"><span class="keyword">type</span> t</code> is a value representing the module type <code class="code">t</code>.
 </div>
 </td></tr>
 <tr><td align="left"><br>U</td></tr>

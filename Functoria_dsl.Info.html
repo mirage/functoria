@@ -30,18 +30,18 @@
 <h1>Module <a href="type_Functoria_dsl.Info.html">Functoria_dsl.Info</a></h1>
 
 <pre><span class="keyword">module</span> Info: <code class="code"><span class="keyword">sig</span></code> <a href="Functoria_dsl.Info.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info module top">
-Information available during configuration.<br>
+Information about the final application.<br>
 </div>
 <hr width="100%">
 
 <pre><span id="TYPEt"><span class="keyword">type</span> <code class="type"></code>t</span> </pre>
 <div class="info ">
-Configuration information for the whole project.<br>
+The type for information about the final application.<br>
 </div>
 
 
 <pre><span id="VALname"><span class="keyword">val</span> name</span> : <code class="type"><a href="Functoria_dsl.Info.html#TYPEt">t</a> -> string</code></pre><div class="info ">
-Name of the project<br>
+<code class="code">name t</code> is the name of the application.<br>
 </div>
 
 <pre><span id="VALroot"><span class="keyword">val</span> root</span> : <code class="type"><a href="Functoria_dsl.Info.html#TYPEt">t</a> -> string</code></pre><div class="info ">
@@ -60,8 +60,9 @@ OPAM packages needed by the project.<br>
 Keys declared by the project.<br>
 </div>
 
-<pre><span id="VALkeymap"><span class="keyword">val</span> keymap</span> : <code class="type"><a href="Functoria_dsl.Info.html#TYPEt">t</a> -> Functoria_dsl.Key.map</code></pre><div class="info ">
-Map from key entered in the command line to values.<br>
+<pre><span id="VALparsed"><span class="keyword">val</span> parsed</span> : <code class="type"><a href="Functoria_dsl.Info.html#TYPEt">t</a> -> Functoria_dsl.Key.parsed</code></pre><div class="info ">
+<code class="code">parsed t</code> is a value representing the command-line argument
+      being parsed.<br>
 </div>
 
-<pre><span id="VALcreate"><span class="keyword">val</span> create</span> : <code class="type">?keys:Functoria_dsl.Key.Set.t -><br>       ?libraries:string list -><br>       ?packages:string list -><br>       keymap:Functoria_dsl.Key.map -><br>       name:string -> root:string -> <a href="Functoria_dsl.Info.html#TYPEt">t</a></code></pre></body></html>
+<pre><span id="VALcreate"><span class="keyword">val</span> create</span> : <code class="type">?keys:Functoria_dsl.Key.Set.t -><br>       ?libraries:string list -><br>       ?packages:string list -><br>       parsed:Functoria_dsl.Key.parsed -><br>       name:string -> root:string -> <a href="Functoria_dsl.Info.html#TYPEt">t</a></code></pre></body></html>

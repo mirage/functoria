@@ -26,21 +26,26 @@
 <tr><td align="left"><br>C</td></tr>
 <tr><td><a href="Functoria_dsl.configurable-c.html#METHODclean">clean</a> [<a href="Functoria_dsl.configurable-c.html">Functoria_dsl.configurable</a>]</td>
 <td><div class="info">
-Clean all the files generated to use the device.
+<code class="code">clean info</code> is the code to clean-up what have beend generated
+      by <a href="Functoria_dsl.configurable-c.html#METHODconfigure"><code class="code"><span class="constructor">Functoria_dsl</span>.configurable.configure</code></a>.
 </div>
 </td></tr>
 <tr><td><a href="Functoria_dsl.base_configurable-c.html#METHODclean">clean</a> [<a href="Functoria_dsl.base_configurable-c.html">Functoria_dsl.base_configurable</a>]</td>
 <td></td></tr>
 <tr><td><a href="Functoria_dsl.configurable-c.html#METHODconfigure">configure</a> [<a href="Functoria_dsl.configurable-c.html">Functoria_dsl.configurable</a>]</td>
 <td><div class="info">
-Configure the device.
+<code class="code">configure info</code> is the code to execute in order to configure
+      the device.
 </div>
 </td></tr>
 <tr><td><a href="Functoria_dsl.base_configurable-c.html#METHODconfigure">configure</a> [<a href="Functoria_dsl.base_configurable-c.html">Functoria_dsl.base_configurable</a>]</td>
 <td></td></tr>
 <tr><td><a href="Functoria_dsl.configurable-c.html#METHODconnect">connect</a> [<a href="Functoria_dsl.configurable-c.html">Functoria_dsl.configurable</a>]</td>
 <td><div class="info">
-Return the function call to connect at runtime with the device.
+<code class="code">connect info <span class="keyword">mod</span> args</code> is the code to execute in order to
+      initialize the state associated with the module <code class="code"><span class="keyword">mod</span></code> (usually
+      calling <code class="code"><span class="keyword">mod</span>.connect</code>) with the arguments <code class="code">args</code>, in the context
+      of the project information <code class="code">info</code>.
 </div>
 </td></tr>
 <tr><td><a href="Functoria_dsl.base_configurable-c.html#METHODconnect">connect</a> [<a href="Functoria_dsl.base_configurable-c.html">Functoria_dsl.base_configurable</a>]</td>
@@ -48,8 +53,9 @@ Return the function call to connect at runtime with the device.
 <tr><td align="left"><br>D</td></tr>
 <tr><td><a href="Functoria_dsl.configurable-c.html#METHODdependencies">dependencies</a> [<a href="Functoria_dsl.configurable-c.html">Functoria_dsl.configurable</a>]</td>
 <td><div class="info">
-The list of dependencies that must be initalized before this
-      device.
+<code class="code">dependencies</code> is the list of <a href="Functoria_dsl.html#TYPEabstract_impl"> abstract
+      implementations</a> that must be initalized before calling
+      <a href="Functoria_dsl.configurable-c.html#METHODconnect"><code class="code"><span class="constructor">Functoria_dsl</span>.configurable.connect</code></a>.
 </div>
 </td></tr>
 <tr><td><a href="Functoria_dsl.base_configurable-c.html#METHODdependencies">dependencies</a> [<a href="Functoria_dsl.base_configurable-c.html">Functoria_dsl.base_configurable</a>]</td>
@@ -57,7 +63,8 @@ The list of dependencies that must be initalized before this
 <tr><td align="left"><br>K</td></tr>
 <tr><td><a href="Functoria_dsl.configurable-c.html#METHODkeys">keys</a> [<a href="Functoria_dsl.configurable-c.html">Functoria_dsl.configurable</a>]</td>
 <td><div class="info">
-Return the list of keys to configure the device.
+<code class="code">keys</code> is the list of command-line keys to set-up the
+      configurable.
 </div>
 </td></tr>
 <tr><td><a href="Functoria_dsl.base_configurable-c.html#METHODkeys">keys</a> [<a href="Functoria_dsl.base_configurable-c.html">Functoria_dsl.base_configurable</a>]</td>
@@ -65,8 +72,8 @@ Return the list of keys to configure the device.
 <tr><td align="left"><br>L</td></tr>
 <tr><td><a href="Functoria_dsl.configurable-c.html#METHODlibraries">libraries</a> [<a href="Functoria_dsl.configurable-c.html">Functoria_dsl.configurable</a>]</td>
 <td><div class="info">
-Return the list of ocamlfind libraries to link with the
-      application to use the device.
+<code class="code">libaries</code> is the list of OCamlfind libraries to include and
+      link with the configurable.
 </div>
 </td></tr>
 <tr><td><a href="Functoria_dsl.base_configurable-c.html#METHODlibraries">libraries</a> [<a href="Functoria_dsl.base_configurable-c.html">Functoria_dsl.base_configurable</a>]</td>
@@ -74,20 +81,22 @@ Return the list of ocamlfind libraries to link with the
 <tr><td align="left"><br>M</td></tr>
 <tr><td><a href="Functoria_dsl.configurable-c.html#METHODmodule_name">module_name</a> [<a href="Functoria_dsl.configurable-c.html">Functoria_dsl.configurable</a>]</td>
 <td><div class="info">
-Return the name of the module implementing the device.
+<code class="code">module_name</code> is the name of the module implementing the
+      configurable.
 </div>
 </td></tr>
 <tr><td align="left"><br>N</td></tr>
 <tr><td><a href="Functoria_dsl.configurable-c.html#METHODname">name</a> [<a href="Functoria_dsl.configurable-c.html">Functoria_dsl.configurable</a>]</td>
 <td><div class="info">
-Return the unique variable name holding the state of the device.
+<code class="code">name</code> is the unique variable name holding the runtime state of
+      the configurable.
 </div>
 </td></tr>
 <tr><td align="left"><br>P</td></tr>
 <tr><td><a href="Functoria_dsl.configurable-c.html#METHODpackages">packages</a> [<a href="Functoria_dsl.configurable-c.html">Functoria_dsl.configurable</a>]</td>
 <td><div class="info">
-Return the list of OPAM packages which needs to be installed to
-      use the device.
+<code class="code">packages</code> is the list of OPAM packages which needs to be
+      installed before compiling the configurable.
 </div>
 </td></tr>
 <tr><td><a href="Functoria_dsl.base_configurable-c.html#METHODpackages">packages</a> [<a href="Functoria_dsl.base_configurable-c.html">Functoria_dsl.base_configurable</a>]</td>
@@ -95,7 +104,7 @@ Return the list of OPAM packages which needs to be installed to
 <tr><td align="left"><br>T</td></tr>
 <tr><td><a href="Functoria_dsl.configurable-c.html#METHODty">ty</a> [<a href="Functoria_dsl.configurable-c.html">Functoria_dsl.configurable</a>]</td>
 <td><div class="info">
-Type of the device.
+<code class="code">ty</code> is the module type of the configurable.
 </div>
 </td></tr>
 </table>

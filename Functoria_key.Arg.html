@@ -90,7 +90,7 @@ The type for argument converters.<br>
 
 <pre><span id="VALconv_emit"><span class="keyword">val</span> conv_emit</span> : <code class="type">'a <a href="Functoria_key.Arg.html#TYPEconverter">converter</a> -> Format.formatter -> 'a -> unit</code></pre><div class="info ">
 <code class="code">conv_emit</code> allows to persist OCaml values across stages, ie. it
-      takes values (which might be parsed with <code class="code">configure</code> at
+      takes values (which might be parsed with <a href="Functoria_key.Arg.html#VALconv_at_configure"><code class="code"><span class="constructor">Functoria_key</span>.<span class="constructor">Arg</span>.conv_at_configure</code></a> at
       configuration time) and produce a valid string representation
       which can be used at runtime, once the generated code is
       compiled.<br>

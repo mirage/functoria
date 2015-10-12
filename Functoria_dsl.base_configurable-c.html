@@ -26,7 +26,17 @@
 <h1>Class <a href="type_Functoria_dsl.base_configurable.html">Functoria_dsl.base_configurable</a></h1>
 
 <pre><span name="TYPEbase_configurable"><span class="keyword">class</span> base_configurable</span> : <code class="type"></code><code class="code"><span class="keyword">object</span></code> <a href="Functoria_dsl.base_configurable-c.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info class top">
-The base configurable pre-defining many methods.<br>
+<code class="code">base_configurable</code> pre-defining many methods from the
+    <a href="Functoria_dsl.configurable-c.html"><code class="code"><span class="constructor">Functoria_dsl</span>.configurable</code></a> class. To be used as follow:
+<p>
+
+    <pre class="codepre"><code class="code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;time_conf&nbsp;=&nbsp;<span class="keyword">object</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">inherit</span>&nbsp;base_configurable<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">method</span>&nbsp;ty&nbsp;=&nbsp;time<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">method</span>&nbsp;name&nbsp;=&nbsp;<span class="string">"time"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">method</span>&nbsp;module_name&nbsp;=&nbsp;<span class="string">"OS.Time"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">end</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;</code></pre><br>
 </div>
 <hr width="100%">
 
@@ -36,4 +46,4 @@ The base configurable pre-defining many methods.<br>
 <pre><span id="METHODconnect"><span class="keyword">method</span> connect</span> : <code class="type"><a href="Functoria_dsl.Info.html#TYPEt">Info.t</a> -> string -> string list -> string</code></pre>
 <pre><span id="METHODconfigure"><span class="keyword">method</span> configure</span> : <code class="type"><a href="Functoria_dsl.Info.html#TYPEt">Info.t</a> -> (unit, string) Rresult.result</code></pre>
 <pre><span id="METHODclean"><span class="keyword">method</span> clean</span> : <code class="type"><a href="Functoria_dsl.Info.html#TYPEt">Info.t</a> -> (unit, string) Rresult.result</code></pre>
-<pre><span id="METHODdependencies"><span class="keyword">method</span> dependencies</span> : <code class="type"><a href="Functoria_dsl.html#TYPEany_impl">any_impl</a> list</code></pre></body></html>
+<pre><span id="METHODdependencies"><span class="keyword">method</span> dependencies</span> : <code class="type"><a href="Functoria_dsl.html#TYPEabstract_impl">abstract_impl</a> list</code></pre></body></html>

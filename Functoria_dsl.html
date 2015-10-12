@@ -20,12 +20,10 @@
 <link title="Functoria_key" rel="Chapter" href="Functoria_key.html">
 <link title="Functoria_dsl" rel="Chapter" href="Functoria_dsl.html">
 <link title="Functoria_runtime" rel="Chapter" href="Functoria_runtime.html">
-<link title="Functoria_info" rel="Chapter" href="Functoria_info.html"><link title="Module combinators" rel="Section" href="#2_Modulecombinators">
-<link title="Keys" rel="Section" href="#2_Keys">
-<link title="Declaring new modules" rel="Section" href="#2_Declaringnewmodules">
-<link title="DSL extension" rel="Section" href="#2_DSLextension">
-<link title="Sharing" rel="Subsection" href="#3_Sharing">
-<link title="Misc" rel="Subsection" href="#3_Misc">
+<link title="Functoria_info" rel="Chapter" href="Functoria_info.html"><link title="Combinators" rel="Section" href="#combinators">
+<link title="Keys" rel="Section" href="#keys">
+<link title="Application Builder" rel="Section" href="#app">
+<link title="Sharing" rel="Section" href="#1_Sharing">
 <title>Functoria : Functoria_dsl</title>
 </head>
 <body>
@@ -36,11 +34,30 @@
 <h1>Module <a href="type_Functoria_dsl.html">Functoria_dsl</a></h1>
 
 <pre><span class="keyword">module</span> Functoria_dsl: <code class="code"><span class="keyword">sig</span></code> <a href="Functoria_dsl.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info module top">
-Core functoria DSL<br>
+The Functoria DSL.
+<p>
+
+    The Functoria DSL allows users to describe how to create portable
+    and flexible applications. It allows to pass application
+    parameters easily using command-line arguments either at
+    configure-time or at runtime.
+<p>
+
+    Users of the Functoria DSL composes their application by defining
+    a list of <a href="Functoria_dsl.html#VALforeign">module</a> implementations, specify the
+    command-line <a href="Functoria_dsl.html#keys"><i>Keys</i></a> that are required and <a href="Functoria_dsl.html#combinators">combine</a>
+    all of them together using
+    <a href="http://dx.doi.org/10.1017/S0956796807006326">applicative</a>
+    operators.
+<p>
+
+    The DSL expression is then compiled into an <a href="Functoria_dsl.html#app">application
+    builder</a>, which will, once evaluated, produced the final portable
+    and flexible application.<br>
 </div>
 <hr width="100%">
 <br>
-<h2 id="2_Modulecombinators">Module combinators</h2><br>
+<h1 id="combinators">Combinators</h1><br>
 
 <pre><code><span id="TYPEtyp"><span class="keyword">type</span> <code class="type">'_</code> typ</span> = </code></pre><table class="typetable">
 <tr>
@@ -55,16 +72,16 @@ Core functoria DSL<br>
 <code><span class="keyword">|</span></code></td>
 <td align="left" valign="top" >
 <code><span id="TYPEELTtyp.Function"><span class="constructor">Function</span></span> <span class="keyword">:</span> <code class="type">'a0 <a href="Functoria_dsl.html#TYPEtyp">typ</a> * 'b <a href="Functoria_dsl.html#TYPEtyp">typ</a></code> <span class="keyword">-></span> <code class="type">('a0 -> 'b) <a href="Functoria_dsl.html#TYPEtyp">typ</a></code></code></td>
-
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+The type for values representing module types.<br>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr></table>
 
-<div class="info ">
-The type of values representing module types.<br>
-</div>
 
 
 <pre><span id="VALtyp"><span class="keyword">val</span> typ</span> : <code class="type">'a -> 'a <a href="Functoria_dsl.html#TYPEtyp">typ</a></code></pre><div class="info ">
-Create a new type.<br>
+<code class="code"><span class="keyword">type</span> t</code> is a value representing the module type <code class="code">t</code>.<br>
 </div>
 
 <pre><span id="VAL(@->)"><span class="keyword">val</span> (@-&gt;)</span> : <code class="type">'a <a href="Functoria_dsl.html#TYPEtyp">typ</a> -> 'b <a href="Functoria_dsl.html#TYPEtyp">typ</a> -> ('a -> 'b) <a href="Functoria_dsl.html#TYPEtyp">typ</a></code></pre><div class="info ">
@@ -80,9 +97,19 @@ Construct a functor type from a type and an existing functor
     <code class="code">kv_ro</code> and an <code class="code">ip</code> device -- and returns a <code class="code">kv_ro</code>.<br>
 </div>
 
+<pre><span id="TYPEjob"><span class="keyword">type</span> <code class="type"></code>job</span> </pre>
+<div class="info ">
+Type for job values.<br>
+</div>
+
+
+<pre><span id="VALjob"><span class="keyword">val</span> job</span> : <code class="type"><a href="Functoria_dsl.html#TYPEjob">job</a> <a href="Functoria_dsl.html#TYPEtyp">typ</a></code></pre><div class="info ">
+<code class="code">jpb</code> is the signature for user's application main module.<br>
+</div>
+
 <pre><span id="TYPEimpl"><span class="keyword">type</span> <code class="type">'a</code> impl</span> </pre>
 <div class="info ">
-The type of values representing module implementations.<br>
+The type for values representing module implementations.<br>
 </div>
 
 
@@ -90,26 +117,26 @@ The type of values representing module implementations.<br>
 <code class="code">m $ a</code> applies the functor <code class="code">m</code> to the module <code class="code">a</code>.<br>
 </div>
 
-<pre><code><span id="TYPEany_impl"><span class="keyword">type</span> <code class="type"></code>any_impl</span> = </code></pre><table class="typetable">
+<pre><code><span id="TYPEabstract_impl"><span class="keyword">type</span> <code class="type"></code>abstract_impl</span> = </code></pre><table class="typetable">
 <tr>
 <td align="left" valign="top" >
 <code><span class="keyword">|</span></code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTany_impl.Any"><span class="constructor">Any</span></span> <span class="keyword">:</span> <code class="type">'a <a href="Functoria_dsl.html#TYPEimpl">impl</a></code> <span class="keyword">-></span> <code class="type"><a href="Functoria_dsl.html#TYPEany_impl">any_impl</a></code></code></td>
-
+<code><span id="TYPEELTabstract_impl.Abstract"><span class="constructor">Abstract</span></span> <span class="keyword">:</span> <code class="type">'a <a href="Functoria_dsl.html#TYPEimpl">impl</a></code> <span class="keyword">-></span> <code class="type"><a href="Functoria_dsl.html#TYPEabstract_impl">abstract_impl</a></code></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+The type for abstract implementations.<br>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr></table>
 
-<div class="info ">
-Type of an implementation, with its type variable hidden.<br>
-</div>
 
 
-<pre><span id="VALhidden"><span class="keyword">val</span> hidden</span> : <code class="type">'a <a href="Functoria_dsl.html#TYPEimpl">impl</a> -> <a href="Functoria_dsl.html#TYPEany_impl">any_impl</a></code></pre><div class="info ">
-<code class="code">hiddent t</code> is <code class="code">t</code> but with a hidden type variable. Useful for
-    dependencies.<br>
+<pre><span id="VALabstract"><span class="keyword">val</span> abstract</span> : <code class="type">'a <a href="Functoria_dsl.html#TYPEimpl">impl</a> -> <a href="Functoria_dsl.html#TYPEabstract_impl">abstract_impl</a></code></pre><div class="info ">
+<code class="code">abstract t</code> is <code class="code">t</code> but with its type variable abstracted. Useful
+    for dependencies.<br>
 </div>
 <br>
-<h2 id="2_Keys">Keys</h2><br>
+<h1 id="keys">Keys</h1><br>
 
 <pre><span class="keyword">module</span> <a href="Functoria_dsl.Key.html">Key</a>: <code class="type">module type of struct include <a href="Functoria_key.html">Functoria_key</a> end</code></pre><div class="info">
 Key creation and manipulation.
@@ -122,61 +149,66 @@ Key creation and manipulation.
 
 <pre><span id="VALswitch"><span class="keyword">val</span> switch</span> : <code class="type">default:'a <a href="Functoria_dsl.html#TYPEimpl">impl</a> -><br>       ('b * 'a <a href="Functoria_dsl.html#TYPEimpl">impl</a>) list -><br>       'b Key.value -> 'a <a href="Functoria_dsl.html#TYPEimpl">impl</a></code></pre><div class="info ">
 <code class="code">switch ~default l v</code> choose the implementation in <code class="code">l</code>
-    corresponding to the value <code class="code">v</code>.  The <code class="code">default</code> implementation is
+    corresponding to the value <code class="code">v</code>. The <code class="code">default</code> implementation is
     chosen if no value match.<br>
 </div>
 <br>
-<h2 id="2_Declaringnewmodules">Declaring new modules</h2><br>
+<h1 id="app">Application Builder</h1><br>
 
-<pre><span id="VALforeign"><span class="keyword">val</span> foreign</span> : <code class="type">?keys:Key.t list -><br>       ?libraries:string list -><br>       ?packages:string list -><br>       ?dependencies:<a href="Functoria_dsl.html#TYPEany_impl">any_impl</a> list -><br>       string -> 'a <a href="Functoria_dsl.html#TYPEtyp">typ</a> -> 'a <a href="Functoria_dsl.html#TYPEimpl">impl</a></code></pre><div class="info ">
-<code class="code">foreign name typ</code> states that the module named by <code class="code">name</code> has the
-    module type <code class="code">typ</code>.<br>
-</div>
-<div class="param_info"><code class="code">keys</code> : The keys related to this module.</div>
-<div class="param_info"><code class="code">libraries</code> : The ocamlfind libraries needed by this module.</div>
-<div class="param_info"><code class="code">packages</code> : The opam packages needed by this module.</div>
-<div class="param_info"><code class="code">dependencies</code> : The data-dependencies needed by this module.
-           You must use <a href="Functoria_dsl.html#VALhidden"><code class="code"><span class="constructor">Functoria_dsl</span>.hidden</code></a> to pass an arbitrary implementation.</div>
+<pre><span id="VALforeign"><span class="keyword">val</span> foreign</span> : <code class="type">?packages:string list -><br>       ?libraries:string list -><br>       ?keys:Key.t list -><br>       ?dependencies:<a href="Functoria_dsl.html#TYPEabstract_impl">abstract_impl</a> list -><br>       string -> 'a <a href="Functoria_dsl.html#TYPEtyp">typ</a> -> 'a <a href="Functoria_dsl.html#TYPEimpl">impl</a></code></pre><div class="info ">
+<code class="code">foreign name typ</code> is the module <code class="code">name</code>, having with the
+    odule type <code class="code">typ</code>.
+<p>
 
-<pre><span id="TYPEjob"><span class="keyword">type</span> <code class="type"></code>job</span> </pre>
-<div class="info ">
-Type for job values.<br>
-</div>
-
-
-<pre><span id="VALjob"><span class="keyword">val</span> job</span> : <code class="type"><a href="Functoria_dsl.html#TYPEjob">job</a> <a href="Functoria_dsl.html#TYPEtyp">typ</a></code></pre><div class="info ">
-Representation of a job.<br>
-</div>
+    <ul>
+<li>If <code class="code">packages</code> is set, then the given OPAM packages are
+       installed before compiling the current application.</li>
+<li>If <code class="code">libraries</code> is set, the given OCamlfind libraries are
+       included and linked with the module <code class="code">name</code>.</li>
+<li>If <code class="code">keys</code> is set, use the given <a href="Functoria_key.html#TYPEkey">keys</a> to
+       parse at configure and runtime the command-line arguments
+       before calling <code class="code">name.connect</code>.</li>
+<li>If <code class="code">dependencies</code> is set, the given list of
+       <a href="Functoria_dsl.html#TYPEabstract_impl">abstract</a> implementations is added as
+       data-dependencies: they will be initialized before calling
+       <code class="code">name.connect</code>. </li>
+</ul>
 <br>
-<h2 id="2_DSLextension">DSL extension</h2><br>
+</div>
 
 <pre><span class="keyword">module</span> <a href="Functoria_dsl.Info.html">Info</a>: <code class="code"><span class="keyword">sig</span></code> <a href="Functoria_dsl.Info.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info">
-Information available during configuration.
+Information about the final application.
 </div>
 
 <pre><span id="TYPEconfigurable"><span class="keyword">class type</span> <code class="type">['ty]</code> <a href="Functoria_dsl.configurable-c.html">configurable</a></span> = <code class="code"><span class="keyword">object</span></code> <a href="Functoria_dsl.configurable-c.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info">
-Signature for configurable devices.
+Signature for configurable module implementations.
 </div>
 
 <pre><span id="VALimpl"><span class="keyword">val</span> impl</span> : <code class="type">'a <a href="Functoria_dsl.configurable-c.html">configurable</a> -> 'a <a href="Functoria_dsl.html#TYPEimpl">impl</a></code></pre><div class="info ">
-Create an implementation based on a specified device.<br>
+<code class="code">impl c</code> is the implementation of the configurable <code class="code">c</code>.<br>
+</div>
+
+<pre><span id="VALexplode"><span class="keyword">val</span> explode</span> : <code class="type">'a <a href="Functoria_dsl.html#TYPEimpl">impl</a> -><br>       [ `App of <a href="Functoria_dsl.html#TYPEabstract_impl">abstract_impl</a> * <a href="Functoria_dsl.html#TYPEabstract_impl">abstract_impl</a><br>       | `If of<br>           bool Key.value * 'a <a href="Functoria_dsl.html#TYPEimpl">impl</a> *<br>           'a <a href="Functoria_dsl.html#TYPEimpl">impl</a><br>       | `Impl of 'a <a href="Functoria_dsl.configurable-c.html">configurable</a> ]</code></pre><div class="info ">
+<code class="code">explode i</code> inspects the contents of <code class="code">i</code>.<br>
 </div>
 
 <pre><span name="TYPEbase_configurable"><span class="keyword">class</span> <a href="Functoria_dsl.base_configurable-c.html">base_configurable</a></span> : <code class="type"></code><code class="code"><span class="keyword">object</span></code> <a href="Functoria_dsl.base_configurable-c.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info">
-The base configurable pre-defining many methods.
+<code class="code">base_configurable</code> pre-defining many methods from the
+    <a href="Functoria_dsl.configurable-c.html"><code class="code"><span class="constructor">Functoria_dsl</span>.configurable</code></a> class.
 </div>
 <br>
-<h3 id="3_Sharing">Sharing</h3><br>
+<h1 id="1_Sharing">Sharing</h1><br>
 
 <pre><span id="VALhash"><span class="keyword">val</span> hash</span> : <code class="type">'a <a href="Functoria_dsl.html#TYPEimpl">impl</a> -> int</code></pre><div class="info ">
-Hash an implementation.<br>
+<code class="code">hash</code> is the hash function on implementations. FIXME(samoht)
+    expand on how it works.<br>
 </div>
 
-<pre><span id="VALequal"><span class="keyword">val</span> equal</span> : <code class="type">'a <a href="Functoria_dsl.html#TYPEimpl">impl</a> -> 'a <a href="Functoria_dsl.html#TYPEimpl">impl</a> -> bool</code></pre>
-<pre><span class="keyword">module</span> <a href="Functoria_dsl.ImplTbl.html">ImplTbl</a>: <code class="type">Hashtbl.S</code><code class="type">  with type key = any_impl</code></pre><div class="info">
+<pre><span id="VALequal"><span class="keyword">val</span> equal</span> : <code class="type">'a <a href="Functoria_dsl.html#TYPEimpl">impl</a> -> 'a <a href="Functoria_dsl.html#TYPEimpl">impl</a> -> bool</code></pre><div class="info ">
+<code class="code">equal</code> is the equality over implementations.<br>
+</div>
+
+<pre><span class="keyword">module</span> <a href="Functoria_dsl.ImplTbl.html">ImplTbl</a>: <code class="type">Hashtbl.S</code><code class="type">  with type key = abstract_impl</code></pre><div class="info">
 Hashtbl of implementations.
 </div>
-<br>
-<h3 id="3_Misc">Misc</h3><br>
-
-<pre><span id="VALexplode"><span class="keyword">val</span> explode</span> : <code class="type">'a <a href="Functoria_dsl.html#TYPEimpl">impl</a> -><br>       [ `App of <a href="Functoria_dsl.html#TYPEany_impl">any_impl</a> * <a href="Functoria_dsl.html#TYPEany_impl">any_impl</a><br>       | `If of<br>           bool Key.value * 'a <a href="Functoria_dsl.html#TYPEimpl">impl</a> *<br>           'a <a href="Functoria_dsl.html#TYPEimpl">impl</a><br>       | `Impl of 'a <a href="Functoria_dsl.configurable-c.html">configurable</a> ]</code></pre></body></html>
+</body></html>

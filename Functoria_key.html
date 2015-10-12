@@ -23,7 +23,7 @@
 <link title="Functoria_info" rel="Chapter" href="Functoria_info.html"><link title="Keys" rel="Section" href="#1_Keys">
 <link title="Stages" rel="Section" href="#1_Stages">
 <link title="Proxy" rel="Section" href="#1_Proxy">
-<link title="Key resolution" rel="Section" href="#1_Keyresolution">
+<link title="Parsed Keys" rel="Section" href="#1_ParsedKeys">
 <link title="Code emission" rel="Section" href="#1_Codeemission">
 <title>Functoria : Functoria_key</title>
 </head>
@@ -90,20 +90,21 @@ The type for configure and runtime values. Values can be parsed
 <pre><span id="TYPEkey"><span class="keyword">type</span> <code class="type">'a</code> key</span> </pre>
 <div class="info ">
 The type for configuration keys. Keys are dynamic values that can
-    be used to
+    be used to:
 <p>
 
     <ul>
 <li>Set <a href="Functoria_key.html#VALvalue">values</a> at configure and runtime by parsing
        arguments on the command line.</li>
-<li>Switch implementation dynamically, using <a href="Functoria_dsl.html#VALif_impl"><code class="code"><span class="constructor">Functoria_dsl</span>.if_impl</code></a>.
-       FIXME(samoht): not sure what this mean (yet)</li>
+<li>Select, at configuration time, between
+    <a href="Functoria_dsl.html#VALif_impl">implementations</a> of the same module
+    type. FIXME(samoht): only at configuration time?</li>
 </ul>
 
 <p>
 
-    Keys' content is made persistent by emitting code in module called
-    <code class="code"><span class="constructor">Bootvar_gen</span></code>. FIXME(implementation details?)<br>
+    Keys' contents are made persistent by emitting code in module
+    called <code class="code"><span class="constructor">Bootvar_gen</span></code>. FIXME(samoht): implementation details?<br>
 </div>
 
 
@@ -208,15 +209,15 @@ Setters allow to set other keys.
 <code class="code">setters k</code> returns the set of keys for which <code class="code">k</code> has a setter.<br>
 </div>
 <br>
-<h1 id="1_Keyresolution">Key resolution</h1><br>
+<h1 id="1_ParsedKeys">Parsed Keys</h1><br>
 
-<pre><span id="TYPEmap"><span class="keyword">type</span> <code class="type"></code>map</span> </pre>
+<pre><span id="TYPEparsed"><span class="keyword">type</span> <code class="type"></code>parsed</span> </pre>
 <div class="info ">
 The type for parsed command-line arguments.<br>
 </div>
 
 
-<pre><span id="VALterm"><span class="keyword">val</span> term</span> : <code class="type">?stage:<a href="Functoria_key.html#TYPEstage">stage</a> -><br>       Set.t -> <a href="Functoria_key.html#TYPEmap">map</a> Cmdliner.Term.t</code></pre><div class="info ">
+<pre><span id="VALterm"><span class="keyword">val</span> term</span> : <code class="type">?stage:<a href="Functoria_key.html#TYPEstage">stage</a> -><br>       Set.t -> <a href="Functoria_key.html#TYPEparsed">parsed</a> Cmdliner.Term.t</code></pre><div class="info ">
 <code class="code">term l</code> is a <code class="code"><span class="constructor">Cmdliner</span>.<span class="constructor">Term</span>.t</code> that, when evaluated, sets the value of the
     the keys in <code class="code">l</code>.<br>
 </div>
@@ -225,26 +226,26 @@ The type for parsed command-line arguments.<br>
 <code class="code">term_value v</code> is <code class="code">term @@ deps v</code> and returns the content of <code class="code">v</code>.<br>
 </div>
 
-<pre><span id="VALis_resolved"><span class="keyword">val</span> is_resolved</span> : <code class="type"><a href="Functoria_key.html#TYPEmap">map</a> -> 'a <a href="Functoria_key.html#TYPEvalue">value</a> -> bool</code></pre><div class="info ">
-<code class="code">is_reduced map v</code> returns <code class="code"><span class="keyword">true</span></code> iff all the dependencies of <code class="code">v</code> have
-    been resolved.<br>
+<pre><span id="VALis_resolved"><span class="keyword">val</span> is_resolved</span> : <code class="type"><a href="Functoria_key.html#TYPEparsed">parsed</a> -> 'a <a href="Functoria_key.html#TYPEvalue">value</a> -> bool</code></pre><div class="info ">
+<code class="code">is_resolved p v</code> returns <code class="code"><span class="keyword">true</span></code> iff all the dependencies of <code class="code">v</code>
+    have been resolved.<br>
 </div>
 
-<pre><span id="VALpeek"><span class="keyword">val</span> peek</span> : <code class="type"><a href="Functoria_key.html#TYPEmap">map</a> -> 'a <a href="Functoria_key.html#TYPEvalue">value</a> -> 'a option</code></pre><div class="info ">
-<code class="code">peek map v</code> returns <code class="code"><span class="constructor">Some</span> x</code> if <code class="code">v</code> has been resolved to <code class="code">x</code>
-    and <code class="code"><span class="constructor">None</span></code> otherwise.<br>
+<pre><span id="VALpeek"><span class="keyword">val</span> peek</span> : <code class="type"><a href="Functoria_key.html#TYPEparsed">parsed</a> -> 'a <a href="Functoria_key.html#TYPEvalue">value</a> -> 'a option</code></pre><div class="info ">
+<code class="code">peek p v</code> returns <code class="code"><span class="constructor">Some</span> x</code> if <code class="code">v</code> has been resolved to <code class="code">x</code> and
+    <code class="code"><span class="constructor">None</span></code> otherwise.<br>
 </div>
 
-<pre><span id="VALeval"><span class="keyword">val</span> eval</span> : <code class="type"><a href="Functoria_key.html#TYPEmap">map</a> -> 'a <a href="Functoria_key.html#TYPEvalue">value</a> -> 'a</code></pre><div class="info ">
-<code class="code">eval map v</code> resolves <code class="code">v</code>, using default values if necessary.<br>
+<pre><span id="VALeval"><span class="keyword">val</span> eval</span> : <code class="type"><a href="Functoria_key.html#TYPEparsed">parsed</a> -> 'a <a href="Functoria_key.html#TYPEvalue">value</a> -> 'a</code></pre><div class="info ">
+<code class="code">eval p v</code> resolves <code class="code">v</code>, using default values if necessary.<br>
 </div>
 
-<pre><span id="VALget"><span class="keyword">val</span> get</span> : <code class="type"><a href="Functoria_key.html#TYPEmap">map</a> -> 'a <a href="Functoria_key.html#TYPEkey">key</a> -> 'a</code></pre><div class="info ">
-<code class="code">get map k</code> resolves <code class="code">k</code>, using default values if necessary.<br>
+<pre><span id="VALget"><span class="keyword">val</span> get</span> : <code class="type"><a href="Functoria_key.html#TYPEparsed">parsed</a> -> 'a <a href="Functoria_key.html#TYPEkey">key</a> -> 'a</code></pre><div class="info ">
+<code class="code">get p k</code> resolves <code class="code">k</code>, using default values if necessary.<br>
 </div>
 
-<pre><span id="VALpp_map"><span class="keyword">val</span> pp_map</span> : <code class="type"><a href="Functoria_key.html#TYPEmap">map</a> -> Set.t Fmt.t</code></pre><div class="info ">
-<code class="code">pp_map map fmt set</code> prints the keys in <code class="code">set</code> with the values in <code class="code">map</code>.<br>
+<pre><span id="VALpp_parsed"><span class="keyword">val</span> pp_parsed</span> : <code class="type"><a href="Functoria_key.html#TYPEparsed">parsed</a> -> Set.t Fmt.t</code></pre><div class="info ">
+<code class="code">pp_parsed map fmt set</code> prints the keys in <code class="code">set</code> with the values in <code class="code">map</code>.<br>
 </div>
 <br>
 <h1 id="1_Codeemission">Code emission</h1><br>
@@ -257,7 +258,7 @@ The type for parsed command-line arguments.<br>
 <code class="code">emit_call fmt k</code> prints the OCaml code needed to get the value of <code class="code">k</code>.<br>
 </div>
 
-<pre><span id="VALemit"><span class="keyword">val</span> emit</span> : <code class="type"><a href="Functoria_key.html#TYPEmap">map</a> -> <a href="Functoria_key.html#TYPEt">t</a> Fmt.t</code></pre><div class="info ">
-<code class="code">emit fmt k</code> prints the OCaml code needed to define <code class="code">k</code>.<br>
+<pre><span id="VALemit"><span class="keyword">val</span> emit</span> : <code class="type"><a href="Functoria_key.html#TYPEparsed">parsed</a> -> <a href="Functoria_key.html#TYPEt">t</a> Fmt.t</code></pre><div class="info ">
+<code class="code">emit p fmt k</code> prints the OCaml code needed to define <code class="code">k</code>.<br>
 </div>
 </body></html>
