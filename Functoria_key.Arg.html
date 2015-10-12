@@ -1,0 +1,132 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="next" href="Functoria_key.Set.html">
+<link rel="Up" href="Functoria_key.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of class methods" rel=Appendix href="index_methods.html">
+<link title="Index of classes" rel=Appendix href="index_classes.html">
+<link title="Index of class types" rel=Appendix href="index_class_types.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="Functoria" rel="Chapter" href="Functoria.html">
+<link title="Functoria_misc" rel="Chapter" href="Functoria_misc.html">
+<link title="Functoria_key" rel="Chapter" href="Functoria_key.html">
+<link title="Functoria_dsl" rel="Chapter" href="Functoria_dsl.html">
+<link title="Functoria_runtime" rel="Chapter" href="Functoria_runtime.html">
+<link title="Functoria_info" rel="Chapter" href="Functoria_info.html"><link title="Cross-stage argument converters" rel="Section" href="#1_Crossstageargumentconverters">
+<link title="Information" rel="Section" href="#1_Information">
+<link title="Predefined Converters" rel="Subsection" href="#2_PredefinedConverters">
+<link title="Accessors" rel="Subsection" href="#2_Accessors">
+<title>Functoria : Functoria_key.Arg</title>
+</head>
+<body>
+<div class="navbar">&nbsp;<a class="up" href="Functoria_key.html" title="Functoria_key">Up</a>
+&nbsp;<a class="post" href="Functoria_key.Set.html" title="Functoria_key.Set">Next</a>
+</div>
+<h1>Module <a href="type_Functoria_key.Arg.html">Functoria_key.Arg</a></h1>
+
+<pre><span class="keyword">module</span> Arg: <code class="code"><span class="keyword">sig</span></code> <a href="Functoria_key.Arg.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info module top">
+Cross-stage command-line arguments.<br>
+</div>
+<hr width="100%">
+<br>
+<h1 id="1_Crossstageargumentconverters">Cross-stage argument converters</h1>
+<p>
+
+      This module extends
+      <a href="http://erratique.ch/software/cmdliner/doc/Cmdliner.Arg.html">
+      Cmdliner.Arg</a> to allow MetaOCaml-style typed cross-stage
+      persistency of command-line arguments.<br>
+
+<pre><span id="TYPEconverter"><span class="keyword">type</span> <code class="type">'a</code> converter</span> </pre>
+<div class="info ">
+The type for argument converters.<br>
+</div>
+
+
+<pre><span id="VALconv"><span class="keyword">val</span> conv</span> : <code class="type">'a Cmdliner.Arg.converter -><br>       (Format.formatter -> 'a -> unit) -> string -> 'a <a href="Functoria_key.Arg.html#TYPEconverter">converter</a></code></pre><div class="info ">
+<code class="code">conv conf emit run</code> is the argument converter using <code class="code">conf</code> to
+      convert argument into OCaml value, <code class="code">emit</code> to convert OCaml
+      values into interpretable strings, and the function named <code class="code">run</code>
+      to transform these strings into OCaml values again. See
+      <a href="Functoria_key.Arg.html#VALconv_at_configure"><code class="code"><span class="constructor">Functoria_key</span>.<span class="constructor">Arg</span>.conv_at_configure</code></a>, <a href="Functoria_key.Arg.html#VALconv_emit"><code class="code"><span class="constructor">Functoria_key</span>.<span class="constructor">Arg</span>.conv_emit</code></a> and <a href="Functoria_key.Arg.html#VALconv_at_runtime"><code class="code"><span class="constructor">Functoria_key</span>.<span class="constructor">Arg</span>.conv_at_runtime</code></a> for
+      details.<br>
+</div>
+<br>
+<h2 id="2_PredefinedConverters">Predefined Converters</h2><br>
+
+<pre><span id="VALstring"><span class="keyword">val</span> string</span> : <code class="type">string <a href="Functoria_key.Arg.html#TYPEconverter">converter</a></code></pre><div class="info ">
+<code class="code">string</code> converts strings.<br>
+</div>
+
+<pre><span id="VALbool"><span class="keyword">val</span> bool</span> : <code class="type">bool <a href="Functoria_key.Arg.html#TYPEconverter">converter</a></code></pre><div class="info ">
+<code class="code">bool</code> converts booleans.<br>
+</div>
+
+<pre><span id="VALint"><span class="keyword">val</span> int</span> : <code class="type">int <a href="Functoria_key.Arg.html#TYPEconverter">converter</a></code></pre><div class="info ">
+<code class="code">int</code> converts integers.<br>
+</div>
+
+<pre><span id="VALlist"><span class="keyword">val</span> list</span> : <code class="type">'a <a href="Functoria_key.Arg.html#TYPEconverter">converter</a> -> 'a list <a href="Functoria_key.Arg.html#TYPEconverter">converter</a></code></pre><div class="info ">
+<code class="code">list t</code> converts lists of <code class="code">t</code>s.<br>
+</div>
+
+<pre><span id="VALsome"><span class="keyword">val</span> some</span> : <code class="type">'a <a href="Functoria_key.Arg.html#TYPEconverter">converter</a> -> 'a option <a href="Functoria_key.Arg.html#TYPEconverter">converter</a></code></pre><div class="info ">
+<code class="code">some t</code> converts <code class="code">t</code> options.<br>
+</div>
+<br>
+<h2 id="2_Accessors">Accessors</h2><br>
+
+<pre><span id="VALconv_at_configure"><span class="keyword">val</span> conv_at_configure</span> : <code class="type">'a <a href="Functoria_key.Arg.html#TYPEconverter">converter</a> -> 'a Cmdliner.Arg.converter</code></pre><div class="info ">
+<code class="code">conv_at_configure t</code> is the converter of configuration time's
+      command-line arguments into OCaml values.<br>
+</div>
+
+<pre><span id="VALconv_emit"><span class="keyword">val</span> conv_emit</span> : <code class="type">'a <a href="Functoria_key.Arg.html#TYPEconverter">converter</a> -> Format.formatter -> 'a -> unit</code></pre><div class="info ">
+<code class="code">conv_emit</code> allows to persist OCaml values across stages, ie. it
+      takes values (which might be parsed with <code class="code">configure</code> at
+      configuration time) and produce a valid string representation
+      which can be used at runtime, once the generated code is
+      compiled.<br>
+</div>
+
+<pre><span id="VALconv_at_runtime"><span class="keyword">val</span> conv_at_runtime</span> : <code class="type">'a <a href="Functoria_key.Arg.html#TYPEconverter">converter</a> -> string</code></pre><div class="info ">
+<code class="code">conv_at_runtime</code> is the name of the function called at runtime
+      to parse the command-line arguments. Usually, it is a
+      <code class="code"><span class="constructor">Cmdliner</span></code>'s combinator such as <i>Cmdliner.Arg.string</i>.<br>
+</div>
+<br>
+<h1 id="1_Information">Information</h1><br>
+
+<pre><span id="TYPEinfo"><span class="keyword">type</span> <code class="type"></code>info</span> </pre>
+<div class="info ">
+The type for information about cross-stage command-line
+      arguments. See
+      <a href="http://erratique.ch/software/cmdliner/doc/Cmdliner.Arg.html#arginfo">
+      Cmdliner.Arg</a>.<br>
+</div>
+
+
+<pre><span id="VALinfo"><span class="keyword">val</span> info</span> : <code class="type">?docs:string -><br>       ?docv:string -><br>       ?doc:string -> ?env:string -> string list -> <a href="Functoria_key.Arg.html#TYPEinfo">info</a></code></pre><div class="info ">
+Define cross-stage information for an argument. See
+      <a href="http://erratique.ch/software/cmdliner/doc/Cmdliner.Arg.html#TYPEinfo">
+      Cmdliner.Arg.info</a>.<br>
+</div>
+
+<pre><span id="VALinfo_at_configure"><span class="keyword">val</span> info_at_configure</span> : <code class="type"><a href="Functoria_key.Arg.html#TYPEinfo">info</a> -> Cmdliner.Arg.info</code></pre><div class="info ">
+<code class="code">cmdliner_info i</code> is the projection of <code class="code">i</code> to
+      <a href="http://erratique.ch/software/cmdliner/doc/Cmdliner.Arg.html#TYPEinfo">
+      Cmdliner.Arg.info</a>.<br>
+</div>
+
+<pre><span id="VALinfo_emit"><span class="keyword">val</span> info_emit</span> : <code class="type">Format.formatter -> <a href="Functoria_key.Arg.html#TYPEinfo">info</a> -> unit</code></pre><div class="info ">
+<code class="code">info_emit</code> allows to persist information about command-line
+      arguments across stages.<br>
+</div>
+</body></html>

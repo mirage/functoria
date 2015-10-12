@@ -30,20 +30,20 @@
 <h1>Module <a href="type_Functoria_runtime.html">Functoria_runtime</a></h1>
 
 <pre><span class="keyword">module</span> Functoria_runtime: <code class="code"><span class="keyword">sig</span></code> <a href="Functoria_runtime.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info module top">
-Runtime<br>
+Functoria runtime.<br>
 </div>
 <hr width="100%">
 
-<pre><span class="keyword">module</span> <a href="Functoria_runtime.Converter.html">Converter</a>: <code class="code"><span class="keyword">sig</span></code> <a href="Functoria_runtime.Converter.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info">
-Cmdliner converter.
+<pre><span class="keyword">module</span> <a href="Functoria_runtime.Conv.html">Conv</a>: <code class="code"><span class="keyword">sig</span></code> <a href="Functoria_runtime.Conv.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info">
+<code class="code"><span class="constructor">Converter</span></code> defines <code class="code"><span class="constructor">Cmdliner</span></code>-compatible argument converters.
 </div>
 
 <pre><span class="keyword">module</span> <a href="Functoria_runtime.Key.html">Key</a>: <code class="code"><span class="keyword">sig</span></code> <a href="Functoria_runtime.Key.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info">
-Runtime Key module.
+<code class="code"><span class="constructor">Key</span></code> allows keys to be set at runtime.
 </div>
 
 <pre><span id="VALwith_argv"><span class="keyword">val</span> with_argv</span> : <code class="type">unit Cmdliner.Term.t list -><br>       string -> string array -> [> `Error of string | `Ok of unit ]</code></pre><div class="info ">
-<code class="code">with_argv keys s argv</code> uses the given key terms to parse the given <code class="code">argv</code>.
-    <code class="code">s</code> is the name of the cmdline executable.<br>
+<code class="code">with_argv keys name argv</code> evaluates the <code class="code">keys</code> <a href="Functoria_runtime.Key.html#VALterm">terms</a>
+    on the command-line <code class="code">argv</code>. <code class="code">name</code> is the executable name.<br>
 </div>
 </body></html>

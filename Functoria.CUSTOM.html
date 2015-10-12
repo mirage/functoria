@@ -59,16 +59,13 @@ Version of the custom DSL.<br>
       the configurable <code class="code">s</code> doesn't initialize correctly.<br>
 </div>
 
-<pre><span id="VALargv"><span class="keyword">val</span> argv</span> : <code class="type"><a href="Functoria.Devices.html#TYPEargv">Functoria.Devices.argv</a> <a href="Functoria_dsl.html#TYPEimpl">Functoria_dsl.impl</a></code></pre><div class="info ">
+<pre><span id="VALargv"><span class="keyword">val</span> argv</span> : <code class="type"><a href="Functoria.Devices.html#TYPEargv">Functoria.Devices.argv</a> Functoria.Dsl.impl</code></pre><div class="info ">
 <code class="code">argv</code> is the device used to read the full list of command-line
       arguments.<br>
 </div>
 
-<pre><span id="VALconfig"><span class="keyword">val</span> config</span> : <code class="type">Functoria.Dsl.job Functoria.Dsl.impl list -><br>       Functoria.Dsl.job Functoria.Dsl.impl</code></pre><div class="info ">
-<code class="code">config jobs</code> is the device configuration the custom DSL, given
-      a list of configuration <code class="code">jobs</code>.
-<p>
-
-      FIXME(thomas): I am not sure to understand that signature.<br>
+<pre><span id="VALcreate"><span class="keyword">val</span> create</span> : <code class="type">Functoria.Dsl.job Functoria.Dsl.impl list -><br>       Functoria.Dsl.job Functoria.Dsl.impl</code></pre><div class="info ">
+<code class="code">create jobs</code> is the top-level job in the custom DSL which will
+      execute the given list of <code class="code">job</code>.<br>
 </div>
 </body></html>
