@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="style.css" type="text/css">
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
 <link rel="Start" href="index.html">
-<link rel="next" href="Functoria_key.Set.html">
+<link rel="next" href="Functoria_key.Alias.html">
 <link rel="Up" href="Functoria_key.html">
 <link title="Index of types" rel=Appendix href="index_types.html">
 <link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
@@ -19,15 +19,14 @@
 <link title="Functoria_key" rel="Chapter" href="Functoria_key.html">
 <link title="Functoria_dsl" rel="Chapter" href="Functoria_dsl.html">
 <link title="Functoria_runtime" rel="Chapter" href="Functoria_runtime.html">
-<link title="Functoria_info" rel="Chapter" href="Functoria_info.html"><link title="Cross-stage argument converters" rel="Section" href="#1_Crossstageargumentconverters">
-<link title="Information" rel="Section" href="#1_Information">
-<link title="Predefined Converters" rel="Subsection" href="#2_PredefinedConverters">
-<link title="Accessors" rel="Subsection" href="#2_Accessors">
+<link title="Functoria_info" rel="Chapter" href="Functoria_info.html"><link title="Argument converters" rel="Section" href="#1_Argumentconverters">
+<link title="Arguments and their information" rel="Section" href="#1_Argumentsandtheirinformation">
+<link title="Optional Arguments" rel="Section" href="#1_OptionalArguments">
 <title>Functoria : Functoria_key.Arg</title>
 </head>
 <body>
 <div class="navbar">&nbsp;<a class="up" href="Functoria_key.html" title="Functoria_key">Up</a>
-&nbsp;<a class="post" href="Functoria_key.Set.html" title="Functoria_key.Set">Next</a>
+&nbsp;<a class="post" href="Functoria_key.Alias.html" title="Functoria_key.Alias">Next</a>
 </div>
 <h1>Module <a href="type_Functoria_key.Arg.html">Functoria_key.Arg</a></h1>
 
@@ -36,30 +35,62 @@ Cross-stage command-line arguments.<br>
 </div>
 <hr width="100%">
 <br>
-<h1 id="1_Crossstageargumentconverters">Cross-stage argument converters</h1>
+Terms for cross-stage arguments.
 <p>
 
       This module extends
       <a href="http://erratique.ch/software/cmdliner/doc/Cmdliner.Arg.html">
       Cmdliner.Arg</a> to allow MetaOCaml-style typed cross-stage
       persistency of command-line arguments.<br>
-
-<pre><span id="TYPEconverter"><span class="keyword">type</span> <code class="type">'a</code> converter</span> </pre>
-<div class="info ">
-The type for argument converters.<br>
-</div>
-
-
-<pre><span id="VALconv"><span class="keyword">val</span> conv</span> : <code class="type">'a Cmdliner.Arg.converter -><br>       (Format.formatter -> 'a -> unit) -> string -> 'a <a href="Functoria_key.Arg.html#TYPEconverter">converter</a></code></pre><div class="info ">
-<code class="code">conv conf emit run</code> is the argument converter using <code class="code">conf</code> to
-      convert argument into OCaml value, <code class="code">emit</code> to convert OCaml
-      values into interpretable strings, and the function named <code class="code">run</code>
-      to transform these strings into OCaml values again. See
-      <a href="Functoria_key.Arg.html#VALconv_at_configure"><code class="code"><span class="constructor">Functoria_key</span>.<span class="constructor">Arg</span>.conv_at_configure</code></a>, <a href="Functoria_key.Arg.html#VALconv_emit"><code class="code"><span class="constructor">Functoria_key</span>.<span class="constructor">Arg</span>.conv_emit</code></a> and <a href="Functoria_key.Arg.html#VALconv_at_runtime"><code class="code"><span class="constructor">Functoria_key</span>.<span class="constructor">Arg</span>.conv_at_runtime</code></a> for
-      details.<br>
-</div>
 <br>
-<h2 id="2_PredefinedConverters">Predefined Converters</h2><br>
+Terms for cross-stage arguments.
+<p>
+
+      This module extends
+      <a href="http://erratique.ch/software/cmdliner/doc/Cmdliner.Arg.html">
+      Cmdliner.Arg</a> to allow MetaOCaml-style typed cross-stage
+      persistency of command-line arguments.<br>
+<br>
+<h1 id="1_Argumentconverters">Argument converters</h1><br>
+
+<pre><span id="TYPEemitter"><span class="keyword">type</span> <code class="type">'a</code> emitter</span> = <code class="type">Format.formatter -> 'a -> unit</code> </pre>
+<div class="info ">
+The type for OCaml code emmiter. A value of type <code class="code"><span class="keywordsign">'</span>a emitter</code>
+      generates valid OCaml code with type <code class="code"><span class="keywordsign">'</span>a</code>.<br>
+</div>
+
+
+<pre><span id="TYPEcode"><span class="keyword">type</span> <code class="type">'a</code> code</span> = <code class="type">string</code> </pre>
+<div class="info ">
+The type for <i>raw</i> OCaml code. A value of type <code class="code"><span class="keywordsign">'</span>a code</code> can
+      be interpreted as an OCaml value with type <code class="code"><span class="keywordsign">'</span>a</code>.<br>
+</div>
+
+
+<pre><span id="TYPEconverter"><span class="keyword">type</span> <code class="type">'a</code> converter</span> = <code class="type">'a Cmdliner.Arg.converter * 'a <a href="Functoria_key.Arg.html#TYPEemitter">emitter</a> *<br>       'a <a href="Functoria_key.Arg.html#TYPEcode">code</a></code> </pre>
+<div class="info ">
+The type for argument converters. A value of <code class="code">(conv, emit,
+      code)</code> of type <code class="code"><span class="keywordsign">'</span>a converter</code> is the argument converter using
+      <code class="code">conf</code> to convert argument into OCaml value, <code class="code">emit</code> to convert
+      OCaml values into interpretable strings, and the function named
+      <code class="code">run</code> to transform these strings into OCaml values again.
+<p>
+
+      <ul>
+<li><code class="code">conv</code> is the converter of configuration time's command-line
+         arguments into OCaml values.</li>
+<li><code class="code">emit</code> allows to persist OCaml values across stages, ie. it
+         takes values (which might be parsed with <code class="code">conv</code> at
+         configuration time) and produce a valid string representation
+         which can be used at runtime, once the generated code is
+         compiled.</li>
+<li><code class="code">run</code> is the name of the function called at runtime to parse
+         the command-line arguments. Usually, it is a <code class="code"><span class="constructor">Cmdliner</span></code>'s
+         combinator such as <i>Cmdliner.Arg.string</i>.</li>
+</ul>
+<br>
+</div>
+
 
 <pre><span id="VALstring"><span class="keyword">val</span> string</span> : <code class="type">string <a href="Functoria_key.Arg.html#TYPEconverter">converter</a></code></pre><div class="info ">
 <code class="code">string</code> converts strings.<br>
@@ -81,35 +112,20 @@ The type for argument converters.<br>
 <code class="code">some t</code> converts <code class="code">t</code> options.<br>
 </div>
 <br>
-<h2 id="2_Accessors">Accessors</h2><br>
+<h1 id="1_Argumentsandtheirinformation">Arguments and their information</h1><br>
 
-<pre><span id="VALconv_at_configure"><span class="keyword">val</span> conv_at_configure</span> : <code class="type">'a <a href="Functoria_key.Arg.html#TYPEconverter">converter</a> -> 'a Cmdliner.Arg.converter</code></pre><div class="info ">
-<code class="code">conv_at_configure t</code> is the converter of configuration time's
-      command-line arguments into OCaml values.<br>
+<pre><span id="TYPEt"><span class="keyword">type</span> <code class="type">'a</code> t</span> </pre>
+<div class="info ">
+The type for arguments holding data of type <code class="code"><span class="keywordsign">'</span>a</code>.<br>
 </div>
 
-<pre><span id="VALconv_emit"><span class="keyword">val</span> conv_emit</span> : <code class="type">'a <a href="Functoria_key.Arg.html#TYPEconverter">converter</a> -> Format.formatter -> 'a -> unit</code></pre><div class="info ">
-<code class="code">conv_emit</code> allows to persist OCaml values across stages, ie. it
-      takes values (which might be parsed with <a href="Functoria_key.Arg.html#VALconv_at_configure"><code class="code"><span class="constructor">Functoria_key</span>.<span class="constructor">Arg</span>.conv_at_configure</code></a> at
-      configuration time) and produce a valid string representation
-      which can be used at runtime, once the generated code is
-      compiled.<br>
-</div>
-
-<pre><span id="VALconv_at_runtime"><span class="keyword">val</span> conv_at_runtime</span> : <code class="type">'a <a href="Functoria_key.Arg.html#TYPEconverter">converter</a> -> string</code></pre><div class="info ">
-<code class="code">conv_at_runtime</code> is the name of the function called at runtime
-      to parse the command-line arguments. Usually, it is a
-      <code class="code"><span class="constructor">Cmdliner</span></code>'s combinator such as <i>Cmdliner.Arg.string</i>.<br>
-</div>
-<br>
-<h1 id="1_Information">Information</h1><br>
 
 <pre><span id="TYPEinfo"><span class="keyword">type</span> <code class="type"></code>info</span> </pre>
 <div class="info ">
 The type for information about cross-stage command-line
       arguments. See
       <a href="http://erratique.ch/software/cmdliner/doc/Cmdliner.Arg.html#arginfo">
-      Cmdliner.Arg</a>.<br>
+      Cmdliner.Arg#TYPEinfo</a>.<br>
 </div>
 
 
@@ -118,15 +134,37 @@ Define cross-stage information for an argument. See
       <a href="http://erratique.ch/software/cmdliner/doc/Cmdliner.Arg.html#TYPEinfo">
       Cmdliner.Arg.info</a>.<br>
 </div>
+<br>
+<h1 id="1_OptionalArguments">Optional Arguments</h1><br>
 
-<pre><span id="VALinfo_at_configure"><span class="keyword">val</span> info_at_configure</span> : <code class="type"><a href="Functoria_key.Arg.html#TYPEinfo">info</a> -> Cmdliner.Arg.info</code></pre><div class="info ">
-<code class="code">cmdliner_info i</code> is the projection of <code class="code">i</code> to
-      <a href="http://erratique.ch/software/cmdliner/doc/Cmdliner.Arg.html#TYPEinfo">
-      Cmdliner.Arg.info</a>.<br>
+<pre><span id="TYPEstage"><span class="keyword">type</span> <code class="type"></code>stage</span> = <code class="type">[ `Both | `Configure | `Run ]</code> </pre>
+<div class="info ">
+The type for specifying at which stage an argument is available.
+<p>
+
+      <ul>
+<li><code class="code"><span class="keywordsign">`</span><span class="constructor">Configure</span></code> means that the argument is read on the
+         command-line at configuration-time.</li>
+<li><code class="code"><span class="keywordsign">`</span><span class="constructor">Run</span></code> means that the argument is read on the command-line at
+         runtime.</li>
+<li><code class="code"><span class="keywordsign">`</span><span class="constructor">Both</span></code> means that the argument is read on the command-line
+         both at configuration-time and runt-ime.</li>
+</ul>
+<br>
 </div>
 
-<pre><span id="VALinfo_emit"><span class="keyword">val</span> info_emit</span> : <code class="type">Format.formatter -> <a href="Functoria_key.Arg.html#TYPEinfo">info</a> -> unit</code></pre><div class="info ">
-<code class="code">info_emit</code> allows to persist information about command-line
-      arguments across stages.<br>
+
+<pre><span id="VALopt"><span class="keyword">val</span> opt</span> : <code class="type">?stage:<a href="Functoria_key.Arg.html#TYPEstage">stage</a> -><br>       'a <a href="Functoria_key.Arg.html#TYPEconverter">converter</a> -><br>       'a -> <a href="Functoria_key.Arg.html#TYPEinfo">info</a> -> 'a <a href="Functoria_key.Arg.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">opt conv v i</code> is similar to
+      <a href="http://erratique.ch/software/cmdliner/doc/Cmdliner.Arg.html#VALopt">
+      Cmdliner.Arg.opt</a> but for cross-stage optional command-line
+      arguments. If not set, <code class="code">stage</code> is <code class="code"><span class="keywordsign">`</span><span class="constructor">Both</span></code>.<br>
+</div>
+
+<pre><span id="VALflag"><span class="keyword">val</span> flag</span> : <code class="type">?stage:<a href="Functoria_key.Arg.html#TYPEstage">stage</a> -><br>       <a href="Functoria_key.Arg.html#TYPEinfo">info</a> -> bool <a href="Functoria_key.Arg.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">flag i</code> is similar to
+      <a href="http://erratique.ch/software/cmdliner/doc/Cmdliner.Arg.html#VALflag">
+      Cmdliner.Arg.opt</a> but for cross-stage command-line flags. If not
+      set, <code class="code">stage</code> is <code class="code"><span class="keywordsign">`</span><span class="constructor">Both</span></code>.<br>
 </div>
 </body></html>

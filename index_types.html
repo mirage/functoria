@@ -35,9 +35,20 @@ The type for command-line arguments, similar to the usual <code class="code">arg
 </div>
 </td></tr>
 <tr><td align="left"><br>C</td></tr>
+<tr><td><a href="Functoria_key.Arg.html#TYPEcode">code</a> [<a href="Functoria_key.Arg.html">Functoria_key.Arg</a>]</td>
+<td><div class="info">
+The type for <i>raw</i> OCaml code.
+</div>
+</td></tr>
 <tr><td><a href="Functoria_key.Arg.html#TYPEconverter">converter</a> [<a href="Functoria_key.Arg.html">Functoria_key.Arg</a>]</td>
 <td><div class="info">
 The type for argument converters.
+</div>
+</td></tr>
+<tr><td align="left"><br>E</td></tr>
+<tr><td><a href="Functoria_key.Arg.html#TYPEemitter">emitter</a> [<a href="Functoria_key.Arg.html">Functoria_key.Arg</a>]</td>
+<td><div class="info">
+The type for OCaml code emmiter.
 </div>
 </td></tr>
 <tr><td align="left"><br>I</td></tr>
@@ -76,13 +87,13 @@ The type for configuration keys.
 <tr><td align="left"><br>P</td></tr>
 <tr><td><a href="Functoria_key.html#TYPEparsed">parsed</a> [<a href="Functoria_key.html">Functoria_key</a>]</td>
 <td><div class="info">
-The type for parsed command-line arguments.
+The type for parsed key graphs.
 </div>
 </td></tr>
 <tr><td align="left"><br>S</td></tr>
-<tr><td><a href="Functoria_key.html#TYPEstage">stage</a> [<a href="Functoria_key.html">Functoria_key</a>]</td>
+<tr><td><a href="Functoria_key.Arg.html#TYPEstage">stage</a> [<a href="Functoria_key.Arg.html">Functoria_key.Arg</a>]</td>
 <td><div class="info">
-The type for specifying at which stage a key is available.
+The type for specifying at which stage an argument is available.
 </div>
 </td></tr>
 <tr><td align="left"><br>T</td></tr>
@@ -101,9 +112,14 @@ The type for argument converters.
 The type for information about the final application.
 </div>
 </td></tr>
-<tr><td><a href="Functoria_key.Setters.html#TYPEt">t</a> [<a href="Functoria_key.Setters.html">Functoria_key.Setters</a>]</td>
+<tr><td><a href="Functoria_key.Alias.html#TYPEt">t</a> [<a href="Functoria_key.Alias.html">Functoria_key.Alias</a>]</td>
 <td><div class="info">
-The type for key setters.
+The type for key alias.
+</div>
+</td></tr>
+<tr><td><a href="Functoria_key.Arg.html#TYPEt">t</a> [<a href="Functoria_key.Arg.html">Functoria_key.Arg</a>]</td>
+<td><div class="info">
+The type for arguments holding data of type <code class="code"><span class="keywordsign">'</span>a</code>.
 </div>
 </td></tr>
 <tr><td><a href="Functoria_key.html#TYPEt">t</a> [<a href="Functoria_key.html">Functoria_key</a>]</td>
@@ -123,7 +139,7 @@ The type for values representing module types.
 <tr><td align="left"><br>V</td></tr>
 <tr><td><a href="Functoria_key.html#TYPEvalue">value</a> [<a href="Functoria_key.html">Functoria_key</a>]</td>
 <td><div class="info">
-The type for configure and runtime values.
+The type for configure-time and run-time values.
 </div>
 </td></tr>
 </table>

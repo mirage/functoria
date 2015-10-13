@@ -31,7 +31,8 @@
 </td></tr>
 <tr><td><a href="Functoria_key.html#VAL($)">($)</a> [<a href="Functoria_key.html">Functoria_key</a>]</td>
 <td><div class="info">
-<code class="code">f $ v</code> is <code class="code">app f v</code>.
+<code class="code">f $ v</code> is is the value resulting from the application of
+    <code class="code">f</code>'value to <code class="code">v</code>'s value.
 </div>
 </td></tr>
 <tr><td><a href="Functoria_misc.html#VAL(/)">(/)</a> [<a href="Functoria_misc.html">Functoria_misc</a>]</td>
@@ -56,16 +57,22 @@ Construct a functor type from a type and an existing functor
 <code class="code">abstract t</code> is <code class="code">t</code> but with its type variable abstracted.
 </div>
 </td></tr>
-<tr><td><a href="Functoria_key.Setters.html#VALadd">add</a> [<a href="Functoria_key.Setters.html">Functoria_key.Setters</a>]</td>
+<tr><td><a href="Functoria_key.Alias.html#VALadd">add</a> [<a href="Functoria_key.Alias.html">Functoria_key.Alias</a>]</td>
 <td><div class="info">
-<code class="code">add k f setters</code> Add a new setter to <code class="code">setters</code>.
+<code class="code">add k f a</code> set <code class="code">a</code> as an alias for the key <code class="code">k</code>: setting <code class="code">a</code> on
+      the command-line will set <code class="code">k</code> to <code class="code">f</code> applied to <code class="code">a</code>'s value.
 </div>
 </td></tr>
 <tr><td><a href="Functoria_misc.Univ.html#VALadd">add</a> [<a href="Functoria_misc.Univ.html">Functoria_misc.Univ</a>]</td>
 <td></td></tr>
-<tr><td><a href="Functoria_key.html#VALapp">app</a> [<a href="Functoria_key.html">Functoria_key</a>]</td>
+<tr><td><a href="Functoria_key.html#VALalias">alias</a> [<a href="Functoria_key.html">Functoria_key</a>]</td>
 <td><div class="info">
-<code class="code">app f x</code> is the value resulting from the application of <code class="code">f</code> to <code class="code">v</code>.
+Similar to <a href="Functoria_key.html#VALcreate"><code class="code"><span class="constructor">Functoria_key</span>.create</code></a> but for command-line alias.
+</div>
+</td></tr>
+<tr><td><a href="Functoria_key.html#VALaliases">aliases</a> [<a href="Functoria_key.html">Functoria_key</a>]</td>
+<td><div class="info">
+<code class="code">aliases t</code> is the list of <code class="code">t</code>'s aliases.
 </div>
 </td></tr>
 <tr><td><a href="Functoria_misc.Codegen.html#VALappend">append</a> [<a href="Functoria_misc.Codegen.html">Functoria_misc.Codegen</a>]</td>
@@ -106,29 +113,9 @@ The type for <a href="Functoria.Devices.html#VALargv"><code class="code"><span c
 <td></td></tr>
 <tr><td><a href="Functoria_misc.html#VALcommand_exists">command_exists</a> [<a href="Functoria_misc.html">Functoria_misc</a>]</td>
 <td></td></tr>
-<tr><td><a href="Functoria_key.Arg.html#VALconv">conv</a> [<a href="Functoria_key.Arg.html">Functoria_key.Arg</a>]</td>
+<tr><td><a href="Functoria_key.html#VALcompare">compare</a> [<a href="Functoria_key.html">Functoria_key</a>]</td>
 <td><div class="info">
-<code class="code">conv conf emit run</code> is the argument converter using <code class="code">conf</code> to
-      convert argument into OCaml value, <code class="code">emit</code> to convert OCaml
-      values into interpretable strings, and the function named <code class="code">run</code>
-      to transform these strings into OCaml values again.
-</div>
-</td></tr>
-<tr><td><a href="Functoria_key.Arg.html#VALconv_at_configure">conv_at_configure</a> [<a href="Functoria_key.Arg.html">Functoria_key.Arg</a>]</td>
-<td><div class="info">
-<code class="code">conv_at_configure t</code> is the converter of configuration time's
-      command-line arguments into OCaml values.
-</div>
-</td></tr>
-<tr><td><a href="Functoria_key.Arg.html#VALconv_at_runtime">conv_at_runtime</a> [<a href="Functoria_key.Arg.html">Functoria_key.Arg</a>]</td>
-<td><div class="info">
-<code class="code">conv_at_runtime</code> is the name of the function called at runtime
-      to parse the command-line arguments.
-</div>
-</td></tr>
-<tr><td><a href="Functoria_key.Arg.html#VALconv_emit">conv_emit</a> [<a href="Functoria_key.Arg.html">Functoria_key.Arg</a>]</td>
-<td><div class="info">
-<code class="code">conv_emit</code> allows to persist OCaml values across stages, ie.
+<code class="code">compare</code> compares untyped keys.
 </div>
 </td></tr>
 <tr><td><a href="Functoria_runtime.Key.html#VALcreate">create</a> [<a href="Functoria_runtime.Key.html">Functoria_runtime.Key</a>]</td>
@@ -137,12 +124,14 @@ The type for <a href="Functoria.Devices.html#VALargv"><code class="code"><span c
 </div>
 </td></tr>
 <tr><td><a href="Functoria_dsl.Info.html#VALcreate">create</a> [<a href="Functoria_dsl.Info.html">Functoria_dsl.Info</a>]</td>
-<td></td></tr>
+<td><div class="info">
+FIXME(samoht): not sure why we have both <code class="code">keys</code> and <code class="code">parsed</code>.
+</div>
+</td></tr>
 <tr><td><a href="Functoria_key.html#VALcreate">create</a> [<a href="Functoria_key.html">Functoria_key</a>]</td>
 <td><div class="info">
-<code class="code">create ~doc ~stage ~default name conv</code> creates a new
-    configuration key with docstring <code class="code">doc</code>, default value <code class="code">default</code>,
-    name <code class="code">name</code> and type descriptor <code class="code">desc</code>.
+<code class="code">create n a</code> is the key named <code class="code">n</code> whose contents is determined by
+    parsing the command-line argument <code class="code">a</code>.
 </div>
 </td></tr>
 <tr><td><a href="Functoria_misc.Name.html#VALcreate">create</a> [<a href="Functoria_misc.Name.html">Functoria_misc.Name</a>]</td>
@@ -191,11 +180,6 @@ Cut at the first occurence of a given character.
 <code class="code">emit_call fmt k</code> prints the OCaml code needed to get the value of <code class="code">k</code>.
 </div>
 </td></tr>
-<tr><td><a href="Functoria_key.Setters.html#VALempty">empty</a> [<a href="Functoria_key.Setters.html">Functoria_key.Setters</a>]</td>
-<td><div class="info">
-<code class="code">empty</code> is the empty setter.
-</div>
-</td></tr>
 <tr><td><a href="Functoria_misc.Monoid.html#VALempty">empty</a> [<a href="Functoria_misc.Monoid.html">Functoria_misc.Monoid</a>]</td>
 <td></td></tr>
 <tr><td><a href="Functoria_misc.Univ.html#VALempty">empty</a> [<a href="Functoria_misc.Univ.html">Functoria_misc.Univ</a>]</td>
@@ -229,7 +213,8 @@ Export all the information available at configure time to runtime.
 <td></td></tr>
 <tr><td><a href="Functoria_key.html#VALfilter_stage">filter_stage</a> [<a href="Functoria_key.html">Functoria_key</a>]</td>
 <td><div class="info">
-<code class="code">filter_stage ~stage set</code> filters <code class="code">set</code> with the appropriate keys.
+<code class="code">filter_stage s ks</code> is <code class="code">ks</code> but with only keys available at stage
+    <code class="code">s</code>.
 </div>
 </td></tr>
 <tr><td><a href="Functoria_misc.Univ.html#VALfind">find</a> [<a href="Functoria_misc.Univ.html">Functoria_misc.Univ</a>]</td>
@@ -239,9 +224,17 @@ Export all the information available at configure time to runtime.
 <code class="code">flag</code> is a converter for an optional flag.
 </div>
 </td></tr>
-<tr><td><a href="Functoria_key.html#VALflag">flag</a> [<a href="Functoria_key.html">Functoria_key</a>]</td>
+<tr><td><a href="Functoria_key.Alias.html#VALflag">flag</a> [<a href="Functoria_key.Alias.html">Functoria_key.Alias</a>]</td>
 <td><div class="info">
-<code class="code">flag ~stage ~doc name</code> creates a new flag.
+<code class="code">flag</code> is similar to <a href="Functoria_key.Arg.html#VALflag"><code class="code"><span class="constructor">Functoria_key</span>.<span class="constructor">Arg</span>.flag</code></a> but defines configure-only
+      command-line flag alias.
+</div>
+</td></tr>
+<tr><td><a href="Functoria_key.Arg.html#VALflag">flag</a> [<a href="Functoria_key.Arg.html">Functoria_key.Arg</a>]</td>
+<td><div class="info">
+<code class="code">flag i</code> is similar to
+      <a href="http://erratique.ch/software/cmdliner/doc/Cmdliner.Arg.html#VALflag">
+      Cmdliner.Arg.opt</a> but for cross-stage command-line flags.
 </div>
 </td></tr>
 <tr><td><a href="Functoria_dsl.html#VALforeign">foreign</a> [<a href="Functoria_dsl.html">Functoria_dsl</a>]</td>
@@ -286,7 +279,7 @@ Export all the information available at configure time to runtime.
 <tr><td align="left"><br>I</td></tr>
 <tr><td><a href="Functoria_key.html#VALif_">if_</a> [<a href="Functoria_key.html">Functoria_key</a>]</td>
 <td><div class="info">
-<code class="code">if_ v x y</code> is <code class="code">pipe v @@ <span class="keyword">fun</span> b <span class="keywordsign">-&gt;</span> <span class="keyword">if</span> b <span class="keyword">then</span> x <span class="keyword">else</span> y</code>.
+<code class="code">if_ v x y</code> is <code class="code">map (<span class="keyword">fun</span> b <span class="keywordsign">-&gt;</span> <span class="keyword">if</span> b <span class="keyword">then</span> x <span class="keyword">else</span> y) v</code>.
 </div>
 </td></tr>
 <tr><td><a href="Functoria_dsl.html#VALif_impl">if_impl</a> [<a href="Functoria_dsl.html">Functoria_dsl</a>]</td>
@@ -311,19 +304,6 @@ Define cross-stage information for an argument.
 <td></td></tr>
 <tr><td><a href="Functoria.Devices.html#VALinfo">info</a> [<a href="Functoria.Devices.html">Functoria.Devices</a>]</td>
 <td></td></tr>
-<tr><td><a href="Functoria_key.Arg.html#VALinfo_at_configure">info_at_configure</a> [<a href="Functoria_key.Arg.html">Functoria_key.Arg</a>]</td>
-<td><div class="info">
-<code class="code">cmdliner_info i</code> is the projection of <code class="code">i</code> to
-      <a href="http://erratique.ch/software/cmdliner/doc/Cmdliner.Arg.html#TYPEinfo">
-      Cmdliner.Arg.info</a>.
-</div>
-</td></tr>
-<tr><td><a href="Functoria_key.Arg.html#VALinfo_emit">info_emit</a> [<a href="Functoria_key.Arg.html">Functoria_key.Arg</a>]</td>
-<td><div class="info">
-<code class="code">info_emit</code> allows to persist information about command-line
-      arguments across stages.
-</div>
-</td></tr>
 <tr><td><a href="Functoria_misc.OCamlfind.html#VALinstalled">installed</a> [<a href="Functoria_misc.OCamlfind.html">Functoria_misc.OCamlfind</a>]</td>
 <td></td></tr>
 <tr><td><a href="Functoria_runtime.Conv.html#VALint">int</a> [<a href="Functoria_runtime.Conv.html">Functoria_runtime.Conv</a>]</td>
@@ -341,10 +321,10 @@ Define cross-stage information for an argument.
 <code class="code">is_configure k</code> is true if <code class="code">k</code>'s stage is <code class="code"><span class="keywordsign">`</span><span class="constructor">Configure</span></code> or <code class="code"><span class="keywordsign">`</span><span class="constructor">Both</span></code>.
 </div>
 </td></tr>
-<tr><td><a href="Functoria_key.html#VALis_resolved">is_resolved</a> [<a href="Functoria_key.html">Functoria_key</a>]</td>
+<tr><td><a href="Functoria_key.html#VALis_parsed">is_parsed</a> [<a href="Functoria_key.html">Functoria_key</a>]</td>
 <td><div class="info">
-<code class="code">is_resolved p v</code> returns <code class="code"><span class="keyword">true</span></code> iff all the dependencies of <code class="code">v</code>
-    have been resolved.
+<code class="code">is_parsed p v</code> returns <code class="code"><span class="keyword">true</span></code> iff all the dependencies of <code class="code">v</code>
+    have been parsed.
 </div>
 </td></tr>
 <tr><td><a href="Functoria_key.html#VALis_runtime">is_runtime</a> [<a href="Functoria_key.html">Functoria_key</a>]</td>
@@ -451,12 +431,38 @@ The version of the current OCaml compiler.
       optional arguments.
 </div>
 </td></tr>
+<tr><td><a href="Functoria_key.Alias.html#VALopt">opt</a> [<a href="Functoria_key.Alias.html">Functoria_key.Alias</a>]</td>
+<td><div class="info">
+<code class="code">opt</code> is similar to <a href="Functoria_key.Arg.html#VALopt"><code class="code"><span class="constructor">Functoria_key</span>.<span class="constructor">Arg</span>.opt</code></a> but defines configure-only
+      optional command-line arguments.
+</div>
+</td></tr>
+<tr><td><a href="Functoria_key.Arg.html#VALopt">opt</a> [<a href="Functoria_key.Arg.html">Functoria_key.Arg</a>]</td>
+<td><div class="info">
+<code class="code">opt conv v i</code> is similar to
+      <a href="http://erratique.ch/software/cmdliner/doc/Cmdliner.Arg.html#VALopt">
+      Cmdliner.Arg.opt</a> but for cross-stage optional command-line
+      arguments.
+</div>
+</td></tr>
 <tr><td><a href="Functoria_misc.html#VALopt_map">opt_map</a> [<a href="Functoria_misc.html">Functoria_misc</a>]</td>
 <td></td></tr>
 <tr><td align="left"><br>P</td></tr>
 <tr><td><a href="Functoria_dsl.Info.html#VALpackages">packages</a> [<a href="Functoria_dsl.Info.html">Functoria_dsl.Info</a>]</td>
 <td><div class="info">
 OPAM packages needed by the project.
+</div>
+</td></tr>
+<tr><td><a href="Functoria_key.html#VALparse">parse</a> [<a href="Functoria_key.html">Functoria_key</a>]</td>
+<td><div class="info">
+<code class="code">parse l</code> is a <code class="code"><span class="constructor">Cmdliner</span>.<span class="constructor">Term</span>.t</code> that, when evaluated, sets the
+    value of the the keys in <code class="code">l</code>.
+</div>
+</td></tr>
+<tr><td><a href="Functoria_key.html#VALparse_value">parse_value</a> [<a href="Functoria_key.html">Functoria_key</a>]</td>
+<td><div class="info">
+<code class="code">parse_value v</code> is <code class="code">parse @@ deps v</code> and returns the content of
+    <code class="code">v</code>.
 </div>
 </td></tr>
 <tr><td><a href="Functoria_dsl.Info.html#VALparsed">parsed</a> [<a href="Functoria_dsl.Info.html">Functoria_dsl.Info</a>]</td>
@@ -471,11 +477,6 @@ OPAM packages needed by the project.
     <code class="code"><span class="constructor">None</span></code> otherwise.
 </div>
 </td></tr>
-<tr><td><a href="Functoria_key.html#VALpipe">pipe</a> [<a href="Functoria_key.html">Functoria_key</a>]</td>
-<td><div class="info">
-<code class="code">pipe v f</code> is <code class="code">map f v</code>.
-</div>
-</td></tr>
 <tr><td><a href="Functoria_key.html#VALpp">pp</a> [<a href="Functoria_key.html">Functoria_key</a>]</td>
 <td><div class="info">
 <code class="code">pp fmt k</code> prints the name of <code class="code">k</code>.
@@ -488,7 +489,8 @@ OPAM packages needed by the project.
 </td></tr>
 <tr><td><a href="Functoria_key.html#VALpp_parsed">pp_parsed</a> [<a href="Functoria_key.html">Functoria_key</a>]</td>
 <td><div class="info">
-<code class="code">pp_parsed map fmt set</code> prints the keys in <code class="code">set</code> with the values in <code class="code">map</code>.
+<code class="code">pp_parsed p fmt set</code> prints the keys in <code class="code">set</code> using the parsed
+    values <code class="code">p</code>.
 </div>
 </td></tr>
 <tr><td><a href="Functoria_misc.html#VALprefix">prefix</a> [<a href="Functoria_misc.html">Functoria_misc</a>]</td>
@@ -499,12 +501,6 @@ OPAM packages needed by the project.
 <tr><td><a href="Functoria.CUSTOM.html#VALprelude">prelude</a> [<a href="Functoria.CUSTOM.html">Functoria.CUSTOM</a>]</td>
 <td><div class="info">
 Prelude printed at the beginning of <code class="code">main.ml</code>.
-</div>
-</td></tr>
-<tr><td><a href="Functoria_key.html#VALproxy">proxy</a> [<a href="Functoria_key.html">Functoria_key</a>]</td>
-<td><div class="info">
-<code class="code">proxy ~doc ~setters name</code> creates a new flag that will call <code class="code">setters</code>
-    when enabled.
 </div>
 </td></tr>
 <tr><td><a href="Functoria_key.html#VALpure">pure</a> [<a href="Functoria_key.html">Functoria_key</a>]</td>
@@ -543,11 +539,6 @@ Define the current main file.
 </td></tr>
 <tr><td><a href="Functoria_misc.html#VALset_section">set_section</a> [<a href="Functoria_misc.html">Functoria_misc</a>]</td>
 <td></td></tr>
-<tr><td><a href="Functoria_key.html#VALsetters">setters</a> [<a href="Functoria_key.html">Functoria_key</a>]</td>
-<td><div class="info">
-<code class="code">setters k</code> returns the set of keys for which <code class="code">k</code> has a setter.
-</div>
-</td></tr>
 <tr><td><a href="Functoria_misc.html#VALshow_error">show_error</a> [<a href="Functoria_misc.html">Functoria_misc</a>]</td>
 <td></td></tr>
 <tr><td><a href="Functoria_key.Arg.html#VALsome">some</a> [<a href="Functoria_key.Arg.html">Functoria_key.Arg</a>]</td>
@@ -582,8 +573,8 @@ Similar to <a href="Functoria_misc.html#VALprefix"><code class="code"><span clas
 </td></tr>
 <tr><td><a href="Functoria_dsl.html#VALswitch">switch</a> [<a href="Functoria_dsl.html">Functoria_dsl</a>]</td>
 <td><div class="info">
-<code class="code">switch ~default l v</code> choose the implementation in <code class="code">l</code>
-    corresponding to the value <code class="code">v</code>.
+<code class="code">switch ~default cases v</code> choose the implementation amongst
+    <code class="code">cases</code> by matching the <code class="code">v</code>'s value.
 </div>
 </td></tr>
 <tr><td><a href="Functoria.Devices.html#VALsys_argv">sys_argv</a> [<a href="Functoria.Devices.html">Functoria.Devices</a>]</td>
@@ -597,17 +588,6 @@ Similar to <a href="Functoria_misc.html#VALprefix"><code class="code"><span clas
 <td><div class="info">
 <code class="code">term k</code> is the <code class="code"><span class="constructor">Cmdliner</span></code> term which, once evaluated, set the
       value of the runtime key.
-</div>
-</td></tr>
-<tr><td><a href="Functoria_key.html#VALterm">term</a> [<a href="Functoria_key.html">Functoria_key</a>]</td>
-<td><div class="info">
-<code class="code">term l</code> is a <code class="code"><span class="constructor">Cmdliner</span>.<span class="constructor">Term</span>.t</code> that, when evaluated, sets the value of the
-    the keys in <code class="code">l</code>.
-</div>
-</td></tr>
-<tr><td><a href="Functoria_key.html#VALterm_value">term_value</a> [<a href="Functoria_key.html">Functoria_key</a>]</td>
-<td><div class="info">
-<code class="code">term_value v</code> is <code class="code">term @@ deps v</code> and returns the content of <code class="code">v</code>.
 </div>
 </td></tr>
 <tr><td><a href="Functoria_dsl.html#VALtyp">typ</a> [<a href="Functoria_dsl.html">Functoria_dsl</a>]</td>

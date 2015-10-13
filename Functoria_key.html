@@ -20,10 +20,9 @@
 <link title="Functoria_key" rel="Chapter" href="Functoria_key.html">
 <link title="Functoria_dsl" rel="Chapter" href="Functoria_dsl.html">
 <link title="Functoria_runtime" rel="Chapter" href="Functoria_runtime.html">
-<link title="Functoria_info" rel="Chapter" href="Functoria_info.html"><link title="Keys" rel="Section" href="#1_Keys">
+<link title="Functoria_info" rel="Chapter" href="Functoria_info.html"><link title="Configuration Keys" rel="Section" href="#1_ConfigurationKeys">
 <link title="Stages" rel="Section" href="#1_Stages">
-<link title="Proxy" rel="Section" href="#1_Proxy">
-<link title="Parsed Keys" rel="Section" href="#1_ParsedKeys">
+<link title="Key Parsing" rel="Section" href="#1_KeyParsing">
 <link title="Code emission" rel="Section" href="#1_Codeemission">
 <title>Functoria : Functoria_key</title>
 </head>
@@ -45,14 +44,10 @@ Cross-stage command-line arguments.
 
 <pre><span id="TYPEvalue"><span class="keyword">type</span> <code class="type">+'a</code> value</span> </pre>
 <div class="info ">
-The type for configure and runtime values. Values can be parsed
-    from the command-line at configure or runtime, or can be provided
-    at configuration time. A value might have evaluation dependencies,
-    provided as a set of <a href="Functoria_key.html#TYPEkey">keys</a>: a value is always evaluated
-    after its dependencies.
-<p>
-
-    FIXME(samoht): example<br>
+The type for configure-time and run-time values. Values can be
+    parsed from the command-line at configure and/or runtime, or can
+    be provided as OCaml values in the application configuration file
+    (ie. <i>config.ml</i>).<br>
 </div>
 
 
@@ -60,90 +55,50 @@ The type for configure and runtime values. Values can be parsed
 <code class="code">pure x</code> is a value without any dependency.<br>
 </div>
 
-<pre><span id="VALapp"><span class="keyword">val</span> app</span> : <code class="type">('a -> 'b) <a href="Functoria_key.html#TYPEvalue">value</a> -><br>       'a <a href="Functoria_key.html#TYPEvalue">value</a> -> 'b <a href="Functoria_key.html#TYPEvalue">value</a></code></pre><div class="info ">
-<code class="code">app f x</code> is the value resulting from the application of <code class="code">f</code> to <code class="code">v</code>.
-    Its dependencies are the union of the dependencies.<br>
-</div>
-
 <pre><span id="VAL($)"><span class="keyword">val</span> ($)</span> : <code class="type">('a -> 'b) <a href="Functoria_key.html#TYPEvalue">value</a> -><br>       'a <a href="Functoria_key.html#TYPEvalue">value</a> -> 'b <a href="Functoria_key.html#TYPEvalue">value</a></code></pre><div class="info ">
-<code class="code">f $ v</code> is <code class="code">app f v</code>.<br>
+<code class="code">f $ v</code> is is the value resulting from the application of
+    <code class="code">f</code>'value to <code class="code">v</code>'s value. <code class="code">$</code> is the usual <i>app</i> operator for
+    <a href="http://dx.doi.org/10.1017/S0956796807006326">applicative
+    functor</a>.<br>
 </div>
 
 <pre><span id="VALmap"><span class="keyword">val</span> map</span> : <code class="type">('a -> 'b) -> 'a <a href="Functoria_key.html#TYPEvalue">value</a> -> 'b <a href="Functoria_key.html#TYPEvalue">value</a></code></pre><div class="info ">
 <code class="code">map f v</code> is <code class="code">pure f $ v</code>.<br>
 </div>
 
-<pre><span id="VALpipe"><span class="keyword">val</span> pipe</span> : <code class="type">'a <a href="Functoria_key.html#TYPEvalue">value</a> -> ('a -> 'b) -> 'b <a href="Functoria_key.html#TYPEvalue">value</a></code></pre><div class="info ">
-<code class="code">pipe v f</code> is <code class="code">map f v</code>.<br>
-</div>
-
 <pre><span id="VALif_"><span class="keyword">val</span> if_</span> : <code class="type">bool <a href="Functoria_key.html#TYPEvalue">value</a> -> 'a -> 'a -> 'a <a href="Functoria_key.html#TYPEvalue">value</a></code></pre><div class="info ">
-<code class="code">if_ v x y</code> is <code class="code">pipe v @@ <span class="keyword">fun</span> b <span class="keywordsign">-&gt;</span> <span class="keyword">if</span> b <span class="keyword">then</span> x <span class="keyword">else</span> y</code>.<br>
+<code class="code">if_ v x y</code> is <code class="code">map (<span class="keyword">fun</span> b <span class="keywordsign">-&gt;</span> <span class="keyword">if</span> b <span class="keyword">then</span> x <span class="keyword">else</span> y) v</code>.<br>
 </div>
 
 <pre><span id="VALdefault"><span class="keyword">val</span> default</span> : <code class="type">'a <a href="Functoria_key.html#TYPEvalue">value</a> -> 'a</code></pre><div class="info ">
 <code class="code">default v</code> returns the default value for <code class="code">v</code>.<br>
 </div>
 <br>
-<h1 id="1_Keys">Keys</h1><br>
+<h1 id="1_ConfigurationKeys">Configuration Keys</h1><br>
 
 <pre><span id="TYPEkey"><span class="keyword">type</span> <code class="type">'a</code> key</span> </pre>
 <div class="info ">
-The type for configuration keys. Keys are dynamic values that can
-    be used to:
+The type for configuration keys. Keys form a directed and acyclic
+    dynamic graph of dependent values that need to be evaluated in
+    order to obtain <code class="code">values</code>. Vertices of the key graph hold
+    <a href="Functoria_key.html#VALvalue">values</a>. Edges represent direct evaluation dependencies
+    between values.
 <p>
 
-    <ul>
-<li>Set <a href="Functoria_key.html#VALvalue">values</a> at configure and runtime by parsing
-       arguments on the command line.</li>
-<li>Select, at configuration time, between
-    <a href="Functoria_dsl.html#VALif_impl">implementations</a> of the same module
-    type. FIXME(samoht): only at configuration time?</li>
-</ul>
-
-<p>
-
-    Keys' contents are made persistent by emitting code in module
-    called <code class="code"><span class="constructor">Bootvar_gen</span></code>. FIXME(samoht): implementation details?<br>
+    Keys are used to retrieve the cross-stage values they are holding
+    (by indexing contents in the autogenerated <code class="code"><span class="constructor">Bootgen_var</span></code> module)
+    but also to parametrize the choice of
+    <a href="Functoria_dsl.html#VALif_impl">module implementation</a>.<br>
 </div>
 
+
+<pre><span id="VALcreate"><span class="keyword">val</span> create</span> : <code class="type">string -> 'a <a href="Functoria_key.Arg.html#TYPEt">Arg.t</a> -> 'a <a href="Functoria_key.html#TYPEkey">key</a></code></pre><div class="info ">
+<code class="code">create n a</code> is the key named <code class="code">n</code> whose contents is determined by
+    parsing the command-line argument <code class="code">a</code>.<br>
+</div>
 
 <pre><span id="VALvalue"><span class="keyword">val</span> value</span> : <code class="type">'a <a href="Functoria_key.html#TYPEkey">key</a> -> 'a <a href="Functoria_key.html#TYPEvalue">value</a></code></pre><div class="info ">
 <code class="code">value k</code> is the value parsed by <code class="code">k</code>.<br>
-</div>
-
-<pre><span id="TYPEstage"><span class="keyword">type</span> <code class="type"></code>stage</span> = <code class="type">[ `Both | `Configure | `Run ]</code> </pre>
-<div class="info ">
-The type for specifying at which stage a key is available.
-<p>
-
-    <ul>
-<li><code class="code"><span class="keywordsign">`</span><span class="constructor">Configure</span></code> means that the key's value is read on the
-       command-line at configuration-time and is available in the
-       <code class="code"><span class="constructor">Bootvar_gen</span></code> module at runtime.</li>
-<li><code class="code"><span class="keywordsign">`</span><span class="constructor">Run</span></code> means that the key's value is read on the command-line
-       at runtime.</li>
-<li><code class="code"><span class="keywordsign">`</span><span class="constructor">Both</span></code> means that the key's value is read on the command-line
-       both at configuration-time and runtime. If the keys is present
-       on the command-line at configuration-time it is available in
-       the <code class="code"><span class="constructor">Bootvar_gen</span></code> module at runtime.</li>
-</ul>
-<br>
-</div>
-
-
-<pre><span id="VALcreate"><span class="keyword">val</span> create</span> : <code class="type">?stage:<a href="Functoria_key.html#TYPEstage">stage</a> -><br>       doc:<a href="Functoria_key.Arg.html#TYPEinfo">Arg.info</a> -><br>       default:'a -><br>       string -> 'a <a href="Functoria_key.Arg.html#TYPEconverter">Arg.converter</a> -> 'a <a href="Functoria_key.html#TYPEkey">key</a></code></pre><div class="info ">
-<code class="code">create ~doc ~stage ~default name conv</code> creates a new
-    configuration key with docstring <code class="code">doc</code>, default value <code class="code">default</code>,
-    name <code class="code">name</code> and type descriptor <code class="code">desc</code>. Default <code class="code">stage</code> is
-    <code class="code"><span class="keywordsign">`</span><span class="constructor">Both</span></code>.  It is an error to use more than one key with the same
-    <code class="code">name</code>.<br>
-</div>
-
-<pre><span id="VALflag"><span class="keyword">val</span> flag</span> : <code class="type">?stage:<a href="Functoria_key.html#TYPEstage">stage</a> -><br>       doc:<a href="Functoria_key.Arg.html#TYPEinfo">Arg.info</a> -> string -> bool <a href="Functoria_key.html#TYPEkey">key</a></code></pre><div class="info ">
-<code class="code">flag ~stage ~doc name</code> creates a new flag. A flag is a key that doesn't
-    take argument. The boolean value represents if the flag was passed
-    on the command line.<br>
 </div>
 
 <pre><span id="TYPEt"><span class="keyword">type</span> <code class="type"></code>t</span> </pre>
@@ -151,6 +106,10 @@ The type for specifying at which stage a key is available.
 The type for untyped keys.<br>
 </div>
 
+
+<pre><span id="VALcompare"><span class="keyword">val</span> compare</span> : <code class="type"><a href="Functoria_key.html#TYPEt">t</a> -> <a href="Functoria_key.html#TYPEt">t</a> -> int</code></pre><div class="info ">
+<code class="code">compare</code> compares untyped keys.<br>
+</div>
 
 <pre><span id="VALv"><span class="keyword">val</span> v</span> : <code class="type">'a <a href="Functoria_key.html#TYPEkey">key</a> -> <a href="Functoria_key.html#TYPEt">t</a></code></pre><div class="info ">
 <code class="code">v key</code> is <code class="code">key</code> by with all type information erased. This allows
@@ -161,15 +120,11 @@ The type for untyped keys.<br>
 <code class="code">pp fmt k</code> prints the name of <code class="code">k</code>.<br>
 </div>
 
-<pre><span class="keyword">module</span> <a href="Functoria_key.Set.html">Set</a>: <code class="type">Set.S</code><code class="type">  with type elt = t</code></pre><div class="info">
-Sets of keys.
-</div>
-
-<pre><span id="VALwith_deps"><span class="keyword">val</span> with_deps</span> : <code class="type">keys:Set.t -> 'a <a href="Functoria_key.html#TYPEvalue">value</a> -> 'a <a href="Functoria_key.html#TYPEvalue">value</a></code></pre><div class="info ">
+<pre><span id="VALwith_deps"><span class="keyword">val</span> with_deps</span> : <code class="type">keys:<a href="Functoria_key.html#TYPEt">t</a> list -> 'a <a href="Functoria_key.html#TYPEvalue">value</a> -> 'a <a href="Functoria_key.html#TYPEvalue">value</a></code></pre><div class="info ">
 <code class="code">with_deps deps v</code> is the value <code class="code">v</code> with added dependencies.<br>
 </div>
 
-<pre><span id="VALdeps"><span class="keyword">val</span> deps</span> : <code class="type">'a <a href="Functoria_key.html#TYPEvalue">value</a> -> Set.t</code></pre><div class="info ">
+<pre><span id="VALdeps"><span class="keyword">val</span> deps</span> : <code class="type">'a <a href="Functoria_key.html#TYPEvalue">value</a> -> <a href="Functoria_key.html#TYPEt">t</a> list</code></pre><div class="info ">
 <code class="code">deps v</code> is the dependencies of <code class="code">v</code>.<br>
 </div>
 
@@ -187,48 +142,44 @@ Sets of keys.
 <code class="code">is_configure k</code> is true if <code class="code">k</code>'s stage is <code class="code"><span class="keywordsign">`</span><span class="constructor">Configure</span></code> or <code class="code"><span class="keywordsign">`</span><span class="constructor">Both</span></code>.<br>
 </div>
 
-<pre><span id="VALfilter_stage"><span class="keyword">val</span> filter_stage</span> : <code class="type">stage:<a href="Functoria_key.html#TYPEstage">stage</a> -> Set.t -> Set.t</code></pre><div class="info ">
-<code class="code">filter_stage ~stage set</code> filters <code class="code">set</code> with the appropriate keys.<br>
+<pre><span id="VALfilter_stage"><span class="keyword">val</span> filter_stage</span> : <code class="type"><a href="Functoria_key.Arg.html#TYPEstage">Arg.stage</a> -> <a href="Functoria_key.html#TYPEt">t</a> list -> <a href="Functoria_key.html#TYPEt">t</a> list</code></pre><div class="info ">
+<code class="code">filter_stage s ks</code> is <code class="code">ks</code> but with only keys available at stage
+    <code class="code">s</code>.<br>
+</div>
+
+<pre><span class="keyword">module</span> <a href="Functoria_key.Alias.html">Alias</a>: <code class="code"><span class="keyword">sig</span></code> <a href="Functoria_key.Alias.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info">
+Alias
+</div>
+
+<pre><span id="VALalias"><span class="keyword">val</span> alias</span> : <code class="type">string -> 'a <a href="Functoria_key.Alias.html#TYPEt">Alias.t</a> -> 'a <a href="Functoria_key.html#TYPEkey">key</a></code></pre><div class="info ">
+Similar to <a href="Functoria_key.html#VALcreate"><code class="code"><span class="constructor">Functoria_key</span>.create</code></a> but for command-line alias.<br>
+</div>
+
+<pre><span id="VALaliases"><span class="keyword">val</span> aliases</span> : <code class="type"><a href="Functoria_key.html#TYPEt">t</a> -> <a href="Functoria_key.html#TYPEt">t</a> list</code></pre><div class="info ">
+<code class="code">aliases t</code> is the list of <code class="code">t</code>'s aliases.<br>
 </div>
 <br>
-<h1 id="1_Proxy">Proxy</h1><br>
-
-<pre><span class="keyword">module</span> <a href="Functoria_key.Setters.html">Setters</a>: <code class="code"><span class="keyword">sig</span></code> <a href="Functoria_key.Setters.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info">
-Setters allow to set other keys.
-</div>
-
-<pre><span id="VALproxy"><span class="keyword">val</span> proxy</span> : <code class="type">doc:<a href="Functoria_key.Arg.html#TYPEinfo">Arg.info</a> -><br>       setters:bool <a href="Functoria_key.Setters.html#TYPEt">Setters.t</a> -> string -> bool <a href="Functoria_key.html#TYPEkey">key</a></code></pre><div class="info ">
-<code class="code">proxy ~doc ~setters name</code> creates a new flag that will call <code class="code">setters</code>
-    when enabled.
-<p>
-
-    Proxies are only available during configuration.<br>
-</div>
-
-<pre><span id="VALsetters"><span class="keyword">val</span> setters</span> : <code class="type"><a href="Functoria_key.html#TYPEt">t</a> -> Set.t</code></pre><div class="info ">
-<code class="code">setters k</code> returns the set of keys for which <code class="code">k</code> has a setter.<br>
-</div>
-<br>
-<h1 id="1_ParsedKeys">Parsed Keys</h1><br>
+<h1 id="1_KeyParsing">Key Parsing</h1><br>
 
 <pre><span id="TYPEparsed"><span class="keyword">type</span> <code class="type"></code>parsed</span> </pre>
 <div class="info ">
-The type for parsed command-line arguments.<br>
+The type for parsed key graphs.<br>
 </div>
 
 
-<pre><span id="VALterm"><span class="keyword">val</span> term</span> : <code class="type">?stage:<a href="Functoria_key.html#TYPEstage">stage</a> -><br>       Set.t -> <a href="Functoria_key.html#TYPEparsed">parsed</a> Cmdliner.Term.t</code></pre><div class="info ">
-<code class="code">term l</code> is a <code class="code"><span class="constructor">Cmdliner</span>.<span class="constructor">Term</span>.t</code> that, when evaluated, sets the value of the
-    the keys in <code class="code">l</code>.<br>
+<pre><span id="VALparse"><span class="keyword">val</span> parse</span> : <code class="type">?stage:<a href="Functoria_key.Arg.html#TYPEstage">Arg.stage</a> -><br>       <a href="Functoria_key.html#TYPEt">t</a> list -> <a href="Functoria_key.html#TYPEparsed">parsed</a> Cmdliner.Term.t</code></pre><div class="info ">
+<code class="code">parse l</code> is a <code class="code"><span class="constructor">Cmdliner</span>.<span class="constructor">Term</span>.t</code> that, when evaluated, sets the
+    value of the the keys in <code class="code">l</code>.<br>
 </div>
 
-<pre><span id="VALterm_value"><span class="keyword">val</span> term_value</span> : <code class="type">?stage:<a href="Functoria_key.html#TYPEstage">stage</a> -> 'a <a href="Functoria_key.html#TYPEvalue">value</a> -> 'a Cmdliner.Term.t</code></pre><div class="info ">
-<code class="code">term_value v</code> is <code class="code">term @@ deps v</code> and returns the content of <code class="code">v</code>.<br>
+<pre><span id="VALparse_value"><span class="keyword">val</span> parse_value</span> : <code class="type">?stage:<a href="Functoria_key.Arg.html#TYPEstage">Arg.stage</a> -><br>       'a <a href="Functoria_key.html#TYPEvalue">value</a> -> 'a Cmdliner.Term.t</code></pre><div class="info ">
+<code class="code">parse_value v</code> is <code class="code">parse @@ deps v</code> and returns the content of
+    <code class="code">v</code>.<br>
 </div>
 
-<pre><span id="VALis_resolved"><span class="keyword">val</span> is_resolved</span> : <code class="type"><a href="Functoria_key.html#TYPEparsed">parsed</a> -> 'a <a href="Functoria_key.html#TYPEvalue">value</a> -> bool</code></pre><div class="info ">
-<code class="code">is_resolved p v</code> returns <code class="code"><span class="keyword">true</span></code> iff all the dependencies of <code class="code">v</code>
-    have been resolved.<br>
+<pre><span id="VALis_parsed"><span class="keyword">val</span> is_parsed</span> : <code class="type"><a href="Functoria_key.html#TYPEparsed">parsed</a> -> 'a <a href="Functoria_key.html#TYPEvalue">value</a> -> bool</code></pre><div class="info ">
+<code class="code">is_parsed p v</code> returns <code class="code"><span class="keyword">true</span></code> iff all the dependencies of <code class="code">v</code>
+    have been parsed.<br>
 </div>
 
 <pre><span id="VALpeek"><span class="keyword">val</span> peek</span> : <code class="type"><a href="Functoria_key.html#TYPEparsed">parsed</a> -> 'a <a href="Functoria_key.html#TYPEvalue">value</a> -> 'a option</code></pre><div class="info ">
@@ -244,8 +195,9 @@ The type for parsed command-line arguments.<br>
 <code class="code">get p k</code> resolves <code class="code">k</code>, using default values if necessary.<br>
 </div>
 
-<pre><span id="VALpp_parsed"><span class="keyword">val</span> pp_parsed</span> : <code class="type"><a href="Functoria_key.html#TYPEparsed">parsed</a> -> Set.t Fmt.t</code></pre><div class="info ">
-<code class="code">pp_parsed map fmt set</code> prints the keys in <code class="code">set</code> with the values in <code class="code">map</code>.<br>
+<pre><span id="VALpp_parsed"><span class="keyword">val</span> pp_parsed</span> : <code class="type"><a href="Functoria_key.html#TYPEparsed">parsed</a> -> <a href="Functoria_key.html#TYPEt">t</a> list Fmt.t</code></pre><div class="info ">
+<code class="code">pp_parsed p fmt set</code> prints the keys in <code class="code">set</code> using the parsed
+    values <code class="code">p</code>.<br>
 </div>
 <br>
 <h1 id="1_Codeemission">Code emission</h1><br>

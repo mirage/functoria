@@ -56,7 +56,7 @@ Ocamlfind libraries needed by the project.<br>
 OPAM packages needed by the project.<br>
 </div>
 
-<pre><span id="VALkeys"><span class="keyword">val</span> keys</span> : <code class="type"><a href="Functoria_dsl.Info.html#TYPEt">t</a> -> Functoria_dsl.Key.Set.t</code></pre><div class="info ">
+<pre><span id="VALkeys"><span class="keyword">val</span> keys</span> : <code class="type"><a href="Functoria_dsl.Info.html#TYPEt">t</a> -> Functoria_dsl.Key.t list</code></pre><div class="info ">
 Keys declared by the project.<br>
 </div>
 
@@ -65,4 +65,7 @@ Keys declared by the project.<br>
       being parsed.<br>
 </div>
 
-<pre><span id="VALcreate"><span class="keyword">val</span> create</span> : <code class="type">?keys:Functoria_dsl.Key.Set.t -><br>       ?libraries:string list -><br>       ?packages:string list -><br>       parsed:Functoria_dsl.Key.parsed -><br>       name:string -> root:string -> <a href="Functoria_dsl.Info.html#TYPEt">t</a></code></pre></body></html>
+<pre><span id="VALcreate"><span class="keyword">val</span> create</span> : <code class="type">?packages:string list -><br>       ?libraries:string list -><br>       ?keys:Functoria_dsl.Key.t list -><br>       parsed:Functoria_dsl.Key.parsed -><br>       name:string -> root:string -> <a href="Functoria_dsl.Info.html#TYPEt">t</a></code></pre><div class="info ">
+FIXME(samoht): not sure why we have both <code class="code">keys</code> and <code class="code">parsed</code>.<br>
+</div>
+</body></html>

@@ -148,9 +148,9 @@ Key creation and manipulation.
 </div>
 
 <pre><span id="VALswitch"><span class="keyword">val</span> switch</span> : <code class="type">default:'a <a href="Functoria_dsl.html#TYPEimpl">impl</a> -><br>       ('b * 'a <a href="Functoria_dsl.html#TYPEimpl">impl</a>) list -><br>       'b Key.value -> 'a <a href="Functoria_dsl.html#TYPEimpl">impl</a></code></pre><div class="info ">
-<code class="code">switch ~default l v</code> choose the implementation in <code class="code">l</code>
-    corresponding to the value <code class="code">v</code>. The <code class="code">default</code> implementation is
-    chosen if no value match.<br>
+<code class="code">switch ~default cases v</code> choose the implementation amongst
+    <code class="code">cases</code> by matching the <code class="code">v</code>'s value. <code class="code">default</code> is chosen if no
+    value match.<br>
 </div>
 <br>
 <h1 id="app">Application Builder</h1><br>
