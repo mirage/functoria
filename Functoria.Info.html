@@ -1,0 +1,68 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="next" href="Functoria.ImplTbl.html">
+<link rel="Up" href="Functoria.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of class methods" rel=Appendix href="index_methods.html">
+<link title="Index of classes" rel=Appendix href="index_classes.html">
+<link title="Index of class types" rel=Appendix href="index_class_types.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="Functoria" rel="Chapter" href="Functoria.html">
+<link title="Functoria_key" rel="Chapter" href="Functoria_key.html">
+<link title="Functoria_app" rel="Chapter" href="Functoria_app.html">
+<link title="Functoria_runtime" rel="Chapter" href="Functoria_runtime.html">
+<link title="Functoria_info" rel="Chapter" href="Functoria_info.html"><title>Functoria : Functoria.Info</title>
+</head>
+<body>
+<div class="navbar">&nbsp;<a class="up" href="Functoria.html" title="Functoria">Up</a>
+&nbsp;<a class="post" href="Functoria.ImplTbl.html" title="Functoria.ImplTbl">Next</a>
+</div>
+<h1>Module <a href="type_Functoria.Info.html">Functoria.Info</a></h1>
+
+<pre><span class="keyword">module</span> Info: <code class="code"><span class="keyword">sig</span></code> <a href="Functoria.Info.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info module top">
+Information about the final application.<br>
+</div>
+<hr width="100%">
+
+<pre><span id="TYPEt"><span class="keyword">type</span> <code class="type"></code>t</span> </pre>
+<div class="info ">
+The type for information about the final application.<br>
+</div>
+
+
+<pre><span id="VALname"><span class="keyword">val</span> name</span> : <code class="type"><a href="Functoria.Info.html#TYPEt">t</a> -> string</code></pre><div class="info ">
+<code class="code">name t</code> is the name of the application.<br>
+</div>
+
+<pre><span id="VALroot"><span class="keyword">val</span> root</span> : <code class="type"><a href="Functoria.Info.html#TYPEt">t</a> -> string</code></pre><div class="info ">
+Directory in which the configuration is done.<br>
+</div>
+
+<pre><span id="VALlibraries"><span class="keyword">val</span> libraries</span> : <code class="type"><a href="Functoria.Info.html#TYPEt">t</a> -> string list</code></pre><div class="info ">
+Ocamlfind libraries needed by the project.<br>
+</div>
+
+<pre><span id="VALpackages"><span class="keyword">val</span> packages</span> : <code class="type"><a href="Functoria.Info.html#TYPEt">t</a> -> string list</code></pre><div class="info ">
+OPAM packages needed by the project.<br>
+</div>
+
+<pre><span id="VALkeys"><span class="keyword">val</span> keys</span> : <code class="type"><a href="Functoria.Info.html#TYPEt">t</a> -> <a href="Functoria.html#TYPEkey">Functoria.key</a> list</code></pre><div class="info ">
+Keys declared by the project.<br>
+</div>
+
+<pre><span id="VALparsed"><span class="keyword">val</span> parsed</span> : <code class="type"><a href="Functoria.Info.html#TYPEt">t</a> -> <a href="Functoria.html#TYPEcontext">Functoria.context</a></code></pre><div class="info ">
+<code class="code">parsed t</code> is a value representing the command-line argument
+      being parsed.<br>
+</div>
+
+<pre><span id="VALcreate"><span class="keyword">val</span> create</span> : <code class="type">?packages:string list -><br>       ?libraries:string list -><br>       ?keys:<a href="Functoria.html#TYPEkey">Functoria.key</a> list -><br>       context:<a href="Functoria.html#TYPEcontext">Functoria.context</a> -> name:string -> root:string -> <a href="Functoria.Info.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">create context n r</code> contains information about the application
+      being built.<br>
+</div>
+</body></html>

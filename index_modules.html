@@ -4,7 +4,6 @@
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
 <link rel="Start" href="index.html">
 <link title="Index of types" rel=Appendix href="index_types.html">
-<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
 <link title="Index of values" rel=Appendix href="index_values.html">
 <link title="Index of class methods" rel=Appendix href="index_methods.html">
 <link title="Index of classes" rel=Appendix href="index_classes.html">
@@ -12,9 +11,8 @@
 <link title="Index of modules" rel=Appendix href="index_modules.html">
 <link title="Index of module types" rel=Appendix href="index_module_types.html">
 <link title="Functoria" rel="Chapter" href="Functoria.html">
-<link title="Functoria_misc" rel="Chapter" href="Functoria_misc.html">
 <link title="Functoria_key" rel="Chapter" href="Functoria_key.html">
-<link title="Functoria_dsl" rel="Chapter" href="Functoria_dsl.html">
+<link title="Functoria_app" rel="Chapter" href="Functoria_app.html">
 <link title="Functoria_runtime" rel="Chapter" href="Functoria_runtime.html">
 <link title="Functoria_info" rel="Chapter" href="Functoria_info.html"><title>Functoria : Index of modules</title>
 </head>
@@ -35,33 +33,20 @@ Cross-stage command-line arguments.
 </div>
 </td></tr>
 <tr><td align="left"><br>C</td></tr>
-<tr><td><a href="Functoria_misc.Codegen.html">Codegen</a> [<a href="Functoria_misc.html">Functoria_misc</a>]</td>
-<td></td></tr>
 <tr><td><a href="Functoria_runtime.Conv.html">Conv</a> [<a href="Functoria_runtime.html">Functoria_runtime</a>]</td>
 <td><div class="info">
 <code class="code"><span class="constructor">Converter</span></code> defines <code class="code"><span class="constructor">Cmdliner</span></code>-compatible argument converters.
 </div>
 </td></tr>
-<tr><td align="left"><br>D</td></tr>
-<tr><td><a href="Functoria.Devices.html">Devices</a> [<a href="Functoria.html">Functoria</a>]</td>
-<td><div class="info">
-Various generic devices.
-</div>
-</td></tr>
-<tr><td><a href="Functoria.Dsl.html">Dsl</a> [<a href="Functoria.html">Functoria</a>]</td>
-<td><div class="info">
-Core functoria DSL
-</div>
-</td></tr>
 <tr><td align="left"><br>F</td></tr>
 <tr><td><a href="Functoria.html">Functoria</a> </td>
 <td><div class="info">
-Configuration library
+The Functoria DSL.
 </div>
 </td></tr>
-<tr><td><a href="Functoria_dsl.html">Functoria_dsl</a> </td>
+<tr><td><a href="Functoria_app.html">Functoria_app</a> </td>
 <td><div class="info">
-The Functoria DSL.
+Application builder.
 </div>
 </td></tr>
 <tr><td><a href="Functoria_info.html">Functoria_info</a> </td>
@@ -74,23 +59,18 @@ Configuration info
 Configuration and runtime command-line arguments.
 </div>
 </td></tr>
-<tr><td><a href="Functoria_misc.html">Functoria_misc</a> </td>
-<td><div class="info">
-Utility module.
-</div>
-</td></tr>
 <tr><td><a href="Functoria_runtime.html">Functoria_runtime</a> </td>
 <td><div class="info">
 Functoria runtime.
 </div>
 </td></tr>
 <tr><td align="left"><br>I</td></tr>
-<tr><td><a href="Functoria_dsl.ImplTbl.html">ImplTbl</a> [<a href="Functoria_dsl.html">Functoria_dsl</a>]</td>
+<tr><td><a href="Functoria.ImplTbl.html">ImplTbl</a> [<a href="Functoria.html">Functoria</a>]</td>
 <td><div class="info">
 Hashtbl of implementations.
 </div>
 </td></tr>
-<tr><td><a href="Functoria_dsl.Info.html">Info</a> [<a href="Functoria_dsl.html">Functoria_dsl</a>]</td>
+<tr><td><a href="Functoria.Info.html">Info</a> [<a href="Functoria.html">Functoria</a>]</td>
 <td><div class="info">
 Information about the final application.
 </div>
@@ -101,47 +81,18 @@ Information about the final application.
 <code class="code"><span class="constructor">Key</span></code> allows keys to be set at runtime.
 </div>
 </td></tr>
-<tr><td><a href="Functoria_dsl.Key.html">Key</a> [<a href="Functoria_dsl.html">Functoria_dsl</a>]</td>
-<td><div class="info">
-Key creation and manipulation.
-</div>
-</td></tr>
 <tr><td align="left"><br>M</td></tr>
-<tr><td><a href="Functoria.Make.html">Make</a> [<a href="Functoria.html">Functoria</a>]</td>
+<tr><td><a href="Functoria_app.Make.html">Make</a> [<a href="Functoria_app.html">Functoria_app</a>]</td>
 <td><div class="info">
-Create a configuration engine for a custom DSL.
+<code class="code"><span class="constructor">Make</span></code> is an helper to generate new a application builder with the
+    custom constructs defined by <a href="Functoria_app.S.html"><code class="code"><span class="constructor">Functoria_app</span>.<span class="constructor">S</span></code></a>.
 </div>
 </td></tr>
-<tr><td align="left"><br>N</td></tr>
-<tr><td><a href="Functoria_misc.Name.html">Name</a> [<a href="Functoria_misc.html">Functoria_misc</a>]</td>
-<td><div class="info">
-Generation of fresh names
-</div>
-</td></tr>
-<tr><td align="left"><br>O</td></tr>
-<tr><td><a href="Functoria_misc.OCamlfind.html">OCamlfind</a> [<a href="Functoria_misc.html">Functoria_misc</a>]</td>
-<td></td></tr>
 <tr><td align="left"><br>S</td></tr>
-<tr><td><a href="Functoria_misc.Set_Make.html">Set_Make</a> [<a href="Functoria_misc.html">Functoria_misc</a>]</td>
-<td></td></tr>
 <tr><td><a href="Functoria_info.StringMap.html">StringMap</a> [<a href="Functoria_info.html">Functoria_info</a>]</td>
 <td></td></tr>
 <tr><td><a href="Functoria_info.StringSet.html">StringSet</a> [<a href="Functoria_info.html">Functoria_info</a>]</td>
 <td></td></tr>
-<tr><td><a href="Functoria_misc.StringSet.html">StringSet</a> [<a href="Functoria_misc.html">Functoria_misc</a>]</td>
-<td></td></tr>
-<tr><td align="left"><br>T</td></tr>
-<tr><td><a href="Functoria_misc.Terminfo.html">Terminfo</a> [<a href="Functoria_misc.html">Functoria_misc</a>]</td>
-<td><div class="info">
-TTY feature detection
-</div>
-</td></tr>
-<tr><td align="left"><br>U</td></tr>
-<tr><td><a href="Functoria_misc.Univ.html">Univ</a> [<a href="Functoria_misc.html">Functoria_misc</a>]</td>
-<td><div class="info">
-Universal map
-</div>
-</td></tr>
 </table>
 </body>
 </html>

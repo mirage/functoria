@@ -4,9 +4,8 @@
 <link rel="stylesheet" href="style.css" type="text/css">
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
 <link rel="Start" href="index.html">
-<link rel="Up" href="Functoria_dsl.html">
+<link rel="Up" href="Functoria.html">
 <link title="Index of types" rel=Appendix href="index_types.html">
-<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
 <link title="Index of values" rel=Appendix href="index_values.html">
 <link title="Index of class methods" rel=Appendix href="index_methods.html">
 <link title="Index of classes" rel=Appendix href="index_classes.html">
@@ -14,18 +13,17 @@
 <link title="Index of modules" rel=Appendix href="index_modules.html">
 <link title="Index of module types" rel=Appendix href="index_module_types.html">
 <link title="Functoria" rel="Chapter" href="Functoria.html">
-<link title="Functoria_misc" rel="Chapter" href="Functoria_misc.html">
 <link title="Functoria_key" rel="Chapter" href="Functoria_key.html">
-<link title="Functoria_dsl" rel="Chapter" href="Functoria_dsl.html">
+<link title="Functoria_app" rel="Chapter" href="Functoria_app.html">
 <link title="Functoria_runtime" rel="Chapter" href="Functoria_runtime.html">
-<link title="Functoria_info" rel="Chapter" href="Functoria_info.html"><title>Functoria : Functoria_dsl.configurable</title>
+<link title="Functoria_info" rel="Chapter" href="Functoria_info.html"><title>Functoria : Functoria.configurable</title>
 </head>
 <body>
-<div class="navbar">&nbsp;<a class="up" href="Functoria_dsl.html" title="Functoria_dsl">Up</a>
+<div class="navbar">&nbsp;<a class="up" href="Functoria.html" title="Functoria">Up</a>
 &nbsp;</div>
-<h1>Class type <a href="type_Functoria_dsl.configurable.html">Functoria_dsl.configurable</a></h1>
+<h1>Class type <a href="type_Functoria.configurable.html">Functoria.configurable</a></h1>
 
-<pre><span id="TYPEconfigurable"><span class="keyword">class type</span> <code class="type">['ty]</code> configurable</span> = <code class="code"><span class="keyword">object</span></code> <a href="Functoria_dsl.configurable-c.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info classtype top">
+<pre><span id="TYPEconfigurable"><span class="keyword">class type</span> <code class="type">['ty]</code> configurable</span> = <code class="code"><span class="keyword">object</span></code> <a href="Functoria.configurable-c.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info classtype top">
 Signature for configurable module implementations. A
     <code class="code">configurable</code> is a module implementation which contains a runtime
     state which can be set either at configuration time (by the
@@ -34,7 +32,7 @@ Signature for configurable module implementations. A
 </div>
 <hr width="100%">
 
-<pre><span id="METHODty"><span class="keyword">method</span> ty</span> : <code class="type">'ty <a href="Functoria_dsl.html#TYPEtyp">typ</a></code></pre><div class="info ">
+<pre><span id="METHODty"><span class="keyword">method</span> ty</span> : <code class="type">'ty <a href="Functoria.html#TYPEtyp">typ</a></code></pre><div class="info ">
 <code class="code">ty</code> is the module type of the configurable.<br>
 </div>
 
@@ -48,42 +46,42 @@ Signature for configurable module implementations. A
       configurable.<br>
 </div>
 
-<pre><span id="METHODpackages"><span class="keyword">method</span> packages</span> : <code class="type">string list Key.value</code></pre><div class="info ">
+<pre><span id="METHODpackages"><span class="keyword">method</span> packages</span> : <code class="type">string list <a href="Functoria.html#TYPEvalue">value</a></code></pre><div class="info ">
 <code class="code">packages</code> is the list of OPAM packages which needs to be
       installed before compiling the configurable.<br>
 </div>
 
-<pre><span id="METHODlibraries"><span class="keyword">method</span> libraries</span> : <code class="type">string list Key.value</code></pre><div class="info ">
+<pre><span id="METHODlibraries"><span class="keyword">method</span> libraries</span> : <code class="type">string list <a href="Functoria.html#TYPEvalue">value</a></code></pre><div class="info ">
 <code class="code">libaries</code> is the list of OCamlfind libraries to include and
       link with the configurable.<br>
 </div>
 
-<pre><span id="METHODconnect"><span class="keyword">method</span> connect</span> : <code class="type"><a href="Functoria_dsl.Info.html#TYPEt">Info.t</a> -> string -> string list -> string</code></pre><div class="info ">
+<pre><span id="METHODconnect"><span class="keyword">method</span> connect</span> : <code class="type"><a href="Functoria.Info.html#TYPEt">Info.t</a> -> string -> string list -> string</code></pre><div class="info ">
 <code class="code">connect info <span class="keyword">mod</span> args</code> is the code to execute in order to
       initialize the state associated with the module <code class="code"><span class="keyword">mod</span></code> (usually
       calling <code class="code"><span class="keyword">mod</span>.connect</code>) with the arguments <code class="code">args</code>, in the context
       of the project information <code class="code">info</code>.<br>
 </div>
 
-<pre><span id="METHODconfigure"><span class="keyword">method</span> configure</span> : <code class="type"><a href="Functoria_dsl.Info.html#TYPEt">Info.t</a> -> (unit, string) Rresult.result</code></pre><div class="info ">
+<pre><span id="METHODconfigure"><span class="keyword">method</span> configure</span> : <code class="type"><a href="Functoria.Info.html#TYPEt">Info.t</a> -> (unit, string) Rresult.result</code></pre><div class="info ">
 <code class="code">configure info</code> is the code to execute in order to configure
       the device. This might involve generating more OCaml code,
       running bash scripts, etc.<br>
 </div>
 
-<pre><span id="METHODclean"><span class="keyword">method</span> clean</span> : <code class="type"><a href="Functoria_dsl.Info.html#TYPEt">Info.t</a> -> (unit, string) Rresult.result</code></pre><div class="info ">
+<pre><span id="METHODclean"><span class="keyword">method</span> clean</span> : <code class="type"><a href="Functoria.Info.html#TYPEt">Info.t</a> -> (unit, string) Rresult.result</code></pre><div class="info ">
 <code class="code">clean info</code> is the code to clean-up what have beend generated
-      by <a href="Functoria_dsl.configurable-c.html#METHODconfigure"><code class="code"><span class="constructor">Functoria_dsl</span>.configurable.configure</code></a>.<br>
+      by <a href="Functoria.configurable-c.html#METHODconfigure"><code class="code"><span class="constructor">Functoria</span>.configurable.configure</code></a>.<br>
 </div>
 
-<pre><span id="METHODkeys"><span class="keyword">method</span> keys</span> : <code class="type">Key.t list</code></pre><div class="info ">
+<pre><span id="METHODkeys"><span class="keyword">method</span> keys</span> : <code class="type"><a href="Functoria.html#TYPEkey">key</a> list</code></pre><div class="info ">
 <code class="code">keys</code> is the list of command-line keys to set-up the
       configurable.<br>
 </div>
 
-<pre><span id="METHODdependencies"><span class="keyword">method</span> dependencies</span> : <code class="type"><a href="Functoria_dsl.html#TYPEabstract_impl">abstract_impl</a> list</code></pre><div class="info ">
-<code class="code">dependencies</code> is the list of <a href="Functoria_dsl.html#TYPEabstract_impl"> abstract
+<pre><span id="METHODdependencies"><span class="keyword">method</span> dependencies</span> : <code class="type"><a href="Functoria.html#TYPEabstract_impl">abstract_impl</a> list</code></pre><div class="info ">
+<code class="code">dependencies</code> is the list of <a href="Functoria.html#TYPEabstract_impl"> abstract
       implementations</a> that must be initalized before calling
-      <a href="Functoria_dsl.configurable-c.html#METHODconnect"><code class="code"><span class="constructor">Functoria_dsl</span>.configurable.connect</code></a>.<br>
+      <a href="Functoria.configurable-c.html#METHODconnect"><code class="code"><span class="constructor">Functoria</span>.configurable.connect</code></a>.<br>
 </div>
 </body></html>

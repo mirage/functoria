@@ -4,7 +4,6 @@
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
 <link rel="Start" href="index.html">
 <link title="Index of types" rel=Appendix href="index_types.html">
-<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
 <link title="Index of values" rel=Appendix href="index_values.html">
 <link title="Index of class methods" rel=Appendix href="index_methods.html">
 <link title="Index of classes" rel=Appendix href="index_classes.html">
@@ -12,9 +11,8 @@
 <link title="Index of modules" rel=Appendix href="index_modules.html">
 <link title="Index of module types" rel=Appendix href="index_module_types.html">
 <link title="Functoria" rel="Chapter" href="Functoria.html">
-<link title="Functoria_misc" rel="Chapter" href="Functoria_misc.html">
 <link title="Functoria_key" rel="Chapter" href="Functoria_key.html">
-<link title="Functoria_dsl" rel="Chapter" href="Functoria_dsl.html">
+<link title="Functoria_app" rel="Chapter" href="Functoria_app.html">
 <link title="Functoria_runtime" rel="Chapter" href="Functoria_runtime.html">
 <link title="Functoria_info" rel="Chapter" href="Functoria_info.html"><title>Functoria : Index of types</title>
 </head>
@@ -24,20 +22,31 @@
 <h1>Index of types</h1>
 <table>
 <tr><td align="left"><br>A</td></tr>
-<tr><td><a href="Functoria_dsl.html#TYPEabstract_impl">abstract_impl</a> [<a href="Functoria_dsl.html">Functoria_dsl</a>]</td>
+<tr><td><a href="Functoria.html#TYPEabstract_impl">abstract_impl</a> [<a href="Functoria.html">Functoria</a>]</td>
 <td><div class="info">
 The type for abstract implementations.
 </div>
 </td></tr>
-<tr><td><a href="Functoria.Devices.html#TYPEargv">argv</a> [<a href="Functoria.Devices.html">Functoria.Devices</a>]</td>
+<tr><td><a href="Functoria_app.html#TYPEargv">argv</a> [<a href="Functoria_app.html">Functoria_app</a>]</td>
 <td><div class="info">
-The type for command-line arguments, similar to the usual <code class="code">argv</code>.
+The type for command-line arguments, similar to the usual
+    <code class="code"><span class="constructor">Sys</span>.argv</code>.
 </div>
 </td></tr>
 <tr><td align="left"><br>C</td></tr>
 <tr><td><a href="Functoria_key.Arg.html#TYPEcode">code</a> [<a href="Functoria_key.Arg.html">Functoria_key.Arg</a>]</td>
 <td><div class="info">
 The type for <i>raw</i> OCaml code.
+</div>
+</td></tr>
+<tr><td><a href="Functoria_key.html#TYPEcontext">context</a> [<a href="Functoria_key.html">Functoria_key</a>]</td>
+<td><div class="info">
+The type for values holding parsing context.
+</div>
+</td></tr>
+<tr><td><a href="Functoria.html#TYPEcontext">context</a> [<a href="Functoria.html">Functoria</a>]</td>
+<td><div class="info">
+The type for keys' parsing context.
 </div>
 </td></tr>
 <tr><td><a href="Functoria_key.Arg.html#TYPEconverter">converter</a> [<a href="Functoria_key.Arg.html">Functoria_key.Arg</a>]</td>
@@ -52,7 +61,7 @@ The type for OCaml code emmiter.
 </div>
 </td></tr>
 <tr><td align="left"><br>I</td></tr>
-<tr><td><a href="Functoria_dsl.html#TYPEimpl">impl</a> [<a href="Functoria_dsl.html">Functoria_dsl</a>]</td>
+<tr><td><a href="Functoria.html#TYPEimpl">impl</a> [<a href="Functoria.html">Functoria</a>]</td>
 <td><div class="info">
 The type for values representing module implementations.
 </div>
@@ -62,16 +71,19 @@ The type for values representing module implementations.
 Configuration information.
 </div>
 </td></tr>
+<tr><td><a href="Functoria_app.html#TYPEinfo">info</a> [<a href="Functoria_app.html">Functoria_app</a>]</td>
+<td><div class="info">
+The type for application about the application being built.
+</div>
+</td></tr>
 <tr><td><a href="Functoria_key.Arg.html#TYPEinfo">info</a> [<a href="Functoria_key.Arg.html">Functoria_key.Arg</a>]</td>
 <td><div class="info">
 The type for information about cross-stage command-line
       arguments.
 </div>
 </td></tr>
-<tr><td><a href="Functoria.Devices.html#TYPEinfo">info</a> [<a href="Functoria.Devices.html">Functoria.Devices</a>]</td>
-<td></td></tr>
 <tr><td align="left"><br>J</td></tr>
-<tr><td><a href="Functoria_dsl.html#TYPEjob">job</a> [<a href="Functoria_dsl.html">Functoria_dsl</a>]</td>
+<tr><td><a href="Functoria.html#TYPEjob">job</a> [<a href="Functoria.html">Functoria</a>]</td>
 <td><div class="info">
 Type for job values.
 </div>
@@ -82,12 +94,9 @@ Type for job values.
 The type for configuration keys.
 </div>
 </td></tr>
-<tr><td><a href="Functoria_misc.Univ.html#TYPEkey">key</a> [<a href="Functoria_misc.Univ.html">Functoria_misc.Univ</a>]</td>
-<td></td></tr>
-<tr><td align="left"><br>P</td></tr>
-<tr><td><a href="Functoria_key.html#TYPEparsed">parsed</a> [<a href="Functoria_key.html">Functoria_key</a>]</td>
+<tr><td><a href="Functoria.html#TYPEkey">key</a> [<a href="Functoria.html">Functoria</a>]</td>
 <td><div class="info">
-The type for parsed key graphs.
+The type for command-line keys.
 </div>
 </td></tr>
 <tr><td align="left"><br>S</td></tr>
@@ -107,11 +116,6 @@ The type for runtime keys containing a value of type <code class="code"><span cl
 The type for argument converters.
 </div>
 </td></tr>
-<tr><td><a href="Functoria_dsl.Info.html#TYPEt">t</a> [<a href="Functoria_dsl.Info.html">Functoria_dsl.Info</a>]</td>
-<td><div class="info">
-The type for information about the final application.
-</div>
-</td></tr>
 <tr><td><a href="Functoria_key.Alias.html#TYPEt">t</a> [<a href="Functoria_key.Alias.html">Functoria_key.Alias</a>]</td>
 <td><div class="info">
 The type for key alias.
@@ -127,11 +131,12 @@ The type for arguments holding data of type <code class="code"><span class="keyw
 The type for untyped keys.
 </div>
 </td></tr>
-<tr><td><a href="Functoria_misc.Monoid.html#TYPEt">t</a> [<a href="Functoria_misc.Monoid.html">Functoria_misc.Monoid</a>]</td>
-<td></td></tr>
-<tr><td><a href="Functoria_misc.Univ.html#TYPEt">t</a> [<a href="Functoria_misc.Univ.html">Functoria_misc.Univ</a>]</td>
-<td></td></tr>
-<tr><td><a href="Functoria_dsl.html#TYPEtyp">typ</a> [<a href="Functoria_dsl.html">Functoria_dsl</a>]</td>
+<tr><td><a href="Functoria.Info.html#TYPEt">t</a> [<a href="Functoria.Info.html">Functoria.Info</a>]</td>
+<td><div class="info">
+The type for information about the final application.
+</div>
+</td></tr>
+<tr><td><a href="Functoria.html#TYPEtyp">typ</a> [<a href="Functoria.html">Functoria</a>]</td>
 <td><div class="info">
 The type for values representing module types.
 </div>
@@ -140,6 +145,11 @@ The type for values representing module types.
 <tr><td><a href="Functoria_key.html#TYPEvalue">value</a> [<a href="Functoria_key.html">Functoria_key</a>]</td>
 <td><div class="info">
 The type for configure-time and run-time values.
+</div>
+</td></tr>
+<tr><td><a href="Functoria.html#TYPEvalue">value</a> [<a href="Functoria.html">Functoria</a>]</td>
+<td><div class="info">
+The type for values parsed from the command-line.
 </div>
 </td></tr>
 </table>
