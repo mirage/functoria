@@ -100,7 +100,7 @@ Type for job values.<br>
 
 
 <pre><span id="VALjob"><span class="keyword">val</span> job</span> : <code class="type"><a href="Functoria.html#TYPEjob">job</a> <a href="Functoria.html#TYPEtyp">typ</a></code></pre><div class="info ">
-<code class="code">jpb</code> is the signature for user's application main module.<br>
+<code class="code">job</code> is the signature for user's application main module.<br>
 </div>
 
 <pre><span id="TYPEimpl"><span class="keyword">type</span> <code class="type">'a</code> impl</span> </pre>
@@ -167,7 +167,7 @@ The type for values parsed from the command-line. See
 <h1 id="app">Application Builder</h1>
 <p>
 
-    Values of type <a href="Functoria.html#VALimpl"><code class="code"><span class="constructor">Functoria</span>.impl</code></a> are tied to concrete module imlementation
+    Values of type <a href="Functoria.html#VALimpl"><code class="code"><span class="constructor">Functoria</span>.impl</code></a> are tied to concrete module implementation
     with the <a href="Functoria.html#VALforeign"><code class="code"><span class="constructor">Functoria</span>.foreign</code></a> construct. Module implementations of type
     <a href="Functoria.html#VALjob"><code class="code"><span class="constructor">Functoria</span>.job</code></a> can then be <a href="Functoria_app.Make.html#VALregister">registered</a> into
     an application builder. The builder is in charge if parsing the
@@ -175,8 +175,8 @@ The type for values parsed from the command-line. See
     application. See <a href="Functoria_app.html"><code class="code"><span class="constructor">Functoria_app</span></code></a> for details.<br>
 
 <pre><span id="VALforeign"><span class="keyword">val</span> foreign</span> : <code class="type">?packages:string list -><br>       ?libraries:string list -><br>       ?keys:<a href="Functoria.html#TYPEkey">key</a> list -><br>       ?dependencies:<a href="Functoria.html#TYPEabstract_impl">abstract_impl</a> list -><br>       string -> 'a <a href="Functoria.html#TYPEtyp">typ</a> -> 'a <a href="Functoria.html#TYPEimpl">impl</a></code></pre><div class="info ">
-<code class="code">foreign name typ</code> is the module <code class="code">name</code>, having with the
-    odule type <code class="code">typ</code>.
+<code class="code">foreign name typ</code> is the module <code class="code">name</code>, having the module type
+    <code class="code">typ</code>.
 <p>
 
     <ul>
