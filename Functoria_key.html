@@ -19,7 +19,6 @@
 <link title="Functoria_runtime" rel="Chapter" href="Functoria_runtime.html">
 <link title="Functoria_info" rel="Chapter" href="Functoria_info.html">
 <link title="Functoria_app" rel="Chapter" href="Functoria_app.html"><link title="Configuration Keys" rel="Section" href="#1_ConfigurationKeys">
-<link title="Data-dependencies" rel="Section" href="#1_Datadependencies">
 <link title="Stages" rel="Section" href="#1_Stages">
 <link title="Parsing context" rel="Section" href="#1_Parsingcontext">
 <link title="Code Serialization" rel="Section" href="#1_CodeSerialization">
@@ -96,25 +95,24 @@ The type for configuration keys. Keys are used to retrieve the
 <pre><span id="VALvalue"><span class="keyword">val</span> value</span> : <code class="type">'a <a href="Functoria_key.html#TYPEkey">key</a> -> 'a <a href="Functoria_key.html#TYPEvalue">value</a></code></pre><div class="info ">
 <code class="code">value k</code> is the value parsed by <code class="code">k</code>.<br>
 </div>
-<br>
-<h1 id="1_Datadependencies">Data-dependencies</h1><br>
 
 <pre><span id="TYPEt"><span class="keyword">type</span> <code class="type"></code>t</span> </pre>
 <div class="info ">
-The type for data dependencies. Data dependencies form a directed
-    and acyclic graph that need to be evaluated in order to obtain
+The type for data dependencies, which are simply <a href="Functoria_key.html#TYPEkey"><code class="code"><span class="constructor">Functoria_key</span>.key</code></a> with their
+    type hidden. Data dependencies form a directed and acyclic graph
+    that need to be evaluated in order to obtain
     <a href="Functoria_key.html#VALvalue">values</a>. Vertices of the graph hold
     <a href="Functoria_key.html#VALvalue">values</a>. Edges represent evaluation-order (e.g. data)
     dependencies between values.<br>
 </div>
 
 
-<pre><span id="VALcompare"><span class="keyword">val</span> compare</span> : <code class="type"><a href="Functoria_key.html#TYPEt">t</a> -> <a href="Functoria_key.html#TYPEt">t</a> -> int</code></pre><div class="info ">
-<code class="code">compare</code> compares untyped keys.<br>
+<pre><span id="VALhide_type"><span class="keyword">val</span> hide_type</span> : <code class="type">'a <a href="Functoria_key.html#TYPEkey">key</a> -> <a href="Functoria_key.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">hide_type k</code> is the data-dependency induced by using <code class="code">k</code>.<br>
 </div>
 
-<pre><span id="VALv"><span class="keyword">val</span> v</span> : <code class="type">'a <a href="Functoria_key.html#TYPEkey">key</a> -> <a href="Functoria_key.html#TYPEt">t</a></code></pre><div class="info ">
-<code class="code">v k</code> is the data-dependency on the key <code class="code">k</code>.<br>
+<pre><span id="VALcompare"><span class="keyword">val</span> compare</span> : <code class="type"><a href="Functoria_key.html#TYPEt">t</a> -> <a href="Functoria_key.html#TYPEt">t</a> -> int</code></pre><div class="info ">
+<code class="code">compare</code> compares untyped keys.<br>
 </div>
 
 <pre><span id="VALpp"><span class="keyword">val</span> pp</span> : <code class="type"><a href="Functoria_key.html#TYPEt">t</a> Fmt.t</code></pre><div class="info ">

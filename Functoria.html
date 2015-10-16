@@ -163,6 +163,11 @@ The type for values parsed from the command-line. See
     <code class="code">cases</code> by matching the <code class="code">v</code>'s value. <code class="code">default</code> is chosen if no
     value matches.<br>
 </div>
+
+<pre><span class="keyword">module type</span> <a href="Functoria.KEY.html">KEY</a> = <code class="type">module type of struct include <a href="Functoria_key.html">Functoria_key</a> end</code></pre><div class="info">
+The signature for run-time and configure-time command-line
+    keys.
+</div>
 <br>
 <h1 id="app">Application Builder</h1>
 <p>
@@ -205,10 +210,6 @@ Signature for configurable module implementations.
 
 <pre><span id="VALimpl"><span class="keyword">val</span> impl</span> : <code class="type">'a <a href="Functoria.configurable-c.html">configurable</a> -> 'a <a href="Functoria.html#TYPEimpl">impl</a></code></pre><div class="info ">
 <code class="code">impl c</code> is the implementation of the configurable <code class="code">c</code>.<br>
-</div>
-
-<pre><span id="VALexplode"><span class="keyword">val</span> explode</span> : <code class="type">'a <a href="Functoria.html#TYPEimpl">impl</a> -><br>       [ `App of <a href="Functoria.html#TYPEabstract_impl">abstract_impl</a> * <a href="Functoria.html#TYPEabstract_impl">abstract_impl</a><br>       | `If of bool <a href="Functoria.html#TYPEvalue">value</a> * 'a <a href="Functoria.html#TYPEimpl">impl</a> * 'a <a href="Functoria.html#TYPEimpl">impl</a><br>       | `Impl of 'a <a href="Functoria.configurable-c.html">configurable</a> ]</code></pre><div class="info ">
-<code class="code">explode i</code> inspects the contents of <code class="code">i</code>.<br>
 </div>
 
 <pre><span name="TYPEbase_configurable"><span class="keyword">class</span> <a href="Functoria.base_configurable-c.html">base_configurable</a></span> : <code class="type"></code><code class="code"><span class="keyword">object</span></code> <a href="Functoria.base_configurable-c.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info">
