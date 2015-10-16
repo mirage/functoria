@@ -11,17 +11,17 @@
 <link title="Index of module types" rel=Appendix href="index_module_types.html">
 <link title="Functoria" rel="Chapter" href="Functoria.html">
 <link title="Functoria_key" rel="Chapter" href="Functoria_key.html">
-<link title="Functoria_app" rel="Chapter" href="Functoria_app.html">
 <link title="Functoria_runtime" rel="Chapter" href="Functoria_runtime.html">
-<link title="Functoria_info" rel="Chapter" href="Functoria_info.html"><title>Functoria : Functoria_key.Arg</title>
+<link title="Functoria_info" rel="Chapter" href="Functoria_info.html">
+<link title="Functoria_app" rel="Chapter" href="Functoria_app.html"><title>Functoria : Functoria_key.Arg</title>
 </head>
 <body>
 <code class="code"><span class="keyword">sig</span><br>
-&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;emitter&nbsp;=&nbsp;<span class="constructor">Format</span>.formatter&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
-&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;code&nbsp;=&nbsp;string<br>
+&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;serialize&nbsp;=&nbsp;<span class="constructor">Format</span>.formatter&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
+&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;runtime_conv&nbsp;=&nbsp;string<br>
 &nbsp;&nbsp;<span class="keyword">type</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;converter&nbsp;=<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">Cmdliner</span>.<span class="constructor">Arg</span>.converter&nbsp;*&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">Functoria_key</span>.<span class="constructor">Arg</span>.emitter&nbsp;*<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">Functoria_key</span>.<span class="constructor">Arg</span>.code<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">Cmdliner</span>.<span class="constructor">Arg</span>.converter&nbsp;*&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">Functoria_key</span>.<span class="constructor">Arg</span>.serialize&nbsp;*<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">Functoria_key</span>.<span class="constructor">Arg</span>.runtime_conv<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;string&nbsp;:&nbsp;string&nbsp;<span class="constructor">Functoria_key</span>.<span class="constructor">Arg</span>.converter<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;bool&nbsp;:&nbsp;bool&nbsp;<span class="constructor">Functoria_key</span>.<span class="constructor">Arg</span>.converter<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;int&nbsp;:&nbsp;int&nbsp;<span class="constructor">Functoria_key</span>.<span class="constructor">Arg</span>.converter<br>

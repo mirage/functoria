@@ -12,9 +12,9 @@
 <link title="Index of module types" rel=Appendix href="index_module_types.html">
 <link title="Functoria" rel="Chapter" href="Functoria.html">
 <link title="Functoria_key" rel="Chapter" href="Functoria_key.html">
-<link title="Functoria_app" rel="Chapter" href="Functoria_app.html">
 <link title="Functoria_runtime" rel="Chapter" href="Functoria_runtime.html">
-<link title="Functoria_info" rel="Chapter" href="Functoria_info.html"><title>Functoria : Index of types</title>
+<link title="Functoria_info" rel="Chapter" href="Functoria_info.html">
+<link title="Functoria_app" rel="Chapter" href="Functoria_app.html"><title>Functoria : Index of types</title>
 </head>
 <body>
 <div class="navbar">&nbsp;<a class="up" href="index.html" title="Index">Up</a>
@@ -34,11 +34,6 @@ The type for command-line arguments, similar to the usual
 </div>
 </td></tr>
 <tr><td align="left"><br>C</td></tr>
-<tr><td><a href="Functoria_key.Arg.html#TYPEcode">code</a> [<a href="Functoria_key.Arg.html">Functoria_key.Arg</a>]</td>
-<td><div class="info">
-The type for <i>raw</i> OCaml code.
-</div>
-</td></tr>
 <tr><td><a href="Functoria_key.html#TYPEcontext">context</a> [<a href="Functoria_key.html">Functoria_key</a>]</td>
 <td><div class="info">
 The type for values holding parsing context.
@@ -54,26 +49,20 @@ The type for keys' parsing context.
 The type for argument converters.
 </div>
 </td></tr>
-<tr><td align="left"><br>E</td></tr>
-<tr><td><a href="Functoria_key.Arg.html#TYPEemitter">emitter</a> [<a href="Functoria_key.Arg.html">Functoria_key.Arg</a>]</td>
-<td><div class="info">
-The type for OCaml code emmiter.
-</div>
-</td></tr>
 <tr><td align="left"><br>I</td></tr>
 <tr><td><a href="Functoria.html#TYPEimpl">impl</a> [<a href="Functoria.html">Functoria</a>]</td>
 <td><div class="info">
 The type for values representing module implementations.
 </div>
 </td></tr>
-<tr><td><a href="Functoria_info.html#TYPEinfo">info</a> [<a href="Functoria_info.html">Functoria_info</a>]</td>
-<td><div class="info">
-Configuration information.
-</div>
-</td></tr>
 <tr><td><a href="Functoria_app.html#TYPEinfo">info</a> [<a href="Functoria_app.html">Functoria_app</a>]</td>
 <td><div class="info">
 The type for application about the application being built.
+</div>
+</td></tr>
+<tr><td><a href="Functoria_info.html#TYPEinfo">info</a> [<a href="Functoria_info.html">Functoria_info</a>]</td>
+<td><div class="info">
+Configuration information.
 </div>
 </td></tr>
 <tr><td><a href="Functoria_key.Arg.html#TYPEinfo">info</a> [<a href="Functoria_key.Arg.html">Functoria_key.Arg</a>]</td>
@@ -99,7 +88,19 @@ The type for configuration keys.
 The type for command-line keys.
 </div>
 </td></tr>
+<tr><td align="left"><br>R</td></tr>
+<tr><td><a href="Functoria_key.Arg.html#TYPEruntime_conv">runtime_conv</a> [<a href="Functoria_key.Arg.html">Functoria_key.Arg</a>]</td>
+<td><div class="info">
+The type for commmand-line argument converters used at
+      runtime.
+</div>
+</td></tr>
 <tr><td align="left"><br>S</td></tr>
+<tr><td><a href="Functoria_key.Arg.html#TYPEserialize">serialize</a> [<a href="Functoria_key.Arg.html">Functoria_key.Arg</a>]</td>
+<td><div class="info">
+The type for command-line argument serializers.
+</div>
+</td></tr>
 <tr><td><a href="Functoria_key.Arg.html#TYPEstage">stage</a> [<a href="Functoria_key.Arg.html">Functoria_key.Arg</a>]</td>
 <td><div class="info">
 The type for specifying at which stage an argument is available.
@@ -111,9 +112,9 @@ The type for specifying at which stage an argument is available.
 The type for runtime keys containing a value of type <code class="code"><span class="keywordsign">'</span>a</code>.
 </div>
 </td></tr>
-<tr><td><a href="Functoria_runtime.Conv.html#TYPEt">t</a> [<a href="Functoria_runtime.Conv.html">Functoria_runtime.Conv</a>]</td>
+<tr><td><a href="Functoria_runtime.Arg.html#TYPEt">t</a> [<a href="Functoria_runtime.Arg.html">Functoria_runtime.Arg</a>]</td>
 <td><div class="info">
-The type for argument converters.
+The type for runtime command-line arguments.
 </div>
 </td></tr>
 <tr><td><a href="Functoria_key.Alias.html#TYPEt">t</a> [<a href="Functoria_key.Alias.html">Functoria_key.Alias</a>]</td>
@@ -128,7 +129,7 @@ The type for arguments holding data of type <code class="code"><span class="keyw
 </td></tr>
 <tr><td><a href="Functoria_key.html#TYPEt">t</a> [<a href="Functoria_key.html">Functoria_key</a>]</td>
 <td><div class="info">
-The type for untyped keys.
+The type for data dependencies.
 </div>
 </td></tr>
 <tr><td><a href="Functoria.Info.html#TYPEt">t</a> [<a href="Functoria.Info.html">Functoria.Info</a>]</td>

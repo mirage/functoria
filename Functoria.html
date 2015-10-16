@@ -15,9 +15,9 @@
 <link title="Index of module types" rel=Appendix href="index_module_types.html">
 <link title="Functoria" rel="Chapter" href="Functoria.html">
 <link title="Functoria_key" rel="Chapter" href="Functoria_key.html">
-<link title="Functoria_app" rel="Chapter" href="Functoria_app.html">
 <link title="Functoria_runtime" rel="Chapter" href="Functoria_runtime.html">
-<link title="Functoria_info" rel="Chapter" href="Functoria_info.html"><link title="Combinators" rel="Section" href="#combinators">
+<link title="Functoria_info" rel="Chapter" href="Functoria_info.html">
+<link title="Functoria_app" rel="Chapter" href="Functoria_app.html"><link title="Combinators" rel="Section" href="#combinators">
 <link title="Keys" rel="Section" href="#keys">
 <link title="Application Builder" rel="Section" href="#app">
 <link title="Sharing" rel="Section" href="#1_Sharing">
@@ -142,7 +142,7 @@ The type for command-line keys. See <a href="Functoria_key.html#TYPEt"><code cla
 
 <pre><span id="TYPEcontext"><span class="keyword">type</span> <code class="type"></code>context</span> = <code class="type"><a href="Functoria_key.html#TYPEcontext">Functoria_key.context</a></code> </pre>
 <div class="info ">
-The type for keys' parsing context. See <a href="Functoria_key.html#TYPEcontext"><code class="code"><span class="constructor">Functoria_key</span>.context</code></a>.<br>
+The type for keys' parsing context. See <a href="Functoria_key.html#VALcontext"><code class="code"><span class="constructor">Functoria_key</span>.context</code></a>.<br>
 </div>
 
 
@@ -158,10 +158,10 @@ The type for values parsed from the command-line. See
     <code class="code">impl2</code> otherwise.<br>
 </div>
 
-<pre><span id="VALswitch"><span class="keyword">val</span> switch</span> : <code class="type">default:'a <a href="Functoria.html#TYPEimpl">impl</a> -><br>       ('b * 'a <a href="Functoria.html#TYPEimpl">impl</a>) list -> 'b <a href="Functoria.html#TYPEvalue">value</a> -> 'a <a href="Functoria.html#TYPEimpl">impl</a></code></pre><div class="info ">
-<code class="code">switch ~default cases v</code> choose the implementation amongst
+<pre><span id="VALmatch_impl"><span class="keyword">val</span> match_impl</span> : <code class="type">'b <a href="Functoria.html#TYPEvalue">value</a> -><br>       default:'a <a href="Functoria.html#TYPEimpl">impl</a> -><br>       ('b * 'a <a href="Functoria.html#TYPEimpl">impl</a>) list -> 'a <a href="Functoria.html#TYPEimpl">impl</a></code></pre><div class="info ">
+<code class="code">match_impl v cases ~default</code> chooses the implementation amongst
     <code class="code">cases</code> by matching the <code class="code">v</code>'s value. <code class="code">default</code> is chosen if no
-    value match.<br>
+    value matches.<br>
 </div>
 <br>
 <h1 id="app">Application Builder</h1>

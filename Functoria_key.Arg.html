@@ -15,9 +15,9 @@
 <link title="Index of module types" rel=Appendix href="index_module_types.html">
 <link title="Functoria" rel="Chapter" href="Functoria.html">
 <link title="Functoria_key" rel="Chapter" href="Functoria_key.html">
-<link title="Functoria_app" rel="Chapter" href="Functoria_app.html">
 <link title="Functoria_runtime" rel="Chapter" href="Functoria_runtime.html">
-<link title="Functoria_info" rel="Chapter" href="Functoria_info.html"><link title="Argument converters" rel="Section" href="#1_Argumentconverters">
+<link title="Functoria_info" rel="Chapter" href="Functoria_info.html">
+<link title="Functoria_app" rel="Chapter" href="Functoria_app.html"><link title="Argument converters" rel="Section" href="#1_Argumentconverters">
 <link title="Arguments and their information" rel="Section" href="#1_Argumentsandtheirinformation">
 <link title="Optional Arguments" rel="Section" href="#1_OptionalArguments">
 <title>Functoria : Functoria_key.Arg</title>
@@ -51,42 +51,32 @@ Terms for cross-stage arguments.
 <br>
 <h1 id="1_Argumentconverters">Argument converters</h1><br>
 
-<pre><span id="TYPEemitter"><span class="keyword">type</span> <code class="type">'a</code> emitter</span> = <code class="type">Format.formatter -> 'a -> unit</code> </pre>
+<pre><span id="TYPEserialize"><span class="keyword">type</span> <code class="type">'a</code> serialize</span> = <code class="type">Format.formatter -> 'a -> unit</code> </pre>
 <div class="info ">
-The type for OCaml code emmiter. A value of type <code class="code"><span class="keywordsign">'</span>a emitter</code>
-      generates valid OCaml code with type <code class="code"><span class="keywordsign">'</span>a</code>.<br>
+The type for command-line argument serializers. A value of type
+      <code class="code"><span class="keywordsign">'</span>a serialize</code> generates a syntactically valid OCaml
+      representation which evaluates to a value of type <code class="code"><span class="keywordsign">'</span>a</code>.<br>
 </div>
 
 
-<pre><span id="TYPEcode"><span class="keyword">type</span> <code class="type">'a</code> code</span> = <code class="type">string</code> </pre>
+<pre><span id="TYPEruntime_conv"><span class="keyword">type</span> <code class="type">'a</code> runtime_conv</span> = <code class="type">string</code> </pre>
 <div class="info ">
-The type for <i>raw</i> OCaml code. A value of type <code class="code"><span class="keywordsign">'</span>a code</code> can
-      be interpreted as an OCaml value with type <code class="code"><span class="keywordsign">'</span>a</code>.<br>
+The type for commmand-line argument converters used at
+      runtime. A value of type <code class="code"><span class="keywordsign">'</span>a runtime_conv</code> is a symbol name of
+      type
+      <a href="http://erratique.ch/software/cmdliner/doc/Cmdliner.Arg.html#TYPEconverter">
+      Cmdliner.Arg.converter</a>.<br>
 </div>
 
 
-<pre><span id="TYPEconverter"><span class="keyword">type</span> <code class="type">'a</code> converter</span> = <code class="type">'a Cmdliner.Arg.converter * 'a <a href="Functoria_key.Arg.html#TYPEemitter">emitter</a> *<br>       'a <a href="Functoria_key.Arg.html#TYPEcode">code</a></code> </pre>
+<pre><span id="TYPEconverter"><span class="keyword">type</span> <code class="type">'a</code> converter</span> = <code class="type">'a Cmdliner.Arg.converter * 'a <a href="Functoria_key.Arg.html#TYPEserialize">serialize</a> *<br>       'a <a href="Functoria_key.Arg.html#TYPEruntime_conv">runtime_conv</a></code> </pre>
 <div class="info ">
-The type for argument converters. A value of <code class="code">(conv, emit,
-      code)</code> of type <code class="code"><span class="keywordsign">'</span>a converter</code> is the argument converter using
-      <code class="code">conf</code> to convert argument into OCaml value, <code class="code">emit</code> to convert
-      OCaml values into interpretable strings, and the function named
-      <code class="code">run</code> to transform these strings into OCaml values again.
-<p>
-
-      <ul>
-<li><code class="code">conv</code> is the converter of configuration time's command-line
-         arguments into OCaml values.</li>
-<li><code class="code">emit</code> allows to persist OCaml values across stages, ie. it
-         takes values (which might be parsed with <code class="code">conv</code> at
-         configuration time) and produce a valid string representation
-         which can be used at runtime, once the generated code is
-         compiled.</li>
-<li><code class="code">run</code> is the name of the function called at runtime to parse
-         the command-line arguments. Usually, it is a <code class="code"><span class="constructor">Cmdliner</span></code>'s
-         combinator such as <i>Cmdliner.Arg.string</i>.</li>
-</ul>
-<br>
+The type for argument converters. A value of <code class="code">(c, s, r)</code> of type
+      <code class="code"><span class="keywordsign">'</span>a converter</code> is the argument converter using <code class="code">c</code> to convert
+      user strings into OCaml value, <code class="code">s</code> to convert OCaml values into
+      strings interpretable as OCaml expressions, and the function
+      named <code class="code">r</code> to convert user strings into OCaml values at
+      runtime.<br>
 </div>
 
 

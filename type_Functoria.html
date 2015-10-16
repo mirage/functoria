@@ -11,9 +11,9 @@
 <link title="Index of module types" rel=Appendix href="index_module_types.html">
 <link title="Functoria" rel="Chapter" href="Functoria.html">
 <link title="Functoria_key" rel="Chapter" href="Functoria_key.html">
-<link title="Functoria_app" rel="Chapter" href="Functoria_app.html">
 <link title="Functoria_runtime" rel="Chapter" href="Functoria_runtime.html">
-<link title="Functoria_info" rel="Chapter" href="Functoria_info.html"><title>Functoria : Functoria</title>
+<link title="Functoria_info" rel="Chapter" href="Functoria_info.html">
+<link title="Functoria_app" rel="Chapter" href="Functoria_app.html"><title>Functoria : Functoria</title>
 </head>
 <body>
 <code class="code"><span class="keyword">sig</span><br>
@@ -38,9 +38,10 @@
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;if_impl&nbsp;:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;bool&nbsp;<span class="constructor">Functoria</span>.value&nbsp;<span class="keywordsign">-&gt;</span><br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">Functoria</span>.impl&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">Functoria</span>.impl&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">Functoria</span>.impl<br>
-&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;switch&nbsp;:<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;match_impl&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">'</span>b&nbsp;<span class="constructor">Functoria</span>.value&nbsp;<span class="keywordsign">-&gt;</span><br>
 &nbsp;&nbsp;&nbsp;&nbsp;default:<span class="keywordsign">'</span>a&nbsp;<span class="constructor">Functoria</span>.impl&nbsp;<span class="keywordsign">-&gt;</span><br>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="keywordsign">'</span>b&nbsp;*&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">Functoria</span>.impl)&nbsp;list&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>b&nbsp;<span class="constructor">Functoria</span>.value&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">Functoria</span>.impl<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="keywordsign">'</span>b&nbsp;*&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">Functoria</span>.impl)&nbsp;list&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">Functoria</span>.impl<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;foreign&nbsp;:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;?packages:string&nbsp;list&nbsp;<span class="keywordsign">-&gt;</span><br>
 &nbsp;&nbsp;&nbsp;&nbsp;?libraries:string&nbsp;list&nbsp;<span class="keywordsign">-&gt;</span><br>
@@ -55,7 +56,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;libraries&nbsp;:&nbsp;<span class="constructor">Functoria</span>.<span class="constructor">Info</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string&nbsp;list<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;packages&nbsp;:&nbsp;<span class="constructor">Functoria</span>.<span class="constructor">Info</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string&nbsp;list<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;keys&nbsp;:&nbsp;<span class="constructor">Functoria</span>.<span class="constructor">Info</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Functoria</span>.key&nbsp;list<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;parsed&nbsp;:&nbsp;<span class="constructor">Functoria</span>.<span class="constructor">Info</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Functoria</span>.context<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;context&nbsp;:&nbsp;<span class="constructor">Functoria</span>.<span class="constructor">Info</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Functoria</span>.context<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;create&nbsp;:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;?packages:string&nbsp;list&nbsp;<span class="keywordsign">-&gt;</span><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;?libraries:string&nbsp;list&nbsp;<span class="keywordsign">-&gt;</span><br>

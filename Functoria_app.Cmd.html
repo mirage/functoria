@@ -1,0 +1,54 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="Functoria_app.Name.html">
+<link rel="next" href="Functoria_app.Log.html">
+<link rel="Up" href="Functoria_app.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of class methods" rel=Appendix href="index_methods.html">
+<link title="Index of classes" rel=Appendix href="index_classes.html">
+<link title="Index of class types" rel=Appendix href="index_class_types.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="Functoria" rel="Chapter" href="Functoria.html">
+<link title="Functoria_key" rel="Chapter" href="Functoria_key.html">
+<link title="Functoria_runtime" rel="Chapter" href="Functoria_runtime.html">
+<link title="Functoria_info" rel="Chapter" href="Functoria_info.html">
+<link title="Functoria_app" rel="Chapter" href="Functoria_app.html"><link title="Shell command helpers" rel="Section" href="#1_Shellcommandhelpers">
+<title>Functoria : Functoria_app.Cmd</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="Functoria_app.Name.html" title="Functoria_app.Name">Previous</a>
+&nbsp;<a class="up" href="Functoria_app.html" title="Functoria_app">Up</a>
+&nbsp;<a class="post" href="Functoria_app.Log.html" title="Functoria_app.Log">Next</a>
+</div>
+<h1>Module <a href="type_Functoria_app.Cmd.html">Functoria_app.Cmd</a></h1>
+
+<pre><span class="keyword">module</span> Cmd: <code class="code"><span class="keyword">sig</span></code> <a href="Functoria_app.Cmd.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><hr width="100%">
+<br>
+<h1 id="1_Shellcommandhelpers">Shell command helpers</h1>.
+<p>
+
+      FIXME: replace by <code class="code"><span class="constructor">Bos</span></code>.<br>
+
+<pre><span id="VALexists"><span class="keyword">val</span> exists</span> : <code class="type">string -> bool</code></pre><div class="info ">
+<code class="code">exists cmd</code> is <code class="code"><span class="keyword">true</span></code> if the command <code class="code">cmd</code> is available in <i>      $PATH</i>.<br>
+</div>
+
+<pre><span id="VALrun"><span class="keyword">val</span> run</span> : <code class="type">?redirect:bool -><br>       ('a, unit, string, (unit, string) Rresult.result) Pervasives.format4 -> 'a</code></pre>
+<pre><span id="VALread"><span class="keyword">val</span> read</span> : <code class="type">('a, unit, string, (string, string) Rresult.result) Pervasives.format4 -> 'a</code></pre>
+<pre><span id="VALremove"><span class="keyword">val</span> remove</span> : <code class="type">string -> unit</code></pre>
+<pre><span id="VALwith_file"><span class="keyword">val</span> with_file</span> : <code class="type">string -> (Format.formatter -> 'a) -> 'a</code></pre>
+<pre><span id="VALin_dir"><span class="keyword">val</span> in_dir</span> : <code class="type">string -> (unit -> 'a) -> 'a</code></pre>
+<pre><span id="VALuname_s"><span class="keyword">val</span> uname_s</span> : <code class="type">unit -> string option</code></pre>
+<pre><span id="VALuname_m"><span class="keyword">val</span> uname_m</span> : <code class="type">unit -> string option</code></pre>
+<pre><span id="VALuname_r"><span class="keyword">val</span> uname_r</span> : <code class="type">unit -> string option</code></pre>
+<pre><span id="VALocaml_version"><span class="keyword">val</span> ocaml_version</span> : <code class="type">unit -> int * int</code></pre><div class="info ">
+<code class="code">ocaml_version</code> is <code class="code">ocaml -version</code>'s output.<br>
+</div>
+
+<pre><span class="keyword">module</span> <a href="Functoria_app.Cmd.OCamlfind.html">OCamlfind</a>: <code class="code"><span class="keyword">sig</span></code> <a href="Functoria_app.Cmd.OCamlfind.html">..</a> <code class="code"><span class="keyword">end</span></code></pre></body></html>
