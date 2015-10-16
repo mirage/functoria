@@ -28,12 +28,10 @@
 <h1>Module <a href="type_Functoria_info.html">Functoria_info</a></h1>
 
 <pre><span class="keyword">module</span> Functoria_info: <code class="code"><span class="keyword">sig</span></code> <a href="Functoria_info.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info module top">
-Configuration info<br>
+Information about Functoria applications.<br>
 </div>
 <hr width="100%">
 
-<pre><span class="keyword">module</span> <a href="Functoria_info.StringSet.html">StringSet</a>: <code class="type">Set.S</code><code class="type">  with type elt = string</code></pre>
-<pre><span class="keyword">module</span> <a href="Functoria_info.StringMap.html">StringMap</a>: <code class="type">Map.S</code><code class="type">  with type key = string</code></pre>
 <pre><code><span id="TYPEinfo"><span class="keyword">type</span> <code class="type"></code>info</span> = {</code></pre><table class="typetable">
 <tr>
 <td align="left" valign="top" >
@@ -46,23 +44,28 @@ Configuration info<br>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTinfo.libraries">libraries</span>&nbsp;: <code class="type">StringSet.t</code>;</code></td>
+<code><span id="TYPEELTinfo.libraries">libraries</span>&nbsp;: <code class="type">string list</code>;</code></td>
 
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code>&nbsp;&nbsp;</code></td>
 <td align="left" valign="top" >
-<code><span id="TYPEELTinfo.packages">packages</span>&nbsp;: <code class="type">string StringMap.t</code>;</code></td>
+<code><span id="TYPEELTinfo.packages">packages</span>&nbsp;: <code class="type">(string * string) list</code>;</code></td>
 
 </tr></table>
 }
 
 <div class="info ">
-Configuration information.<ul>
-<li><code class="code">name</code> is the name of the unikernel.</li>
-<li><code class="code">libraries</code> is the set of ocamlfind libraries.</li>
-<li><code class="code">packages</code> is the map of opam packages to version.</li>
+The type for information about applications.
+<p>
+
+    <ul>
+<li><code class="code">name</code> is the name of the application.</li>
+<li><code class="code">libraries</code> is the list of OCamlfind libraries linked to form the
+       application.</li>
+<li><code class="code">packages</code> is the list of package name and version used to create
+       the application.</li>
 </ul>
 <br>
 </div>
