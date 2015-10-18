@@ -42,10 +42,10 @@ Cross-stage command-line arguments.
 
 <pre><span id="TYPEvalue"><span class="keyword">type</span> <code class="type">+'a</code> value</span> </pre>
 <div class="info ">
-The type for configure-time and run-time values. Values can be
-    parsed from the command-line at configure and/or runtime, or can
-    be provided as OCaml values in the application configuration file
-    (i.e. <i>config.ml</i>).<br>
+The type for configure-time and run-time values. Values are either
+    <a href="Functoria_key.html#VALpure"><code class="code"><span class="constructor">Functoria_key</span>.pure</code></a> or obtained by composing other values. Values might have
+    <a href="Functoria_key.html#VALdeps">data dependencies</a>, which form an (implicit) directed and
+    acyclic graph that need to be evaluated.<br>
 </div>
 
 
@@ -69,7 +69,7 @@ The type for configure-time and run-time values. Values can be
 </div>
 
 <pre><span id="VALmatch_"><span class="keyword">val</span> match_</span> : <code class="type">'a <a href="Functoria_key.html#TYPEvalue">value</a> -> ('a -> 'b) -> 'b <a href="Functoria_key.html#TYPEvalue">value</a></code></pre><div class="info ">
-<code class="code">match_ v patt</code> is <code class="code">map patt v</code>.<br>
+<code class="code">match_ v pattern</code> is <code class="code">map pattern v</code>.<br>
 </div>
 
 <pre><span id="VALdefault"><span class="keyword">val</span> default</span> : <code class="type">'a <a href="Functoria_key.html#TYPEvalue">value</a> -> 'a</code></pre><div class="info ">
@@ -98,17 +98,12 @@ The type for configuration keys. Keys are used to retrieve the
 
 <pre><span id="TYPEt"><span class="keyword">type</span> <code class="type"></code>t</span> </pre>
 <div class="info ">
-The type for data dependencies, which are simply <a href="Functoria_key.html#TYPEkey">keys</a> with
-    their type hidden. Data dependencies form a directed and acyclic
-    graph that need to be evaluated in order to obtain
-    <a href="Functoria_key.html#VALvalue">values</a>. Vertices of the graph hold
-    <a href="Functoria_key.html#VALvalue">values</a>. Edges represent evaluation-order (e.g. data)
-    dependencies between values.<br>
+The type for abstract <a href="Functoria_key.html#TYPEkey">keys</a>.<br>
 </div>
 
 
-<pre><span id="VALhide_type"><span class="keyword">val</span> hide_type</span> : <code class="type">'a <a href="Functoria_key.html#TYPEkey">key</a> -> <a href="Functoria_key.html#TYPEt">t</a></code></pre><div class="info ">
-<code class="code">hide_type k</code> is the data-dependency induced by using <code class="code">k</code>.<br>
+<pre><span id="VALabstract"><span class="keyword">val</span> abstract</span> : <code class="type">'a <a href="Functoria_key.html#TYPEkey">key</a> -> <a href="Functoria_key.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">hide k</code> is the <code class="code">k</code> with its type hidden.<br>
 </div>
 
 <pre><span id="VALcompare"><span class="keyword">val</span> compare</span> : <code class="type"><a href="Functoria_key.html#TYPEt">t</a> -> <a href="Functoria_key.html#TYPEt">t</a> -> int</code></pre><div class="info ">
@@ -119,7 +114,7 @@ The type for data dependencies, which are simply <a href="Functoria_key.html#TYP
 <code class="code">pp fmt k</code> prints the name of <code class="code">k</code>.<br>
 </div>
 
-<pre><span id="VALwith_deps"><span class="keyword">val</span> with_deps</span> : <code class="type">keys:<a href="Functoria_key.html#TYPEt">t</a> list -> 'a <a href="Functoria_key.html#TYPEvalue">value</a> -> 'a <a href="Functoria_key.html#TYPEvalue">value</a></code></pre><div class="info ">
+<pre><span id="VALwith_deps"><span class="keyword">val</span> with_deps</span> : <code class="type"><a href="Functoria_key.html#TYPEt">t</a> list -> 'a <a href="Functoria_key.html#TYPEvalue">value</a> -> 'a <a href="Functoria_key.html#TYPEvalue">value</a></code></pre><div class="info ">
 <code class="code">with_deps keys v</code> is <code class="code">v</code> with <code class="code">keys</code> as data-dependencies.<br>
 </div>
 
@@ -147,7 +142,8 @@ The type for data dependencies, which are simply <a href="Functoria_key.html#TYP
 </div>
 
 <pre><span class="keyword">module</span> <a href="Functoria_key.Alias.html">Alias</a>: <code class="code"><span class="keyword">sig</span></code> <a href="Functoria_key.Alias.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info">
-Alias
+Alias allows to define virtual keys in terms of other keys at
+    configuration time only.
 </div>
 
 <pre><span id="VALalias"><span class="keyword">val</span> alias</span> : <code class="type">string -> 'a <a href="Functoria_key.Alias.html#TYPEt">Alias.t</a> -> 'a <a href="Functoria_key.html#TYPEkey">key</a></code></pre><div class="info ">
@@ -183,12 +179,12 @@ The type for values holding parsing context.<br>
 </div>
 
 <pre><span id="VALeval"><span class="keyword">val</span> eval</span> : <code class="type"><a href="Functoria_key.html#TYPEcontext">context</a> -> 'a <a href="Functoria_key.html#TYPEvalue">value</a> -> 'a</code></pre><div class="info ">
-<code class="code">eval c v</code> evaluates <code class="code">v</code> in <code class="code">t</code>'s context, using default values if
+<code class="code">eval c v</code> evaluates <code class="code">v</code> in <code class="code">c</code>'s context, using default values if
     necessary.<br>
 </div>
 
 <pre><span id="VALget"><span class="keyword">val</span> get</span> : <code class="type"><a href="Functoria_key.html#TYPEcontext">context</a> -> 'a <a href="Functoria_key.html#TYPEkey">key</a> -> 'a</code></pre><div class="info ">
-<code class="code">get c k</code> resolves <code class="code">k</code>, using default values if necessary.<br>
+<code class="code">get c k</code> is <code class="code">k</code>'s value in <code class="code">c</code>'s context.<br>
 </div>
 
 <pre><span id="VALpps"><span class="keyword">val</span> pps</span> : <code class="type"><a href="Functoria_key.html#TYPEcontext">context</a> -> <a href="Functoria_key.html#TYPEt">t</a> list Fmt.t</code></pre><div class="info ">
@@ -196,10 +192,7 @@ The type for values holding parsing context.<br>
     their value.<br>
 </div>
 <br>
-<h1 id="1_CodeSerialization">Code Serialization</h1>
-<p>
-
-    FIXME: this is not really supposed to be exported, isn't it?<br>
+<h1 id="1_CodeSerialization">Code Serialization</h1><br>
 
 <pre><span id="VALocaml_name"><span class="keyword">val</span> ocaml_name</span> : <code class="type"><a href="Functoria_key.html#TYPEt">t</a> -> string</code></pre><div class="info ">
 <code class="code">ocaml_name k</code> is the ocaml name of <code class="code">k</code>.<br>

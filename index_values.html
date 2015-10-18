@@ -40,6 +40,11 @@ Construct a functor type from a type and an existing functor
 </div>
 </td></tr>
 <tr><td align="left"><br>A</td></tr>
+<tr><td><a href="Functoria_key.html#VALabstract">abstract</a> [<a href="Functoria_key.html">Functoria_key</a>]</td>
+<td><div class="info">
+<code class="code">hide k</code> is the <code class="code">k</code> with its type hidden.
+</div>
+</td></tr>
 <tr><td><a href="Functoria.html#VALabstract">abstract</a> [<a href="Functoria.html">Functoria</a>]</td>
 <td><div class="info">
 <code class="code">abstract t</code> is <code class="code">t</code> but with its type variable abstracted.
@@ -107,6 +112,15 @@ Add some string to <code class="code">main.ml</code>.
       being parsed.
 </div>
 </td></tr>
+<tr><td><a href="Functoria_key.Arg.html#VALconv">conv</a> [<a href="Functoria_key.Arg.html">Functoria_key.Arg</a>]</td>
+<td><div class="info">
+<code class="code">conv c s r</code> is the argument converter using <code class="code">c</code> to convert user
+      strings into OCaml value, <code class="code">s</code> to convert OCaml values into
+      strings interpretable as OCaml expressions, and the function
+      named <code class="code">r</code> to convert user strings into OCaml values at
+      runtime.
+</div>
+</td></tr>
 <tr><td><a href="Functoria_app.S.html#VALcreate">create</a> [<a href="Functoria_app.S.html">Functoria_app.S</a>]</td>
 <td><div class="info">
 <code class="code">create jobs</code> is the top-level job in the custom DSL which will
@@ -121,7 +135,7 @@ Add some string to <code class="code">main.ml</code>.
 </td></tr>
 <tr><td><a href="Functoria_runtime.Key.html#VALcreate">create</a> [<a href="Functoria_runtime.Key.html">Functoria_runtime.Key</a>]</td>
 <td><div class="info">
-<code class="code">create ~doc ~default conv</code> create a new key.
+<code class="code">create conv</code> create a new runtime key.
 </div>
 </td></tr>
 <tr><td><a href="Functoria_key.html#VALcreate">create</a> [<a href="Functoria_key.html">Functoria_key</a>]</td>
@@ -166,7 +180,7 @@ Add some string to <code class="code">main.ml</code>.
 </td></tr>
 <tr><td><a href="Functoria_key.html#VALeval">eval</a> [<a href="Functoria_key.html">Functoria_key</a>]</td>
 <td><div class="info">
-<code class="code">eval c v</code> evaluates <code class="code">v</code> in <code class="code">t</code>'s context, using default values if
+<code class="code">eval c v</code> evaluates <code class="code">v</code> in <code class="code">c</code>'s context, using default values if
     necessary.
 </div>
 </td></tr>
@@ -222,7 +236,7 @@ Add some string to <code class="code">main.ml</code>.
 </td></tr>
 <tr><td><a href="Functoria_key.html#VALget">get</a> [<a href="Functoria_key.html">Functoria_key</a>]</td>
 <td><div class="info">
-<code class="code">get c k</code> resolves <code class="code">k</code>, using default values if necessary.
+<code class="code">get c k</code> is <code class="code">k</code>'s value in <code class="code">c</code>'s context.
 </div>
 </td></tr>
 <tr><td><a href="Functoria_app.Make.html#VALget_base_context">get_base_context</a> [<a href="Functoria_app.Make.html">Functoria_app.Make</a>]</td>
@@ -237,11 +251,6 @@ Add some string to <code class="code">main.ml</code>.
 <tr><td><a href="Functoria.html#VALhash">hash</a> [<a href="Functoria.html">Functoria</a>]</td>
 <td><div class="info">
 <code class="code">hash</code> is the hash function on implementations.
-</div>
-</td></tr>
-<tr><td><a href="Functoria_key.html#VALhide_type">hide_type</a> [<a href="Functoria_key.html">Functoria_key</a>]</td>
-<td><div class="info">
-<code class="code">hide_type k</code> is the data-dependency induced by using <code class="code">k</code>.
 </div>
 </td></tr>
 <tr><td align="left"><br>I</td></tr>
@@ -327,7 +336,7 @@ OCamlfind libraries needed by the project.
 </td></tr>
 <tr><td><a href="Functoria_key.html#VALmatch_">match_</a> [<a href="Functoria_key.html">Functoria_key</a>]</td>
 <td><div class="info">
-<code class="code">match_ v patt</code> is <code class="code">map patt v</code>.
+<code class="code">match_ v pattern</code> is <code class="code">map pattern v</code>.
 </div>
 </td></tr>
 <tr><td><a href="Functoria.html#VALmatch_impl">match_impl</a> [<a href="Functoria.html">Functoria</a>]</td>
@@ -388,12 +397,6 @@ Add a newline to <code class="code">main.ml</code>.
 <tr><td><a href="Functoria_runtime.Arg.html#VALopt">opt</a> [<a href="Functoria_runtime.Arg.html">Functoria_runtime.Arg</a>]</td>
 <td><div class="info">
 <code class="code">opt</code> is the runtime companion of <a href="Functoria_key.Arg.html#VALopt"><code class="code"><span class="constructor">Functoria_key</span>.<span class="constructor">Arg</span>.opt</code></a>.
-</div>
-</td></tr>
-<tr><td><a href="Functoria_key.Alias.html#VALopt">opt</a> [<a href="Functoria_key.Alias.html">Functoria_key.Alias</a>]</td>
-<td><div class="info">
-<code class="code">opt</code> is similar to <a href="Functoria_key.Arg.html#VALopt"><code class="code"><span class="constructor">Functoria_key</span>.<span class="constructor">Arg</span>.opt</code></a> but defines configure-only
-      optional command-line arguments.
 </div>
 </td></tr>
 <tr><td><a href="Functoria_key.Arg.html#VALopt">opt</a> [<a href="Functoria_key.Arg.html">Functoria_key.Arg</a>]</td>

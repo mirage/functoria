@@ -17,7 +17,8 @@
 <link title="Functoria_key" rel="Chapter" href="Functoria_key.html">
 <link title="Functoria_runtime" rel="Chapter" href="Functoria_runtime.html">
 <link title="Functoria_info" rel="Chapter" href="Functoria_info.html">
-<link title="Functoria_app" rel="Chapter" href="Functoria_app.html"><title>Functoria : Functoria_key.Alias</title>
+<link title="Functoria_app" rel="Chapter" href="Functoria_app.html"><link title="Alias" rel="Section" href="#1_Alias">
+<title>Functoria : Functoria_key.Alias</title>
 </head>
 <body>
 <div class="navbar"><a class="pre" href="Functoria_key.Arg.html" title="Functoria_key.Arg">Previous</a>
@@ -26,13 +27,12 @@
 <h1>Module <a href="type_Functoria_key.Alias.html">Functoria_key.Alias</a></h1>
 
 <pre><span class="keyword">module</span> Alias: <code class="code"><span class="keyword">sig</span></code> <a href="Functoria_key.Alias.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info module top">
-<h1 id="1_Alias">Alias</h1>
-<p>
-
-    Alias allows to define virtual keys in terms of other keys at
+Alias allows to define virtual keys in terms of other keys at
     configuration time only.<br>
 </div>
 <hr width="100%">
+<br>
+<h1 id="1_Alias">Alias</h1><br>
 
 <pre><span id="TYPEt"><span class="keyword">type</span> <code class="type">'a</code> t</span> </pre>
 <div class="info ">
@@ -49,10 +49,5 @@ The type for key alias.<br>
 <pre><span id="VALflag"><span class="keyword">val</span> flag</span> : <code class="type"><a href="Functoria_key.Arg.html#TYPEinfo">Functoria_key.Arg.info</a> -> bool <a href="Functoria_key.Alias.html#TYPEt">t</a></code></pre><div class="info ">
 <code class="code">flag</code> is similar to <a href="Functoria_key.Arg.html#VALflag"><code class="code"><span class="constructor">Functoria_key</span>.<span class="constructor">Arg</span>.flag</code></a> but defines configure-only
       command-line flag alias. Set <code class="code">stage</code> to <code class="code"><span class="keywordsign">`</span><span class="constructor">Configure</span></code>.<br>
-</div>
-
-<pre><span id="VALopt"><span class="keyword">val</span> opt</span> : <code class="type">'a <a href="Functoria_key.Arg.html#TYPEconverter">Functoria_key.Arg.converter</a> -><br>       'a -> <a href="Functoria_key.Arg.html#TYPEinfo">Functoria_key.Arg.info</a> -> 'a <a href="Functoria_key.Alias.html#TYPEt">t</a></code></pre><div class="info ">
-<code class="code">opt</code> is similar to <a href="Functoria_key.Arg.html#VALopt"><code class="code"><span class="constructor">Functoria_key</span>.<span class="constructor">Arg</span>.opt</code></a> but defines configure-only
-      optional command-line arguments. Set <code class="code">stage</code> to <code class="code"><span class="keywordsign">`</span><span class="constructor">Configure</span></code>.<br>
 </div>
 </body></html>

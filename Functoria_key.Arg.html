@@ -69,16 +69,19 @@ The type for command-line argument converters used at
 </div>
 
 
-<pre><span id="TYPEconverter"><span class="keyword">type</span> <code class="type">'a</code> converter</span> = <code class="type">'a Cmdliner.Arg.converter * 'a <a href="Functoria_key.Arg.html#TYPEserialize">serialize</a> *<br>       'a <a href="Functoria_key.Arg.html#TYPEruntime_conv">runtime_conv</a></code> </pre>
+<pre><span id="TYPEconverter"><span class="keyword">type</span> <code class="type">'a</code> converter</span> </pre>
 <div class="info ">
-The type for argument converters. A value of <code class="code">(c, s, r)</code> of type
-      <code class="code"><span class="keywordsign">'</span>a converter</code> is the argument converter using <code class="code">c</code> to convert
-      user strings into OCaml value, <code class="code">s</code> to convert OCaml values into
+The type for argument converters.<br>
+</div>
+
+
+<pre><span id="VALconv"><span class="keyword">val</span> conv</span> : <code class="type">conv:'a Cmdliner.Arg.converter -><br>       serialize:'a <a href="Functoria_key.Arg.html#TYPEserialize">serialize</a> -><br>       runtime_conv:'a <a href="Functoria_key.Arg.html#TYPEruntime_conv">runtime_conv</a> -><br>       'a <a href="Functoria_key.Arg.html#TYPEconverter">converter</a></code></pre><div class="info ">
+<code class="code">conv c s r</code> is the argument converter using <code class="code">c</code> to convert user
+      strings into OCaml value, <code class="code">s</code> to convert OCaml values into
       strings interpretable as OCaml expressions, and the function
       named <code class="code">r</code> to convert user strings into OCaml values at
       runtime.<br>
 </div>
-
 
 <pre><span id="VALstring"><span class="keyword">val</span> string</span> : <code class="type">string <a href="Functoria_key.Arg.html#TYPEconverter">converter</a></code></pre><div class="info ">
 <code class="code">string</code> converts strings.<br>
@@ -120,7 +123,7 @@ The type for information about cross-stage command-line
 <pre><span id="VALinfo"><span class="keyword">val</span> info</span> : <code class="type">?docs:string -><br>       ?docv:string -><br>       ?doc:string -> ?env:string -> string list -> <a href="Functoria_key.Arg.html#TYPEinfo">info</a></code></pre><div class="info ">
 Define cross-stage information for an argument. See
       <a href="http://erratique.ch/software/cmdliner/doc/Cmdliner.Arg.html#TYPEinfo">
-      Cmdliner.Arg.info</a>.<br>
+      Cmdliner.Arg.info</a>. If not set, <code class="code">docs</code> is <code class="code"><span class="string">"UNIKERNEL PARAMETERS"</span></code>.<br>
 </div>
 <br>
 <h1 id="1_OptionalArguments">Optional Arguments</h1><br>
