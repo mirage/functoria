@@ -179,7 +179,7 @@ The signature for run-time and configure-time command-line
     command-line arguments and of generating code for the final
     application. See <a href="Functoria_app.html"><code class="code"><span class="constructor">Functoria_app</span></code></a> for details.<br>
 
-<pre><span id="VALforeign"><span class="keyword">val</span> foreign</span> : <code class="type">?packages:string list -><br>       ?libraries:string list -><br>       ?keys:<a href="Functoria.html#TYPEkey">key</a> list -><br>       ?dependencies:<a href="Functoria.html#TYPEabstract_impl">abstract_impl</a> list -><br>       string -> 'a <a href="Functoria.html#TYPEtyp">typ</a> -> 'a <a href="Functoria.html#TYPEimpl">impl</a></code></pre><div class="info ">
+<pre><span id="VALforeign"><span class="keyword">val</span> foreign</span> : <code class="type">?packages:string list -><br>       ?libraries:string list -><br>       ?keys:<a href="Functoria.html#TYPEkey">key</a> list -><br>       ?deps:<a href="Functoria.html#TYPEabstract_impl">abstract_impl</a> list -><br>       string -> 'a <a href="Functoria.html#TYPEtyp">typ</a> -> 'a <a href="Functoria.html#TYPEimpl">impl</a></code></pre><div class="info ">
 <code class="code">foreign name typ</code> is the module <code class="code">name</code>, having the module type
     <code class="code">typ</code>.
 <p>
@@ -192,10 +192,9 @@ The signature for run-time and configure-time command-line
 <li>If <code class="code">keys</code> is set, use the given <a href="Functoria_key.html#TYPEkey">keys</a> to
        parse at configure and runtime the command-line arguments
        before calling <code class="code">name.connect</code>.</li>
-<li>If <code class="code">dependencies</code> is set, the given list of
-       <a href="Functoria.html#TYPEabstract_impl">abstract</a> implementations is added as
-       data-dependencies: they will be initialized before calling
-       <code class="code">name.connect</code>. </li>
+<li>If <code class="code">depes</code> is set, the given list of <a href="Functoria.html#TYPEabstract_impl">abstract</a>
+       implementations is added as data-dependencies: they will be
+       initialized before calling <code class="code">name.connect</code>. </li>
 </ul>
 <br>
 </div>

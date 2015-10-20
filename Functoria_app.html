@@ -71,9 +71,12 @@ The type for application about the application being built.<br>
 <code class="code">info</code> is a value representing <a href="Functoria_app.html#VALinfo"><code class="code"><span class="constructor">Functoria_app</span>.info</code></a> module types.<br>
 </div>
 
-<pre><span id="VALexport_info"><span class="keyword">val</span> export_info</span> : <code class="type"><a href="Functoria_app.html#TYPEinfo">info</a> <a href="Functoria.html#TYPEimpl">Functoria.impl</a></code></pre><div class="info ">
-<code class="code">export_info</code> is the module implementation whose state contins all
-    the information available at configure-time and run-time.<br>
+<pre><span id="VALapp_info"><span class="keyword">val</span> app_info</span> : <code class="type">?type_modname:string -><br>       ?gen_modname:string -> unit -> <a href="Functoria_app.html#TYPEinfo">info</a> <a href="Functoria.html#TYPEimpl">Functoria.impl</a></code></pre><div class="info ">
+<code class="code">app_info</code> is the module implementation whose state contains all
+    the information available at configure-time. The type of the
+    generated value lives in the module <code class="code">type_modname</code>: if not set, it
+    is <code class="code"><span class="constructor">Functoria_info</span></code>. The value is stored into a generated module
+    name <code class="code">gen_modname</code>: if not set, it is <code class="code"><span class="constructor">Info_gen</span></code>.<br>
 </div>
 <br>
 <h1 id="1_Builders">Builders</h1><br>

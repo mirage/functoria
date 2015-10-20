@@ -111,7 +111,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;?packages:string&nbsp;list&nbsp;<span class="keywordsign">-&gt;</span><br>
 &nbsp;&nbsp;&nbsp;&nbsp;?libraries:string&nbsp;list&nbsp;<span class="keywordsign">-&gt;</span><br>
 &nbsp;&nbsp;&nbsp;&nbsp;?keys:<span class="constructor">Functoria</span>.key&nbsp;list&nbsp;<span class="keywordsign">-&gt;</span><br>
-&nbsp;&nbsp;&nbsp;&nbsp;?dependencies:<span class="constructor">Functoria</span>.abstract_impl&nbsp;list&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;?deps:<span class="constructor">Functoria</span>.abstract_impl&nbsp;list&nbsp;<span class="keywordsign">-&gt;</span><br>
 &nbsp;&nbsp;&nbsp;&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">Functoria</span>.typ&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">Functoria</span>.impl<br>
 &nbsp;&nbsp;<span class="keyword">module</span>&nbsp;<span class="constructor">Info</span>&nbsp;:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">sig</span><br>
@@ -134,7 +134,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">method</span>&nbsp;clean&nbsp;:&nbsp;<span class="constructor">Functoria</span>.<span class="constructor">Info</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;(unit,&nbsp;string)&nbsp;<span class="constructor">Rresult</span>.result<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">method</span>&nbsp;configure&nbsp;:&nbsp;<span class="constructor">Functoria</span>.<span class="constructor">Info</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;(unit,&nbsp;string)&nbsp;<span class="constructor">Rresult</span>.result<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">method</span>&nbsp;connect&nbsp;:&nbsp;<span class="constructor">Functoria</span>.<span class="constructor">Info</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string&nbsp;list&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">method</span>&nbsp;dependencies&nbsp;:&nbsp;<span class="constructor">Functoria</span>.abstract_impl&nbsp;list<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">method</span>&nbsp;deps&nbsp;:&nbsp;<span class="constructor">Functoria</span>.abstract_impl&nbsp;list<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">method</span>&nbsp;keys&nbsp;:&nbsp;<span class="constructor">Functoria</span>.key&nbsp;list<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">method</span>&nbsp;libraries&nbsp;:&nbsp;string&nbsp;list&nbsp;<span class="constructor">Functoria</span>.value<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">method</span>&nbsp;module_name&nbsp;:&nbsp;string<br>
@@ -148,7 +148,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">method</span>&nbsp;clean&nbsp;:&nbsp;<span class="constructor">Functoria</span>.<span class="constructor">Info</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;(unit,&nbsp;string)&nbsp;<span class="constructor">Rresult</span>.result<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">method</span>&nbsp;configure&nbsp;:&nbsp;<span class="constructor">Functoria</span>.<span class="constructor">Info</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;(unit,&nbsp;string)&nbsp;<span class="constructor">Rresult</span>.result<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">method</span>&nbsp;connect&nbsp;:&nbsp;<span class="constructor">Functoria</span>.<span class="constructor">Info</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string&nbsp;list&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">method</span>&nbsp;dependencies&nbsp;:&nbsp;<span class="constructor">Functoria</span>.abstract_impl&nbsp;list<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">method</span>&nbsp;deps&nbsp;:&nbsp;<span class="constructor">Functoria</span>.abstract_impl&nbsp;list<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">method</span>&nbsp;keys&nbsp;:&nbsp;<span class="constructor">Functoria</span>.key&nbsp;list<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">method</span>&nbsp;libraries&nbsp;:&nbsp;string&nbsp;list&nbsp;<span class="constructor">Functoria</span>.value<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">method</span>&nbsp;packages&nbsp;:&nbsp;string&nbsp;list&nbsp;<span class="constructor">Functoria</span>.value<br>
