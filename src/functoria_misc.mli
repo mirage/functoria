@@ -119,9 +119,9 @@ val error:
 
 val fail: ('a, Format.formatter, unit, 'b) format4 -> 'a
 
-val info: ('a, Format.formatter, unit, unit) format4 -> 'a
-val debug: ('a, Format.formatter, unit, unit) format4 -> 'a
-val show_error: ('a, Format.formatter, unit, unit) format4 -> 'a
+val info: ('a, Format.formatter, unit) format -> 'a
+val debug: ('a, Format.formatter, unit) format -> 'a
+val show_error: ('a, Format.formatter, unit) format -> 'a
 
 val blue: string Fmt.t
 val yellow: string Fmt.t
@@ -151,14 +151,14 @@ end
 
 module Codegen: sig
 
-  val append: Format.formatter -> ('a, Format.formatter, unit, unit, unit, unit) format6 -> 'a
+  val append: Format.formatter -> ('a, Format.formatter, unit) format -> 'a
 
   val newline: Format.formatter -> unit
 
   val set_main_ml: string -> unit
   (** Define the current main file. *)
 
-  val append_main: ('a, Format.formatter, unit, unit, unit, unit) format6 -> 'a
+  val append_main: ('a, Format.formatter, unit) format -> 'a
   (** Add some string to [main.ml]. *)
 
   val newline_main: unit -> unit
