@@ -102,6 +102,10 @@ The type for abstract <a href="Functoria_key.html#TYPEkey">keys</a>.<br>
 </div>
 
 
+<pre><span class="keyword">module</span> <a href="Functoria_key.Set.html">Set</a>: <code class="code"><span class="keyword">sig</span></code> <a href="Functoria_key.Set.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info">
+<code class="code"><span class="constructor">Set</span></code> implements sets over <code class="code">t</code> elements.
+</div>
+
 <pre><span id="VALabstract"><span class="keyword">val</span> abstract</span> : <code class="type">'a <a href="Functoria_key.html#TYPEkey">key</a> -> <a href="Functoria_key.html#TYPEt">t</a></code></pre><div class="info ">
 <code class="code">hide k</code> is the <code class="code">k</code> with its type hidden.<br>
 </div>
@@ -118,7 +122,7 @@ The type for abstract <a href="Functoria_key.html#TYPEkey">keys</a>.<br>
 <code class="code">with_deps keys v</code> is <code class="code">v</code> with <code class="code">keys</code> as data-dependencies.<br>
 </div>
 
-<pre><span id="VALdeps"><span class="keyword">val</span> deps</span> : <code class="type">'a <a href="Functoria_key.html#TYPEvalue">value</a> -> <a href="Functoria_key.html#TYPEt">t</a> list</code></pre><div class="info ">
+<pre><span id="VALdeps"><span class="keyword">val</span> deps</span> : <code class="type">'a <a href="Functoria_key.html#TYPEvalue">value</a> -> Set.t</code></pre><div class="info ">
 <code class="code">deps v</code> are <code class="code">v</code>'s data-dependencies.<br>
 </div>
 
@@ -136,7 +140,7 @@ The type for abstract <a href="Functoria_key.html#TYPEkey">keys</a>.<br>
 <code class="code">is_configure k</code> is true if <code class="code">k</code>'s stage is <code class="code"><span class="keywordsign">`</span><span class="constructor">Configure</span></code> or <code class="code"><span class="keywordsign">`</span><span class="constructor">Both</span></code>.<br>
 </div>
 
-<pre><span id="VALfilter_stage"><span class="keyword">val</span> filter_stage</span> : <code class="type"><a href="Functoria_key.Arg.html#TYPEstage">Arg.stage</a> -> <a href="Functoria_key.html#TYPEt">t</a> list -> <a href="Functoria_key.html#TYPEt">t</a> list</code></pre><div class="info ">
+<pre><span id="VALfilter_stage"><span class="keyword">val</span> filter_stage</span> : <code class="type"><a href="Functoria_key.Arg.html#TYPEstage">Arg.stage</a> -> Set.t -> Set.t</code></pre><div class="info ">
 <code class="code">filter_stage s ks</code> is <code class="code">ks</code> but with only keys available at stage
     <code class="code">s</code>.<br>
 </div>
@@ -150,7 +154,7 @@ Alias allows to define virtual keys in terms of other keys at
 Similar to <a href="Functoria_key.html#VALcreate"><code class="code"><span class="constructor">Functoria_key</span>.create</code></a> but for command-line alias.<br>
 </div>
 
-<pre><span id="VALaliases"><span class="keyword">val</span> aliases</span> : <code class="type"><a href="Functoria_key.html#TYPEt">t</a> -> <a href="Functoria_key.html#TYPEt">t</a> list</code></pre><div class="info ">
+<pre><span id="VALaliases"><span class="keyword">val</span> aliases</span> : <code class="type"><a href="Functoria_key.html#TYPEt">t</a> -> Set.t</code></pre><div class="info ">
 <code class="code">aliases t</code> is the list of <code class="code">t</code>'s aliases.<br>
 </div>
 <br>
@@ -162,7 +166,7 @@ The type for values holding parsing context.<br>
 </div>
 
 
-<pre><span id="VALcontext"><span class="keyword">val</span> context</span> : <code class="type">?stage:<a href="Functoria_key.Arg.html#TYPEstage">Arg.stage</a> -><br>       <a href="Functoria_key.html#TYPEt">t</a> list -> <a href="Functoria_key.html#TYPEcontext">context</a> Cmdliner.Term.t</code></pre><div class="info ">
+<pre><span id="VALcontext"><span class="keyword">val</span> context</span> : <code class="type">?stage:<a href="Functoria_key.Arg.html#TYPEstage">Arg.stage</a> -><br>       Set.t -> <a href="Functoria_key.html#TYPEcontext">context</a> Cmdliner.Term.t</code></pre><div class="info ">
 <code class="code">context ks</code> is a <code class="code"><span class="constructor">Cmdliner</span></code>
     <a href="http://erratique.ch/software/cmdliner/doc/Cmdliner.Term.html#TYPt">
     term</a> that evaluates into a parsing context for command-line
@@ -187,7 +191,7 @@ The type for values holding parsing context.<br>
 <code class="code">get c k</code> is <code class="code">k</code>'s value in <code class="code">c</code>'s context.<br>
 </div>
 
-<pre><span id="VALpps"><span class="keyword">val</span> pps</span> : <code class="type"><a href="Functoria_key.html#TYPEcontext">context</a> -> <a href="Functoria_key.html#TYPEt">t</a> list Fmt.t</code></pre><div class="info ">
+<pre><span id="VALpps"><span class="keyword">val</span> pps</span> : <code class="type"><a href="Functoria_key.html#TYPEcontext">context</a> -> Set.t Fmt.t</code></pre><div class="info ">
 <code class="code">pps c fmt ks</code> prints the keys <code class="code">ks</code> using the context <code class="code">c</code> to get
     their value.<br>
 </div>
