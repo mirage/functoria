@@ -48,6 +48,14 @@ The type for runtime command-line arguments. Similar to
 <code class="code">opt</code> is the runtime companion of <a href="Functoria_key.Arg.html#VALopt"><code class="code"><span class="constructor">Functoria_key</span>.<span class="constructor">Arg</span>.opt</code></a>.<br>
 </div>
 
+<pre><span id="VALrequired"><span class="keyword">val</span> required</span> : <code class="type">'a Cmdliner.Arg.converter -> Cmdliner.Arg.info -> 'a <a href="Functoria_runtime.Arg.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">required</code> is the runtime companion of <a href="Functoria_key.Arg.html#VALrequired"><code class="code"><span class="constructor">Functoria_key</span>.<span class="constructor">Arg</span>.required</code></a>.<br>
+</div>
+
+<pre><span id="VALkey"><span class="keyword">val</span> key</span> : <code class="type">?default:'a -><br>       'a Cmdliner.Arg.converter -> Cmdliner.Arg.info -> 'a <a href="Functoria_runtime.Arg.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">key</code> is either <a href="Functoria_runtime.Arg.html#VALopt"><code class="code"><span class="constructor">Functoria_runtime</span>.<span class="constructor">Arg</span>.opt</code></a> or <code class="code">runtime</code>, depending if <code class="code">~default</code> is provided.<br>
+</div>
+
 <pre><span id="VALflag"><span class="keyword">val</span> flag</span> : <code class="type">Cmdliner.Arg.info -> bool <a href="Functoria_runtime.Arg.html#TYPEt">t</a></code></pre><div class="info ">
 <code class="code">flag</code> is the runtime companion of <a href="Functoria_key.Arg.html#VALflag"><code class="code"><span class="constructor">Functoria_key</span>.<span class="constructor">Arg</span>.flag</code></a>.<br>
 </div>

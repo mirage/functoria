@@ -40,7 +40,7 @@ The Functoria DSL.
 <p>
 
     Users of the Functoria DSL composes their application by defining
-    a list of <a href="Functoria.html#VALforeign">module</a> implementations, specify the
+    a list of <a href="Functoria.foreign-c.html">module</a> implementations, specify the
     command-line <a href="Functoria.html#keys"><i>Keys</i></a> that are required and <a href="Functoria.html#combinators">combine</a>
     all of them together using
     <a href="http://dx.doi.org/10.1017/S0956796807006326">applicative</a>
@@ -173,7 +173,7 @@ The signature for run-time and configure-time command-line
 <p>
 
     Values of type <a href="Functoria.html#VALimpl"><code class="code"><span class="constructor">Functoria</span>.impl</code></a> are tied to concrete module implementation
-    with the <a href="Functoria.html#VALforeign"><code class="code"><span class="constructor">Functoria</span>.foreign</code></a> construct. Module implementations of type
+    with the <a href="Functoria.foreign-c.html"><code class="code"><span class="constructor">Functoria</span>.foreign</code></a> construct. Module implementations of type
     <a href="Functoria.html#VALjob"><code class="code"><span class="constructor">Functoria</span>.job</code></a> can then be <a href="Functoria_app.Make.html#VALregister">registered</a> into
     an application builder. The builder is in charge if parsing the
     command-line arguments and of generating code for the final
@@ -192,11 +192,16 @@ The signature for run-time and configure-time command-line
 <li>If <code class="code">keys</code> is set, use the given <a href="Functoria_key.html#TYPEkey">keys</a> to
        parse at configure and runtime the command-line arguments
        before calling <code class="code">name.connect</code>.</li>
-<li>If <code class="code">depes</code> is set, the given list of <a href="Functoria.html#TYPEabstract_impl">abstract</a>
+<li>If <code class="code">deps</code> is set, the given list of <a href="Functoria.html#TYPEabstract_impl">abstract</a>
        implementations is added as data-dependencies: they will be
        initialized before calling <code class="code">name.connect</code>. </li>
 </ul>
-<br>
+
+<p>
+
+    For a more flexible definition of libraries and packages, or for a custom
+    configuration step, see the <a href="Functoria.configurable-c.html"><code class="code"><span class="constructor">Functoria</span>.configurable</code></a> class type and the
+    <a href="Functoria.foreign-c.html"><code class="code"><span class="constructor">Functoria</span>.foreign</code></a> class.<br>
 </div>
 
 <pre><span class="keyword">module</span> <a href="Functoria.Info.html">Info</a>: <code class="code"><span class="keyword">sig</span></code> <a href="Functoria.Info.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info">
@@ -214,6 +219,11 @@ Signature for configurable module implementations.
 <pre><span name="TYPEbase_configurable"><span class="keyword">class</span> <a href="Functoria.base_configurable-c.html">base_configurable</a></span> : <code class="type"></code><code class="code"><span class="keyword">object</span></code> <a href="Functoria.base_configurable-c.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info">
 <code class="code">base_configurable</code> pre-defining many methods from the
     <a href="Functoria.configurable-c.html"><code class="code"><span class="constructor">Functoria</span>.configurable</code></a> class.
+</div>
+
+<pre><span name="TYPEforeign"><span class="keyword">class</span> <code class="type">['a]</code> <a href="Functoria.foreign-c.html">foreign</a></span> : <code class="type">?packages:string list -> ?libraries:string list -> ?keys:<a href="Functoria.html#TYPEkey">key</a> list -> ?deps:<a href="Functoria.html#TYPEabstract_impl">abstract_impl</a> list -> string -> 'a <a href="Functoria.html#TYPEtyp">typ</a> -> </code><code class="type">['a]</code> <code class="type"><a href="Functoria.configurable-c.html">configurable</a></code></pre><div class="info">
+This class can be inherited to define a <a href="Functoria.configurable-c.html"><code class="code"><span class="constructor">Functoria</span>.configurable</code></a> with an API
+    similar to <a href="Functoria.foreign-c.html"><code class="code"><span class="constructor">Functoria</span>.foreign</code></a>.
 </div>
 <br>
 <h1 id="1_Sharing">Sharing</h1><br>

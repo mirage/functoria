@@ -116,7 +116,7 @@ The type for arguments holding data of type <code class="code"><span class="keyw
 The type for information about cross-stage command-line
       arguments. See
       <a href="http://erratique.ch/software/cmdliner/doc/Cmdliner.Arg.html#arginfo">
-      Cmdliner.Arg#TYPEinfo</a>.<br>
+      Cmdliner's arguments</a>.<br>
 </div>
 
 
@@ -152,10 +152,17 @@ The type for specifying at which stage an argument is available.
       arguments. If not set, <code class="code">stage</code> is <code class="code"><span class="keywordsign">`</span><span class="constructor">Both</span></code>.<br>
 </div>
 
+<pre><span id="VALrequired"><span class="keyword">val</span> required</span> : <code class="type">?stage:<a href="Functoria_key.Arg.html#TYPEstage">stage</a> -><br>       'a <a href="Functoria_key.Arg.html#TYPEconverter">converter</a> -><br>       <a href="Functoria_key.Arg.html#TYPEinfo">info</a> -> 'a option <a href="Functoria_key.Arg.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">required conv i</code> is similar to
+      <a href="http://erratique.ch/software/cmdliner/doc/Cmdliner.Arg.html#VALrequired">
+      Cmdliner.Arg.required</a> but for cross-stage required command-line
+      arguments. If not set, <code class="code">stage</code> is <code class="code"><span class="keywordsign">`</span><span class="constructor">Both</span></code>.<br>
+</div>
+
 <pre><span id="VALflag"><span class="keyword">val</span> flag</span> : <code class="type">?stage:<a href="Functoria_key.Arg.html#TYPEstage">stage</a> -><br>       <a href="Functoria_key.Arg.html#TYPEinfo">info</a> -> bool <a href="Functoria_key.Arg.html#TYPEt">t</a></code></pre><div class="info ">
 <code class="code">flag i</code> is similar to
       <a href="http://erratique.ch/software/cmdliner/doc/Cmdliner.Arg.html#VALflag">
-      Cmdliner.Arg.opt</a> but for cross-stage command-line flags. If not
+      Cmdliner.Arg.flag</a> but for cross-stage command-line flags. If not
       set, <code class="code">stage</code> is <code class="code"><span class="keywordsign">`</span><span class="constructor">Both</span></code>.<br>
 </div>
 </body></html>

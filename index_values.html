@@ -106,7 +106,7 @@ Add some string to <code class="code">main.ml</code>.
 </td></tr>
 <tr><td><a href="Functoria_key.html#VALcontext">context</a> [<a href="Functoria_key.html">Functoria_key</a>]</td>
 <td><div class="info">
-<code class="code">context ks</code> is a <code class="code"><span class="constructor">Cmdliner</span></code>
+<code class="code">context ~with_required ks</code> is a <code class="code"><span class="constructor">Cmdliner</span></code>
     <a href="http://erratique.ch/software/cmdliner/doc/Cmdliner.Term.html#TYPt">
     term</a> that evaluates into a parsing context for command-line
     arguments.
@@ -157,6 +157,11 @@ Add some string to <code class="code">main.ml</code>.
 </div>
 </td></tr>
 <tr><td align="left"><br>D</td></tr>
+<tr><td><a href="Functoria_runtime.Key.html#VALdefault">default</a> [<a href="Functoria_runtime.Key.html">Functoria_runtime.Key</a>]</td>
+<td><div class="info">
+<code class="code">default k</code> is the default value of <code class="code">k</code>, if one is available.
+</div>
+</td></tr>
 <tr><td><a href="Functoria_key.html#VALdefault">default</a> [<a href="Functoria_key.html">Functoria_key</a>]</td>
 <td><div class="info">
 <code class="code">default v</code> returns the default value for <code class="code">v</code>.
@@ -174,6 +179,8 @@ Add some string to <code class="code">main.ml</code>.
 </div>
 </td></tr>
 <tr><td align="left"><br>E</td></tr>
+<tr><td><a href="Functoria_key.html#VALempty_context">empty_context</a> [<a href="Functoria_key.html">Functoria_key</a>]</td>
+<td></td></tr>
 <tr><td><a href="Functoria.html#VALequal">equal</a> [<a href="Functoria.html">Functoria</a>]</td>
 <td><div class="info">
 <code class="code">equal</code> is the equality over implementations.
@@ -217,7 +224,7 @@ Add some string to <code class="code">main.ml</code>.
 <td><div class="info">
 <code class="code">flag i</code> is similar to
       <a href="http://erratique.ch/software/cmdliner/doc/Cmdliner.Arg.html#VALflag">
-      Cmdliner.Arg.opt</a> but for cross-stage command-line flags.
+      Cmdliner.Arg.flag</a> but for cross-stage command-line flags.
 </div>
 </td></tr>
 <tr><td><a href="Functoria.html#VALforeign">foreign</a> [<a href="Functoria.html">Functoria</a>]</td>
@@ -306,6 +313,11 @@ Define cross-stage information for an argument.
 </div>
 </td></tr>
 <tr><td align="left"><br>K</td></tr>
+<tr><td><a href="Functoria_runtime.Arg.html#VALkey">key</a> [<a href="Functoria_runtime.Arg.html">Functoria_runtime.Arg</a>]</td>
+<td><div class="info">
+<code class="code">key</code> is either <a href="Functoria_runtime.Arg.html#VALopt"><code class="code"><span class="constructor">Functoria_runtime</span>.<span class="constructor">Arg</span>.opt</code></a> or <code class="code">runtime</code>, depending if <code class="code">~default</code> is provided.
+</div>
+</td></tr>
 <tr><td><a href="Functoria_app.html#VALkeys">keys</a> [<a href="Functoria_app.html">Functoria_app</a>]</td>
 <td><div class="info">
 <code class="code">keys a</code> is an implementation of <a href="Functoria.html#VALjob"><code class="code"><span class="constructor">Functoria</span>.job</code></a> that holds the
@@ -394,6 +406,11 @@ Add a newline to <code class="code">main.ml</code>.
       replacing '-' with '_'.
 </div>
 </td></tr>
+<tr><td><a href="Functoria_key.html#VALof_deps">of_deps</a> [<a href="Functoria_key.html">Functoria_key</a>]</td>
+<td><div class="info">
+<code class="code">of_deps keys</code> is a value with <code class="code">keys</code> as data-dependencies.
+</div>
+</td></tr>
 <tr><td><a href="Functoria_key.Set.html#VALof_list">of_list</a> [<a href="Functoria_key.Set.html">Functoria_key.Set</a>]</td>
 <td><div class="info">
 <code class="code">of_list l</code> is the set of keys <code class="code">l</code>.
@@ -472,6 +489,19 @@ Prelude printed at the beginning of <code class="code">main.ml</code>.
 </td></tr>
 <tr><td><a href="Functoria_app.Cmd.html#VALremove">remove</a> [<a href="Functoria_app.Cmd.html">Functoria_app.Cmd</a>]</td>
 <td></td></tr>
+<tr><td><a href="Functoria_runtime.Arg.html#VALrequired">required</a> [<a href="Functoria_runtime.Arg.html">Functoria_runtime.Arg</a>]</td>
+<td><div class="info">
+<code class="code">required</code> is the runtime companion of <a href="Functoria_key.Arg.html#VALrequired"><code class="code"><span class="constructor">Functoria_key</span>.<span class="constructor">Arg</span>.required</code></a>.
+</div>
+</td></tr>
+<tr><td><a href="Functoria_key.Arg.html#VALrequired">required</a> [<a href="Functoria_key.Arg.html">Functoria_key.Arg</a>]</td>
+<td><div class="info">
+<code class="code">required conv i</code> is similar to
+      <a href="http://erratique.ch/software/cmdliner/doc/Cmdliner.Arg.html#VALrequired">
+      Cmdliner.Arg.required</a> but for cross-stage required command-line
+      arguments.
+</div>
+</td></tr>
 <tr><td><a href="Functoria.Info.html#VALroot">root</a> [<a href="Functoria.Info.html">Functoria.Info</a>]</td>
 <td><div class="info">
 Directory in which the configuration is done.
@@ -493,7 +523,7 @@ Run the application builder.
 </td></tr>
 <tr><td><a href="Functoria_key.html#VALserialize_call">serialize_call</a> [<a href="Functoria_key.html">Functoria_key</a>]</td>
 <td><div class="info">
-<code class="code">serialize_call fmt k</code> outputs <code class="code"><span class="constructor">Bootvar_gen</span>.n ()</code> to <code class="code">fmt</code>, where
+<code class="code">serialize_call fmt k</code> outputs <code class="code"><span class="constructor">Key_gen</span>.n ()</code> to <code class="code">fmt</code>, where
     <code class="code">n</code> is <code class="code">k</code>'s <a href="Functoria_key.html#VALocaml_name">OCaml name</a>.
 </div>
 </td></tr>
@@ -553,11 +583,6 @@ Version of the custom DSL.
 <td><div class="info">
 <code class="code">with_argv keys name argv</code> evaluates the <code class="code">keys</code> <a href="Functoria_runtime.Key.html#VALterm">terms</a>
     on the command-line <code class="code">argv</code>.
-</div>
-</td></tr>
-<tr><td><a href="Functoria_key.html#VALwith_deps">with_deps</a> [<a href="Functoria_key.html">Functoria_key</a>]</td>
-<td><div class="info">
-<code class="code">with_deps keys v</code> is <code class="code">v</code> with <code class="code">keys</code> as data-dependencies.
 </div>
 </td></tr>
 <tr><td><a href="Functoria_app.Cmd.html#VALwith_file">with_file</a> [<a href="Functoria_app.Cmd.html">Functoria_app.Cmd</a>]</td>

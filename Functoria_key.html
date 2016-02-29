@@ -118,8 +118,8 @@ The type for abstract <a href="Functoria_key.html#TYPEkey">keys</a>.<br>
 <code class="code">pp fmt k</code> prints the name of <code class="code">k</code>.<br>
 </div>
 
-<pre><span id="VALwith_deps"><span class="keyword">val</span> with_deps</span> : <code class="type"><a href="Functoria_key.html#TYPEt">t</a> list -> 'a <a href="Functoria_key.html#TYPEvalue">value</a> -> 'a <a href="Functoria_key.html#TYPEvalue">value</a></code></pre><div class="info ">
-<code class="code">with_deps keys v</code> is <code class="code">v</code> with <code class="code">keys</code> as data-dependencies.<br>
+<pre><span id="VALof_deps"><span class="keyword">val</span> of_deps</span> : <code class="type">Set.t -> unit <a href="Functoria_key.html#TYPEvalue">value</a></code></pre><div class="info ">
+<code class="code">of_deps keys</code> is a value with <code class="code">keys</code> as data-dependencies.<br>
 </div>
 
 <pre><span id="VALdeps"><span class="keyword">val</span> deps</span> : <code class="type">'a <a href="Functoria_key.html#TYPEvalue">value</a> -> Set.t</code></pre><div class="info ">
@@ -166,11 +166,13 @@ The type for values holding parsing context.<br>
 </div>
 
 
-<pre><span id="VALcontext"><span class="keyword">val</span> context</span> : <code class="type">?stage:<a href="Functoria_key.Arg.html#TYPEstage">Arg.stage</a> -><br>       Set.t -> <a href="Functoria_key.html#TYPEcontext">context</a> Cmdliner.Term.t</code></pre><div class="info ">
-<code class="code">context ks</code> is a <code class="code"><span class="constructor">Cmdliner</span></code>
+<pre><span id="VALempty_context"><span class="keyword">val</span> empty_context</span> : <code class="type"><a href="Functoria_key.html#TYPEcontext">context</a></code></pre>
+<pre><span id="VALcontext"><span class="keyword">val</span> context</span> : <code class="type">?stage:<a href="Functoria_key.Arg.html#TYPEstage">Arg.stage</a> -><br>       with_required:bool -><br>       Set.t -> <a href="Functoria_key.html#TYPEcontext">context</a> Cmdliner.Term.t</code></pre><div class="info ">
+<code class="code">context ~with_required ks</code> is a <code class="code"><span class="constructor">Cmdliner</span></code>
     <a href="http://erratique.ch/software/cmdliner/doc/Cmdliner.Term.html#TYPt">
     term</a> that evaluates into a parsing context for command-line
-    arguments.<br>
+    arguments.
+    If <code class="code">with_required</code> is false, it will only produce optional keys.<br>
 </div>
 
 <pre><span id="VALmem"><span class="keyword">val</span> mem</span> : <code class="type"><a href="Functoria_key.html#TYPEcontext">context</a> -> 'a <a href="Functoria_key.html#TYPEvalue">value</a> -> bool</code></pre><div class="info ">
@@ -203,7 +205,7 @@ The type for values holding parsing context.<br>
 </div>
 
 <pre><span id="VALserialize_call"><span class="keyword">val</span> serialize_call</span> : <code class="type"><a href="Functoria_key.html#TYPEt">t</a> Fmt.t</code></pre><div class="info ">
-<code class="code">serialize_call fmt k</code> outputs <code class="code"><span class="constructor">Bootvar_gen</span>.n ()</code> to <code class="code">fmt</code>, where
+<code class="code">serialize_call fmt k</code> outputs <code class="code"><span class="constructor">Key_gen</span>.n ()</code> to <code class="code">fmt</code>, where
     <code class="code">n</code> is <code class="code">k</code>'s <a href="Functoria_key.html#VALocaml_name">OCaml name</a>.<br>
 </div>
 
