@@ -36,6 +36,9 @@ val sys_argv: argv impl
 (** [sys_argv] is a device providing command-line arguments by using
     {!Sys.argv}. *)
 
+val no_argv: argv impl
+(** [no_argv] is a device discarding command-line arguments. *)
+
 val keys: argv impl -> job impl
 (** [keys a] is an implementation of {!Functoria.job} that holds the
     parsed command-line arguments. *)

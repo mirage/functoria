@@ -42,8 +42,15 @@ let sys_argv = impl @@ object
     method ty = argv
     method name = "argv"
     method module_name = "Sys"
-    method !connect _info _m _ =
-      "return (`Ok Sys.argv)"
+    method !connect _info _m _ = "return (`Ok Sys.argv)"
+  end
+
+let no_argv = impl @@ object
+    inherit base_configurable
+    method ty = argv
+    method name = "no_argv"
+    method module_name = "Functoria_runtime"
+    method !connect _ _ _ = "Lwt.return (`Ok [|\"\"|])"
   end
 
 (* Keys *)
@@ -667,7 +674,7 @@ module Make (P: S) = struct
     | Ok config ->
        let config_keys = Config.keys config in
        let context_args = Key.context ~stage:`Configure ~with_required:false config_keys in
-       let context = 
+       let context =
          match Cmdliner.Term.eval_peek_opts ~argv context_args with
          | _, `Ok context -> context
          | _ -> Functoria_key.empty_context

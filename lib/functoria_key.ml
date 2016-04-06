@@ -406,3 +406,10 @@ let serialize ctx fmt k =
   if is_runtime k
   then serialize_rw ctx fmt k
   else serialize_ro ctx fmt k
+
+(** {3 Argv} *)
+let no_argv section =
+  let doc = "Ignore the command line and set argv to [|\"\"|]" in
+  let doc = Arg.info ~docs:section ~doc ["no-argv"] in
+  let key = Arg.flag ~stage:`Configure doc in
+  create "no_argv" key
