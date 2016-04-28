@@ -292,6 +292,13 @@ val serialize: context -> t Fmt.t
 (** [serialize ctx ppf k] outputs the [Cmdliner] runes to parse
     command-line arguments represented by [k] at runtime. *)
 
+(** {1 Base keys} *)
+
+val no_argv: string -> bool key
+(** [no_argv s] is the [--no-argv] command-line argument appearing in
+    the section [s] in the man page. This disables command-line
+    parsing and set [argv] to [|""|]. *)
+
 (**/**)
 
 val module_name: string
