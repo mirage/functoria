@@ -111,6 +111,7 @@ class base_configurable = object
   method configure (_: Info.t): (unit,string) R.t = R.ok ()
   method clean (_: Info.t): (unit,string) R.t = R.ok ()
   method deps: abstract_impl list = []
+  method module_name: string = "Functoria_runtime"
 end
 
 type job = JOB
