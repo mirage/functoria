@@ -17,7 +17,7 @@
 <link title="Functoria_key" rel="Chapter" href="Functoria_key.html">
 <link title="Functoria_runtime" rel="Chapter" href="Functoria_runtime.html">
 <link title="Functoria_info" rel="Chapter" href="Functoria_info.html">
-<link title="Functoria_app" rel="Chapter" href="Functoria_app.html"><title>Functoria : Functoria.foreign</title>
+<link title="Functoria_app" rel="Chapter" href="Functoria_app.html"><title>Functoria.foreign</title>
 </head>
 <body>
 <div class="navbar"><a class="pre" href="Functoria.base_configurable-c.html" title="Functoria.base_configurable">Previous</a>
@@ -31,12 +31,12 @@ This class can be inherited to define a <a href="Functoria.configurable-c.html">
 <p>
 
     In particular, it allows dynamic libraries and packages. Here is an example:
-    <pre class="codepre"><code class="code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;main&nbsp;=&nbsp;impl&nbsp;@@&nbsp;<span class="keyword">object</span><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">inherit</span>&nbsp;[_]&nbsp;foreign<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;~packages:[<span class="string">"vchan"</span>]<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"Unikernel.Main"</span>&nbsp;(console&nbsp;@-&gt;&nbsp;job)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">method</span>&nbsp;libraries&nbsp;=&nbsp;<span class="constructor">Key</span>.(if_&nbsp;is_xen)&nbsp;[<span class="string">"vchan.xen"</span>]&nbsp;[<span class="string">"vchan.lwt"</span>]<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">end</span><br>
+    <pre class="codepre"><code class="code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;main&nbsp;=&nbsp;impl&nbsp;@@&nbsp;<span class="keyword">object</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">inherit</span>&nbsp;[_]&nbsp;foreign
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;~packages:[<span class="string">"vchan"</span>]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"Unikernel.Main"</span>&nbsp;(console&nbsp;@-&gt;&nbsp;job)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">method</span>&nbsp;libraries&nbsp;=&nbsp;<span class="constructor">Key</span>.(if_&nbsp;is_xen)&nbsp;[<span class="string">"vchan.xen"</span>]&nbsp;[<span class="string">"vchan.lwt"</span>]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">end</span>
 &nbsp;&nbsp;&nbsp;&nbsp;</code></pre><br>
 </div>
 <hr width="100%">

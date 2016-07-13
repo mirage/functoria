@@ -17,7 +17,7 @@
 <link title="Functoria_key" rel="Chapter" href="Functoria_key.html">
 <link title="Functoria_runtime" rel="Chapter" href="Functoria_runtime.html">
 <link title="Functoria_info" rel="Chapter" href="Functoria_info.html">
-<link title="Functoria_app" rel="Chapter" href="Functoria_app.html"><title>Functoria : Functoria.base_configurable</title>
+<link title="Functoria_app" rel="Chapter" href="Functoria_app.html"><title>Functoria.base_configurable</title>
 </head>
 <body>
 <div class="navbar">&nbsp;<a class="up" href="Functoria.html" title="Functoria">Up</a>
@@ -30,12 +30,12 @@
     <a href="Functoria.configurable-c.html"><code class="code"><span class="constructor">Functoria</span>.configurable</code></a> class. To be used as follow:
 <p>
 
-    <pre class="codepre"><code class="code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;time_conf&nbsp;=&nbsp;<span class="keyword">object</span><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">inherit</span>&nbsp;base_configurable<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">method</span>&nbsp;ty&nbsp;=&nbsp;time<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">method</span>&nbsp;name&nbsp;=&nbsp;<span class="string">"time"</span><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">method</span>&nbsp;module_name&nbsp;=&nbsp;<span class="string">"OS.Time"</span><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">end</span><br>
+    <pre class="codepre"><code class="code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;time_conf&nbsp;=&nbsp;<span class="keyword">object</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">inherit</span>&nbsp;base_configurable
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">method</span>&nbsp;ty&nbsp;=&nbsp;time
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">method</span>&nbsp;name&nbsp;=&nbsp;<span class="string">"time"</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">method</span>&nbsp;module_name&nbsp;=&nbsp;<span class="string">"OS.Time"</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">end</span>
 &nbsp;&nbsp;&nbsp;&nbsp;</code></pre><br>
 </div>
 <hr width="100%">

@@ -17,7 +17,7 @@
 <link title="Functoria_key" rel="Chapter" href="Functoria_key.html">
 <link title="Functoria_runtime" rel="Chapter" href="Functoria_runtime.html">
 <link title="Functoria_info" rel="Chapter" href="Functoria_info.html">
-<link title="Functoria_app" rel="Chapter" href="Functoria_app.html"><title>Functoria : Functoria_app.Make</title>
+<link title="Functoria_app" rel="Chapter" href="Functoria_app.html"><title>Functoria_app.Make</title>
 </head>
 <body>
 <div class="navbar">&nbsp;<a class="up" href="Functoria_app.html" title="Functoria_app">Up</a>
@@ -25,7 +25,7 @@
 </div>
 <h1>Functor <a href="type_Functoria_app.Make.html">Functoria_app.Make</a></h1>
 
-<pre><span class="keyword">module</span> Make <code class="code">(</code><code class="code"><span class="constructor">P</span></code><code class="code"> : </code><code class="type"><a href="Functoria_app.S.html">S</a></code><code class="code">) </code>: <code class="code"><span class="keyword">sig</span></code> <a href="Functoria_app.Make.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info module top">
+<pre><span class="keyword">module</span> Make: <div class="sig_block"><code class="code"><span class="keyword">functor</span> (</code><code class="code"><span class="constructor">P</span></code><code class="code"> : </code><code class="type"><a href="Functoria_app.S.html">S</a></code><code class="code">) <span class="keywordsign">-&gt;</span> </code><code class="code"><span class="keyword">sig</span></code> <a href="Functoria_app.Make.html">..</a> <code class="code"><span class="keyword">end</span></code></div></pre><div class="info module top">
 <code class="code"><span class="constructor">Make</span></code> is an helper to generate new a application builder with the
     custom constructs defined by <a href="Functoria_app.S.html"><code class="code"><span class="constructor">Functoria_app</span>.<span class="constructor">S</span></code></a>.<br>
 </div>
@@ -45,10 +45,16 @@
 </table>
 <hr width="100%">
 
-<pre><span id="VALregister"><span class="keyword">val</span> register</span> : <code class="type">?packages:string list -><br>       ?libraries:string list -><br>       ?keys:<a href="Functoria.html#TYPEkey">Functoria.key</a> list -><br>       string -> <a href="Functoria.html#TYPEjob">Functoria.job</a> <a href="Functoria.html#TYPEimpl">Functoria.impl</a> list -> unit</code></pre><div class="info ">
+<pre><span id="VALregister"><span class="keyword">val</span> register</span> : <code class="type">?packages:string list -><br>       ?libraries:string list -><br>       ?keys:<a href="Functoria.html#TYPEkey">Functoria.key</a> list -><br>       ?init:<a href="Functoria.html#TYPEjob">Functoria.job</a> <a href="Functoria.html#TYPEimpl">Functoria.impl</a> list -><br>       string -> <a href="Functoria.html#TYPEjob">Functoria.job</a> <a href="Functoria.html#TYPEimpl">Functoria.impl</a> list -> unit</code></pre><div class="info ">
 <code class="code">register name jobs</code> registers the application named by <code class="code">name</code>
       which will executes the given <code class="code">jobs</code>. Same optinal arguments as
-      <code class="code"><span class="constructor">Functoria</span>.foreign</code>.<br>
+      <code class="code"><span class="constructor">Functoria</span>.foreign</code>.
+<p>
+
+      <code class="code">init</code> is the list of job to execute before anything else (such
+      as command-line argument parsing, log reporter setup, etc.). The
+      jobs are always executed in the sequence specified by the
+      caller.<br>
 </div>
 
 <pre><span id="VALget_base_context"><span class="keyword">val</span> get_base_context</span> : <code class="type">unit -> <a href="Functoria.html#TYPEcontext">Functoria.context</a></code></pre><div class="info ">
