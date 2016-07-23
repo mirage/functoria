@@ -243,16 +243,13 @@ module Engine = struct
   let meta_init fmt (connect_name, result_name) =
     Fmt.pf fmt "let _%s =@[@ Lazy.force %s @]in@ " result_name connect_name
 
-  let meta_connect error fmt (connect_name, result_name) =
+  let meta_connect fmt (_connect_name, result_name) =
     Fmt.pf fmt
-      "_%s >>= function@ \
-       | `Error _e -> %s@ \
-       | `Ok %s ->@ "
+      "_%s >>= fun %s ->@ "
       result_name
-      (error connect_name)
       result_name
 
-  let emit_connect fmt (error, iname, names, connect_string) =
+  let emit_connect fmt (iname, names, connect_string) =
     (* We avoid potential collision between double application
        by prefixing with "_". This also avoid warnings. *)
     let names = List.map (fun x -> (x, "_"^x)) names in
@@ -263,7 +260,7 @@ module Engine = struct
        %s@ )@]@."
       iname
       Fmt.(list ~sep:nop meta_init) names
-      Fmt.(list ~sep:nop @@ meta_connect error) names
+      Fmt.(list ~sep:nop meta_connect) names
       (connect_string @@ List.map snd names)
 
   let emit_run init main =
@@ -280,7 +277,7 @@ module Engine = struct
        in run t@]"
       Fmt.(list ~sep:nop force) init main
 
-  let connect modtbl info error (init, job) =
+  let connect modtbl info (init, job) =
     let tbl = Graph.Tbl.create 17 in
     let f v = match Graph.explode job v with
       | `App _ | `If _ -> assert false
@@ -290,7 +287,7 @@ module Engine = struct
         Graph.Tbl.add tbl v ident;
         let names = List.map (Graph.Tbl.find tbl) (args @ deps) in
         Codegen.append_main "%a"
-          emit_connect (error, ident, names, c#connect info modname)
+          emit_connect (ident, names, c#connect info modname)
     in
     Graph.fold (fun v () -> f v) job ();
     let main_name = Graph.Tbl.find tbl @@ Graph.find_root job in
@@ -300,9 +297,9 @@ module Engine = struct
     emit_run init_names main_name;
     ()
 
-  let configure_and_connect info error g =
+  let configure_and_connect info g =
     configure info g >>| fun modtbl ->
-    connect modtbl info error g
+    connect modtbl info g
 
   let clean i g =
     let f v = match Graph.explode g v with
@@ -465,7 +462,7 @@ module Make (P: S) = struct
     Codegen.newline_main ();
     Codegen.append_main "let _ = Printexc.record_backtrace true";
     Codegen.newline_main ();
-    Engine.configure_and_connect i P.driver_error jobs >>| fun () ->
+    Engine.configure_and_connect i jobs >>| fun () ->
     Codegen.newline_main ();
     ()
 
