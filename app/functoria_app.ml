@@ -30,7 +30,7 @@ let noop = impl @@ object
     inherit base_configurable
     method ty = job
     method name = "noop"
-    method module_name = "Pervasives"
+    method !module_name = "Pervasives"
   end
 
 (* Default argv *)
@@ -41,7 +41,7 @@ let sys_argv = impl @@ object
     inherit base_configurable
     method ty = argv
     method name = "argv"
-    method module_name = "Sys"
+    method !module_name = "Sys"
     method !connect _info _m _ =
       "return (`Ok Sys.argv)"
   end
@@ -77,7 +77,7 @@ let keys (argv: argv impl) = impl @@ object
     inherit base_configurable
     method ty = job
     method name = Keys.name
-    method module_name = Key.module_name
+    method !module_name = Key.module_name
     method !configure = Keys.configure
     method !clean = Keys.clean
     method !libraries = Key.pure [ "functoria.runtime" ]
@@ -120,7 +120,7 @@ let app_info ?(type_modname="Functoria_info")  ?(gen_modname="Info_gen") () =
     method ty = info
     method name = "info"
     val gen_file = String.lowercase gen_modname  ^ ".ml"
-    method module_name = gen_modname
+    method !module_name = gen_modname
     method !libraries = Key.pure ["functoria.runtime"]
     method !packages = Key.pure ["functoria"]
     method !connect _ modname _ = Fmt.strf "return (`Ok %s.info)" modname

@@ -250,6 +250,7 @@ class base_configurable: object
   method configure: Info.t -> (unit, string) Rresult.result
   method clean: Info.t -> (unit, string) Rresult.result
   method deps: abstract_impl list
+  method module_name: string
 end
 
 class ['a] foreign:
