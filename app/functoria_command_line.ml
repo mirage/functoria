@@ -36,21 +36,6 @@ let term_info title ~doc ~man ~arg =
  * Argument specifications
  *)
 
-(** Argument specification for --no-opam *)
-let no_opam =
-  mk_flag ["no-opam"]
-    "Do not manage the OPAM configuration. \
-     This will result in dependent libraries not being automatically \
-     installed during the configuration phase."
-
-(** Argument specification for --no-opam-version-check *)
-let no_opam_version_check =
-  mk_flag ["no-opam-version-check"] "Bypass the OPAM version check."
-
-(** Argument specification for --no-depext *)
-let no_depext =
-  mk_flag ["no-depext"] "Skip installation of external dependencies."
-
 (** Argument specification for --eval *)
 let full_eval =
   mk_flag ["eval"]
@@ -122,9 +107,6 @@ let verbose : Functoria_misc.Log.level Term.t =
 
 type 'a config_args = {
   result: 'a;
-  no_opam: bool;
-  no_depext: bool;
-  no_opam_version: bool
 }
 
 type 'a describe_args = {
@@ -153,15 +135,12 @@ struct
         `S "DESCRIPTION";
         `P "The $(b,configure) command initializes a fresh $(mname) application."
       ]
-      ~arg:Term.(pure (fun _ _ _ info no_opam no_opam_version no_depext -> 
-          Configure { result = info; no_opam; no_depext; no_opam_version })
+      ~arg:Term.(pure (fun _ _ _ info -> 
+          Configure { result = info })
                  $ verbose
                  $ color
                  $ config_file
-                 $ result
-                 $ no_opam
-                 $ no_opam_version_check
-                 $ no_depext)
+                 $ result)
 
   (** The 'describe' subcommand *)
   let describe result =

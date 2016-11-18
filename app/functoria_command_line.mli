@@ -42,10 +42,7 @@ val read_full_eval : string array -> bool
     value indicates whether the option is present in [argv]. *)
 
 type 'a config_args = {
-  result: 'a;
-  no_opam: bool;
-  no_depext: bool;
-  no_opam_version: bool
+  result: 'a
 }
 (** A value of type [config_args] is the result of parsing the arguments to a
     [configure] subcommand.
@@ -92,9 +89,6 @@ val parse_args : name:string -> version:string ->
       name configure [-v|--verbose]
                      [--color=(auto|always|never)]
                      [-f FILE | --file=FILE]
-                     [--no-opam]
-                     [--no-opam-version-check]
-                     [--no-depext]
                      [extra arguments]
       name describe [--eval]
                     [-v|--verbose]

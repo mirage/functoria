@@ -45,9 +45,6 @@ module Cmd: sig
   val with_file: string -> (Format.formatter -> 'a) -> 'a
   val with_process_in: string -> (in_channel -> 'a) -> 'a
   val with_process_out: string -> (out_channel -> 'a) -> 'a
-  val opam:
-    string -> ?yes:bool -> ?switch:string -> ?color:Fmt.style_renderer ->
-    string list -> (unit, string) result
   val in_dir: string -> (unit -> 'a) -> 'a
   val uname_s: unit -> string option
   val uname_m: unit -> string option

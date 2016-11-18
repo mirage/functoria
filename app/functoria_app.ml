@@ -414,44 +414,6 @@ module Make (P: S) = struct
     | None   -> Log.error "No configuration was registered."
     | Some t -> Ok t
 
-  (* {2 Opam Management} *)
-
-  let configure_opam ~no_opam_version ~no_depext t =
-    Log.info "Installing OPAM packages.";
-    let ps = Info.packages t in
-    if ps = [] then Ok ()
-    else if Cmd.exists "opam" then
-      if no_opam_version then Ok ()
-      else (
-        Cmd.read "opam --version" >>= fun opam_version ->
-        let version_error () =
-          Log.error
-            "Your version of OPAM (%s) is not recent enough. \
-             Please update to (at least) 1.2: \
-             https://opam.ocaml.org/doc/Install.html \
-             You can pass the `--no-opam-version-check` flag to force its \
-             use." opam_version
-        in
-        match String.cuts ~sep:"." opam_version with
-        | major::minor::_ ->
-          let major = try int_of_string major with Failure _ -> 0 in
-          let minor = try int_of_string minor with Failure _ -> 0 in
-          let color = Log.get_color () in
-          if (major, minor) >= (1, 2) then (
-            begin
-              if no_depext then Ok ()
-              else begin
-                if Cmd.exists "opam-depext"
-                then Ok (Log.info "opam depext is installed.")
-                else Cmd.opam ?color "install" ["depext"]
-              end >>= fun () -> Cmd.opam "depext" ps
-            end >>= fun () ->
-            Cmd.opam ?color "install" ps
-          ) else version_error ()
-        | _ -> version_error ()
-      )
-    else Log.error "OPAM is not installed."
-
   let configure_main i jobs =
     Log.info "%a main.ml" Log.blue "Generating:";
     Codegen.set_main_ml (Info.root i / "main.ml");
@@ -469,15 +431,9 @@ module Make (P: S) = struct
     Engine.clean i jobs >>| fun () ->
     Cmd.remove (Info.root i / "main.ml")
 
-  let configure ~no_opam ~no_depext ~no_opam_version i jobs =
+  let configure i jobs =
     Log.info "%a %s" Log.blue "Using configuration:"  (get_config_file ());
-    Cmd.in_dir (Info.root i) (fun () ->
-        begin if no_opam
-          then Ok ()
-          else configure_opam ~no_depext ~no_opam_version i
-        end >>= fun () ->
-        configure_main i jobs
-      )
+    Cmd.in_dir (Info.root i) (fun () -> configure_main i jobs)
 
   let clean i (_init, job) =
     Log.info "%a %s" Log.blue "Clean:"  (get_config_file ());
@@ -584,9 +540,9 @@ module Make (P: S) = struct
     function
     | `Error _ -> exit 1
     | `Ok Cmd.Help -> ()
-    | `Ok (Cmd.Configure {result = (jobs, info); no_opam; no_depext; no_opam_version}) ->
+    | `Ok (Cmd.Configure {result = (jobs, info)}) ->
       Config'.pp_info Log.info Log.DEBUG info;
-      fatalize_error (configure info jobs ~no_opam ~no_depext ~no_opam_version)
+      fatalize_error (configure info jobs)
     | `Ok (Cmd.Describe { result = (jobs, info); dotcmd; dot; output }) ->
       Config'.pp_info Fmt.(pf stdout) Log.INFO info;
       fatalize_error (describe info jobs ~dotcmd ~dot ~output)

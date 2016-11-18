@@ -32,13 +32,10 @@ let test_configure _ =
       ~describe:extra_term
       ~clean:extra_term
       ~help:extra_term
-      [|"name"; "configure"; "--xyz"; "--verbose"; "--no-opam"|]
+      [|"name"; "configure"; "--xyz"; "--verbose"|]
   in
   assert_equal
-    (`Ok (Cmd.Configure { result = (true, false);
-                          no_opam = true;
-                          no_opam_version = false;
-                          no_depext = false }))
+    (`Ok (Cmd.Configure { result = (true, false) }))
     result
 
 
