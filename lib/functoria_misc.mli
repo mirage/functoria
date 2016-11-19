@@ -50,14 +50,6 @@ module Cmd: sig
   val uname_m: unit -> string option
   val uname_r: unit -> string option
   val ocaml_version: unit -> int * int
-
-  module OCamlfind: sig
-    val query:
-      ?predicates:string list -> ?format:string -> ?recursive:bool ->
-      string list -> (string list, string) result
-    val installed: string -> bool
-  end
-
 end
 
 

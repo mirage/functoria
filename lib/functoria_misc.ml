@@ -234,25 +234,6 @@ module Cmd = struct
         with _ -> 0, 0
       end
     | _ -> 0, 0
-
-  module OCamlfind = struct
-
-    let query ?predicates ?(format="%p") ?(recursive=false) xs =
-      let pred = match predicates with
-        | None    -> ""
-        | Some ps -> "-predicates '" ^ String.concat ~sep:"," ps ^ "'"
-      and fmt  = "-format '" ^ format ^ "'"
-      and r    = if recursive then "-recursive" else ""
-      and pkgs = String.concat ~sep:" " xs
-      in
-      read "ocamlfind query %s %s %s %s" fmt pred r pkgs
-      >>| fun out -> Astring.String.cuts ~sep:"\n" out
-
-    let installed lib =
-      Sys.command ("ocamlfind query " ^ lib ^ " 2>&1 1>/dev/null") = 0
-
-  end
-
 end
 (* {Misc informations} *)
 
