@@ -89,8 +89,7 @@ module Make (P: S): sig
   open Functoria
 
   val register:
-    ?packages:string list ->
-    ?libraries:string list ->
+    ?packages:package list ->
     ?keys:key list ->
     ?init:job impl list ->
     string -> job impl list -> unit
