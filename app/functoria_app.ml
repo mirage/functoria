@@ -530,7 +530,7 @@ module Make (P: S) = struct
     function
     | `Error _ -> exit 1
     | `Ok Cmd.Help -> ()
-    | `Ok (Cmd.Configure {result = (jobs, info)}) ->
+    | `Ok (Cmd.Configure (jobs, info)) ->
       Config'.pp_info Log.info Log.DEBUG info;
       fatalize_error (configure info jobs)
     | `Ok (Cmd.Describe { result = (jobs, info); dotcmd; dot; output }) ->

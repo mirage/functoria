@@ -85,12 +85,49 @@ module Package = struct
       | None, None -> [opam]
       | Some xs, None -> opam :: List.map (fun x -> opam ^ "." ^ x) xs
       | None, Some a -> a
-      | Some _, Some _ -> invalid_arg "only either ~sub or ~ocamlfind may be specified"
+      | Some _, Some _ ->
+        invalid_arg ("dependent package " ^ opam ^ " may either specify ~sublibs or ~ocamlfind")
     in
     let ocamlfind = String.Set.of_list ocamlfind in
     match min, max with
-    | Some min, Some max when compare_version min max >= 0 -> invalid_arg "min must be < max"
+    | Some min, Some max when compare_version min max >= 0 ->
+      invalid_arg ("invalid version constraints for " ^ opam)
     | _ -> { opam ; build ; ocamlfind ; min ; max }
+
+  let ocamlfind build p =
+    if p.build = build then
+      p.ocamlfind
+    else
+      String.Set.empty
+
+  let libraries ps =
+    String.Set.elements
+      (List.fold_left String.Set.union String.Set.empty
+         (List.map (ocamlfind false) ps))
+
+  let package_name build p =
+    if p.build = build then
+      Some p.opam
+    else
+      None
+
+  let package_names ps =
+    List.fold_left (fun acc p ->
+        match package_name false p with
+        | Some pack -> pack :: acc
+        | None -> acc) []
+      ps
+
+  let exts_to_string min max build =
+    let bui = if build then "build & " else "" in
+    match min, max with
+    | None, None -> if build then "{build}" else ""
+    | Some a, None -> Printf.sprintf "{%s>=\"%s\"}" bui a
+    | None, Some b -> Printf.sprintf "{%s<\"%s\"}" bui b
+    | Some a, Some b -> Printf.sprintf "{%s>=\"%s\" & <\"%s\"}" bui a b
+
+  let pp_package t ppf p =
+    Fmt.pf ppf "%s%s%s %s" t p.opam t (exts_to_string p.min p.max p.build)
 end
 
 let package = Package.package
@@ -106,17 +143,11 @@ module Info = struct
 
   let name t = t.name
   let root t = t.root
-  let libraries t =
-    String.Set.elements
-      (List.fold_left String.Set.union String.Set.empty
-         (List.map (fun x -> x.ocamlfind)
-            (List.filter (fun x -> x.build = false)
-               (List.map snd (String.Map.bindings t.packages)))))
-  let package_names t =
-    List.map fst
-      (List.filter (fun (_, p) -> p.build = false)
-         (String.Map.bindings t.packages))
+
   let packages t = List.map snd (String.Map.bindings t.packages)
+  let libraries t = Package.libraries (packages t)
+  let package_names t = Package.package_names (packages t)
+
   let keys t = Key.Set.elements t.keys
   let context t = t.context
 
@@ -128,24 +159,13 @@ module Info = struct
         | None -> String.Map.add n p m
         | Some p' -> match Package.merge p.opam p p' with
           | Some p -> String.Map.add n p m
-          | None -> invalid_arg "bad constraints")
+          | None -> invalid_arg ("bad version constraints in " ^ p.opam))
         String.Map.empty packages
     in
     { name; root; keys; packages; context }
 
-  let exts_to_string min max build =
-    let bui = if build then "build & " else "" in
-    match min, max with
-    | None, None -> if build then "{build}" else ""
-    | Some a, None -> Printf.sprintf "{%s>=\"%s\"}" bui a
-    | None, Some b -> Printf.sprintf "{%s<\"%s\"}" bui b
-    | Some a, Some b -> Printf.sprintf "{%s>=\"%s\" & <\"%s\"}" bui a b
-
-  let pp_package t ppf p =
-    Fmt.pf ppf "%s%s%s@ %s" t p.opam t (exts_to_string p.min p.max p.build)
-
   let pp_packages ?(surround = "") ?sep ppf t =
-    Fmt.pf ppf "%a" (Fmt.iter ?sep List.iter (pp_package surround)) (packages t)
+    Fmt.pf ppf "%a" (Fmt.iter ?sep List.iter (Package.pp_package surround)) (packages t)
 
   let pp verbose ppf ({ name ; root ; keys ; context ; _ } as t) =
     let show name = Fmt.pf ppf "@[<2>%a@ %a@]@," Log.blue name in
@@ -162,7 +182,7 @@ module Info = struct
     let name = match name with None -> t.name | Some x -> x in
     Fmt.pf ppf "opam-version: \"1.2\"@." ;
     Fmt.pf ppf "name: \"%s\"@." name ;
-    Fmt.pf ppf "depends: [ @[<2>%a@]@ ]@."
+    Fmt.pf ppf "depends: [ @[<hv>%a@]@ ]@."
       (pp_packages ~surround:"\"" ~sep:(Fmt.unit "@ ")) t
 end
 

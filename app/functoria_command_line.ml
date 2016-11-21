@@ -105,10 +105,6 @@ let verbose : Functoria_misc.Log.level Term.t =
   in
   Term.(pure log_level_of_verbosity $ Arg.(value & flag_all doc))
 
-type 'a config_args = {
-  result: 'a;
-}
-
 type 'a describe_args = {
   result: 'a;
   dotcmd: string;
@@ -117,7 +113,7 @@ type 'a describe_args = {
 }
 
 type 'a action =
-    Configure of 'a config_args
+    Configure of 'a
   | Describe of 'a describe_args
   | Clean of 'a
   | Help
@@ -135,8 +131,7 @@ struct
         `S "DESCRIPTION";
         `P "The $(b,configure) command initializes a fresh $(mname) application."
       ]
-      ~arg:Term.(pure (fun _ _ _ info -> 
-          Configure { result = info })
+      ~arg:Term.(pure (fun _ _ _ info -> Configure info)
                  $ verbose
                  $ color
                  $ config_file

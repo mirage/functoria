@@ -127,7 +127,8 @@ val package :
     name is by default the same as [opam], you can specify [~sublibs] to add
     additional sublibraries (e.g. [~sublibs:["mirage"] "foo"] will result in the
     findlib names [ ["foo"; "foo.mirage"] ].  In case the findlib name is
-    disjoint (or empty), use [~ocamlfind].  Version constraints are given as
+    disjoint (or empty), use [~ocamlfind].  Specifying both [~ocamlfind] and
+    [~sublibs] leads to an invalid argument.  Version constraints are given as
     [min] (inclusive) and [max] (exclusive). *)
 
 (** {1:app Application Builder}
@@ -148,7 +149,7 @@ val foreign:
     [typ].
 
     {ul
-    {- If [packages] is set, then the given OPAM packages are
+    {- If [packages] is set, then the given packages are
        installed before compiling the current application.}
     {- If [keys] is set, use the given {{!Functoria_key.key}keys} to
        parse at configure and runtime the command-line arguments

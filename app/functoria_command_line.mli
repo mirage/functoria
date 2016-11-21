@@ -41,16 +41,6 @@ val read_full_eval : string array -> bool
 (** [read_full_eval argv] reads the --eval option from [argv]; the return
     value indicates whether the option is present in [argv]. *)
 
-type 'a config_args = {
-  result: 'a
-}
-(** A value of type [config_args] is the result of parsing the arguments to a
-    [configure] subcommand.
-
-    The [result] field holds the result of parsing the "additional" arguments
-    whose specification is passed as the [configure] argument to
-    {!parse_args}. *)
-
 type 'a describe_args = {
   result: 'a;
   dotcmd: string;
@@ -65,7 +55,7 @@ type 'a describe_args = {
     {!parse_args}. *)
 
 type 'a action =
-    Configure of 'a config_args
+    Configure of 'a
   | Describe of 'a describe_args
   | Clean of 'a
   | Help
