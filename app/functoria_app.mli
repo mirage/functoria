@@ -89,8 +89,7 @@ module Make (P: S): sig
   open Functoria
 
   val register:
-    ?packages:string list ->
-    ?libraries:string list ->
+    ?packages:package list ->
     ?keys:key list ->
     ?init:job impl list ->
     string -> job impl list -> unit
@@ -154,13 +153,6 @@ module Cmd: sig
 
   val ocaml_version: unit -> int * int
   (** [ocaml_version] is [ocaml -version]'s output. *)
-
-  module OCamlfind: sig
-    val query:
-      ?predicates:string list -> ?format:string -> ?recursive:bool ->
-      string list -> (string list, string) Rresult.result
-  end
-
 end
 
 (** Console logging. FIXME: replace by [Bos.Log]. *)

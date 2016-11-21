@@ -158,24 +158,6 @@ module Cmd = struct
         | Error err -> Log.error "%s" err
       ) fmt
 
-  let opam cmd ?(yes=true) ?switch ?color deps =
-    let color = match color with
-      | None -> ""
-      | Some `None -> " --color=never"
-      | Some `Ansi_tty -> " --color=always"
-    in
-    let deps = String.concat ~sep:" " deps in
-    (* Note: we don't redirect output to the log as installation can
-     * take a long time and the user will want to see what is
-       happening. *)
-    let yes = if yes then " --yes " else "" in
-    let redirect = false in
-    let switch = match switch with
-      | None   -> ""
-      | Some s -> Printf.sprintf " --switch=%s" s
-    in
-    run ~redirect "opam %s%s%s%s %s" cmd yes color switch deps
-
   let in_dir dir f =
     let pwd = Sys.getcwd () in
     let reset () =
@@ -252,25 +234,6 @@ module Cmd = struct
         with _ -> 0, 0
       end
     | _ -> 0, 0
-
-  module OCamlfind = struct
-
-    let query ?predicates ?(format="%p") ?(recursive=false) xs =
-      let pred = match predicates with
-        | None    -> ""
-        | Some ps -> "-predicates '" ^ String.concat ~sep:"," ps ^ "'"
-      and fmt  = "-format '" ^ format ^ "'"
-      and r    = if recursive then "-recursive" else ""
-      and pkgs = String.concat ~sep:" " xs
-      in
-      read "ocamlfind query %s %s %s %s" fmt pred r pkgs
-      >>| fun out -> Astring.String.cuts ~sep:"\n" out
-
-    let installed lib =
-      Sys.command ("ocamlfind query " ^ lib ^ " 2>&1 1>/dev/null") = 0
-
-  end
-
 end
 (* {Misc informations} *)
 

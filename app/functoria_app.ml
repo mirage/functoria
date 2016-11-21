@@ -82,8 +82,7 @@ let keys (argv: argv impl) = impl @@ object
     method module_name = Key.module_name
     method !configure = Keys.configure
     method !clean = Keys.clean
-    method !libraries = Key.pure [ "functoria-runtime" ]
-    method !packages = Key.pure [ "functoria-runtime" ]
+    method !packages = Key.pure [package "functoria-runtime"]
     method !deps = [ abstract argv ]
     method !connect info modname = function
       | [ argv ] ->
@@ -98,6 +97,8 @@ let keys (argv: argv impl) = impl @@ object
 type info = Info
 let info = Type Info
 
+(* hannes is pretty sure the following pp needs adjustments, but unclear to me
+   what exactly to do here? i.e. who reads the formatted stuff in again? *)
 let pp_libraries fmt l =
   Fmt.pf fmt "[@ %a]"
     Fmt.(iter ~sep:(unit ";@ ") List.iter @@ fmt "%S") l
@@ -113,7 +114,7 @@ let pp_dump_info module_name fmt i =
     "%s.{@ name = %S;@ \
      @[<v 2>packages = %a@]@ ;@ @[<v 2>libraries = %a@]@ }"
     module_name (Info.name i)
-    pp_packages (Info.packages i)
+    pp_packages (Info.package_names i)
     pp_libraries (Info.libraries i)
 
 let app_info ?(type_modname="Functoria_info")  ?(gen_modname="Info_gen") () =
@@ -123,8 +124,7 @@ let app_info ?(type_modname="Functoria_info")  ?(gen_modname="Info_gen") () =
     method name = "info"
     val gen_file = String.Ascii.lowercase gen_modname  ^ ".ml"
     method module_name = gen_modname
-    method !libraries = Key.pure ["functoria-runtime"]
-    method !packages = Key.pure ["functoria-runtime"]
+    method !packages = Key.pure [package "functoria-runtime"]
     method !connect _ modname _ = Fmt.strf "return %s.info" modname
 
     method !clean i =
@@ -159,21 +159,15 @@ module Engine = struct
     | App     -> Key.Set.empty
 
   module M = struct
-    type t = String.Set.t Key.value
-    let union x y = Key.(pure String.Set.union $ x $ y)
-    let empty = Key.pure String.Set.empty
+    type t = package list Key.value
+    let union x y = Key.(pure List.append $ x $ y)
+    let empty = Key.pure []
   end
 
   let packages =
     let open Graph in
     Graph.collect (module M) @@ function
-    | Impl c     -> Key.map String.Set.of_list c#packages
-    | If _ | App -> M.empty
-
-  let libraries =
-    let open Graph in
-    Graph.collect (module M) @@ function
-    | Impl c     -> Key.map String.Set.of_list c#libraries
+    | Impl c     -> c#packages
     | If _ | App -> M.empty
 
   (* Return a unique variable name holding the state of the given
@@ -316,8 +310,7 @@ module Config = struct
   type t = {
     name     : string;
     root     : string;
-    libraries: String.Set.t Key.value;
-    packages: String.Set.t Key.value;
+    packages: package list Key.value;
     keys    : Key.Set.t;
     init    : job impl list;
     jobs    : Graph.t;
@@ -335,29 +328,25 @@ module Config = struct
     in
     Key.Set.fold f all_keys skeys
 
-  let make ?(keys=[]) ?(libraries=[]) ?(packages=[]) ?(init=[]) name root
+  let make ?(keys=[]) ?(packages=[]) ?(init=[]) name root
       main_dev =
     let jobs = Graph.create main_dev in
-    let libraries = Key.pure @@ String.Set.of_list libraries in
-    let packages = Key.pure @@ String.Set.of_list packages in
+    let packages = Key.pure @@ packages in
     let keys = Key.Set.(union (of_list keys) (get_if_context jobs)) in
-    { libraries; packages; keys; name; root; init; jobs }
+    { packages; keys; name; root; init; jobs }
 
   let eval ~partial context
-      { name = n; root; packages; libraries; keys; jobs; init }
+      { name = n; root; packages; keys; jobs; init }
     =
     let e = Graph.eval ~partial ~context jobs in
-    let pkgs = Key.(pure String.Set.union $ packages $ Engine.packages e) in
-    let libs = Key.(pure String.Set.union $ libraries $ Engine.libraries e) in
+    let packages = Key.(pure List.append $ packages $ Engine.packages e) in
     let keys = Key.Set.elements (Key.Set.union keys @@ Engine.keys e) in
-    Key.(pure (fun libraries packages _ context ->
+    Key.(pure (fun packages _ context ->
         ((init, e),
          Info.create
-           ~libraries:(String.Set.elements libraries)
-           ~packages:(String.Set.elements packages)
+           ~packages
            ~keys ~context ~name:n ~root))
-         $ libs
-         $ pkgs
+         $ packages
          $ of_deps (Set.of_list keys))
 
   (* Extract all the keys directly. Useful to pre-resolve the keys
@@ -402,55 +391,17 @@ module Make (P: S) = struct
 
   let get_root () = Filename.dirname @@ get_config_file ()
 
-  let register ?(packages=[]) ?(libraries=[]) ?keys ?(init=[]) name jobs =
+  let register ?(packages=[]) ?keys ?(init=[]) name jobs =
     let keys = match keys with None -> [] | Some x -> x in
     let root = get_root () in
     let main_dev = P.create (init @ jobs) in
-    let c = Config.make ~keys ~libraries ~packages ~init name root main_dev in
+    let c = Config.make ~keys ~packages ~init name root main_dev in
     configuration := Some c
 
   let registered () =
     match !configuration with
     | None   -> Log.error "No configuration was registered."
     | Some t -> Ok t
-
-  (* {2 Opam Management} *)
-
-  let configure_opam ~no_opam_version ~no_depext t =
-    Log.info "Installing OPAM packages.";
-    let ps = Info.packages t in
-    if ps = [] then Ok ()
-    else if Cmd.exists "opam" then
-      if no_opam_version then Ok ()
-      else (
-        Cmd.read "opam --version" >>= fun opam_version ->
-        let version_error () =
-          Log.error
-            "Your version of OPAM (%s) is not recent enough. \
-             Please update to (at least) 1.2: \
-             https://opam.ocaml.org/doc/Install.html \
-             You can pass the `--no-opam-version-check` flag to force its \
-             use." opam_version
-        in
-        match String.cuts ~sep:"." opam_version with
-        | major::minor::_ ->
-          let major = try int_of_string major with Failure _ -> 0 in
-          let minor = try int_of_string minor with Failure _ -> 0 in
-          let color = Log.get_color () in
-          if (major, minor) >= (1, 2) then (
-            begin
-              if no_depext then Ok ()
-              else begin
-                if Cmd.exists "opam-depext"
-                then Ok (Log.info "opam depext is installed.")
-                else Cmd.opam ?color "install" ["depext"]
-              end >>= fun () -> Cmd.opam "depext" ps
-            end >>= fun () ->
-            Cmd.opam ?color "install" ps
-          ) else version_error ()
-        | _ -> version_error ()
-      )
-    else Log.error "OPAM is not installed."
 
   let configure_main i jobs =
     Log.info "%a main.ml" Log.blue "Generating:";
@@ -469,15 +420,10 @@ module Make (P: S) = struct
     Engine.clean i jobs >>| fun () ->
     Cmd.remove (Info.root i / "main.ml")
 
-  let configure ~no_opam ~no_depext ~no_opam_version i jobs =
+  let configure i jobs =
     Log.info "%a %s" Log.blue "Using configuration:"  (get_config_file ());
-    Cmd.in_dir (Info.root i) (fun () ->
-        begin if no_opam
-          then Ok ()
-          else configure_opam ~no_depext ~no_opam_version i
-        end >>= fun () ->
-        configure_main i jobs
-      )
+    Log.info "opam: %a" (Info.opam ?name:None) i ;
+    Cmd.in_dir (Info.root i) (fun () -> configure_main i jobs)
 
   let clean i (_init, job) =
     Log.info "%a %s" Log.blue "Clean:"  (get_config_file ());
@@ -584,9 +530,9 @@ module Make (P: S) = struct
     function
     | `Error _ -> exit 1
     | `Ok Cmd.Help -> ()
-    | `Ok (Cmd.Configure {result = (jobs, info); no_opam; no_depext; no_opam_version}) ->
+    | `Ok (Cmd.Configure (jobs, info)) ->
       Config'.pp_info Log.info Log.DEBUG info;
-      fatalize_error (configure info jobs ~no_opam ~no_depext ~no_opam_version)
+      fatalize_error (configure info jobs)
     | `Ok (Cmd.Describe { result = (jobs, info); dotcmd; dot; output }) ->
       Config'.pp_info Fmt.(pf stdout) Log.INFO info;
       fatalize_error (describe info jobs ~dotcmd ~dot ~output)
