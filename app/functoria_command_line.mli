@@ -16,26 +16,11 @@
 
 (** Functions for reading various options from a command line. *)
 
-val read_log_level : string array -> Functoria_misc.Log.level
-(** [read_log_level argv] reads -v and --verbose options from [argv] and
-    builds a {!Log.level} value according to the number of times the flags
-    occur:
-     * 0 occurrences: WARN
-     * 1 occurrence: INFO
-     * 2+ occurrences: DEBUG
-*)
-
-val read_colour_option : string array -> Fmt.style_renderer option
-(** [read_colour_option argv] reads the --color option from [argv] and builds
-    a {!Fmt.style_renderer} value that depends on the argument of the option:
-     * --color=auto: None
-     * --color=always: Some `Ansi_tty
-     * --color=never: Some `None
-*)
-
 val read_config_file : string array -> string option
 (** [read_config_file argv] reads the -f or --file option from [argv] and
     returns the argument of the option. *)
+
+val setup_log : unit Cmdliner.Term.t
 
 val read_full_eval : string array -> bool
 (** [read_full_eval argv] reads the --eval option from [argv]; the return
@@ -57,6 +42,7 @@ type 'a describe_args = {
 type 'a action =
     Configure of 'a
   | Describe of 'a describe_args
+  | Build of 'a
   | Clean of 'a
   | Help
 (** A value of type [action] is the result of parsing command-line arguments using
@@ -67,6 +53,7 @@ open Cmdliner.Term
 val parse_args : name:string -> version:string ->
   configure:'a t ->
   describe:'a t ->
+  build:'a t ->
   clean:'a t ->
   help:_ t ->
   string array ->
@@ -88,6 +75,10 @@ val parse_args : name:string -> version:string ->
                     [--dot-command=COMMAND]
                     [--dot]
                     [extra arguments]
+      name build [-v|--verbose]
+                 [--color=(auto|always|never)]
+                 [-f FILE | --file=FILE]
+                 [extra arguments]
       name clean [-v|--verbose]
                  [--color=(auto|always|never)]
                  [-f FILE | --file=FILE]
@@ -95,7 +86,7 @@ val parse_args : name:string -> version:string ->
       name help [-v|--verbose]
                 [--color=(auto|always|never)]
                 [--man-format=(groff|pager|plain)]
-                [configure|describe|clean|help|topics]
+                [configure|describe|build|clean|help|topics]
                 [extra arguments]
       name [-v|--verbose]
            [--color=(auto|always|never)]

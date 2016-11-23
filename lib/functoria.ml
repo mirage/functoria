@@ -168,7 +168,7 @@ module Info = struct
     Fmt.pf ppf "%a" (Fmt.iter ?sep List.iter (Package.pp_package surround)) (packages t)
 
   let pp verbose ppf ({ name ; root ; keys ; context ; _ } as t) =
-    let show name = Fmt.pf ppf "@[<2>%a@ %a@]@," Log.blue name in
+    let show name = Fmt.pf ppf "@[<2>%s@ %a@]@," name in
     let list = Fmt.iter ~sep:(Fmt.unit ",@ ") List.iter Fmt.string in
     show "Name      " Fmt.string name;
     show "Root      " Fmt.string root;
@@ -215,8 +215,9 @@ module rec Typ: sig
     method keys: Key.t list
     method packages: package list Key.value
     method connect: Info.t -> string -> string list -> string
-    method configure: Info.t -> (unit, string) R.t
-    method clean: Info.t -> (unit, string) R.t
+    method configure: Info.t -> (unit, R.msg) R.t
+    method build: Info.t -> (unit, R.msg) R.t
+    method clean: Info.t -> (unit, R.msg) R.t
     method deps: abstract_impl list
   end
 
@@ -238,8 +239,9 @@ class base_configurable = object
   method keys: Key.t list = []
   method connect (_:Info.t) (_:string) l =
     Printf.sprintf "return (%s)" (String.concat ~sep:", " l)
-  method configure (_: Info.t): (unit,string) R.t = R.ok ()
-  method clean (_: Info.t): (unit,string) R.t = R.ok ()
+  method configure (_: Info.t): (unit, R.msg) R.t = R.ok ()
+  method build (_: Info.t): (unit, R.msg) R.t = R.ok ()
+  method clean (_: Info.t): (unit, R.msg) R.t = R.ok ()
   method deps: abstract_impl list = []
 end
 
@@ -264,6 +266,7 @@ class ['ty] foreign
         Fmt.(list ~sep:sp string)  args
     method clean _ = R.ok ()
     method configure _ = R.ok ()
+    method build _ = R.ok ()
     method deps = deps
   end
 

@@ -24,8 +24,9 @@ type subconf = <
   keys       : key list;
   packages   : package list value ;
   connect    : Info.t -> string -> string list -> string;
-  configure  : Info.t -> (unit, string) Rresult.result;
-  clean      : Info.t -> (unit, string) Rresult.result;
+  build      : Info.t -> (unit, [ `Msg of string ]) Rresult.result;
+  configure  : Info.t -> (unit, [ `Msg of string ]) Rresult.result;
+  clean      : Info.t -> (unit, [ `Msg of string ]) Rresult.result;
 >
 (** A subset of {!configurable} with neither polymorphism nor recursion. *)
 

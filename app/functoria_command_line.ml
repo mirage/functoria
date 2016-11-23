@@ -14,7 +14,16 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *)
 
+let setup_log style_renderer level =
+  Fmt_tty.setup_std_outputs ?style_renderer ();
+  Logs.set_level level;
+  Logs.set_reporter (Logs_fmt.reporter ());
+  ()
+
 open Cmdliner
+
+let setup_log =
+  Term.(const setup_log $ Fmt_cli.style_renderer () $ Logs_cli.level ())
 
 let global_option_section = "COMMON OPTIONS"
 
@@ -79,32 +88,6 @@ let output =
   in
   Arg.(value & opt (some string) None & doc)
 
-(** Argument specification for --color=(auto|always|never) *)
-let color =
-  let enum = [
-    "auto"  , None;
-    "always", Some `Ansi_tty;
-    "never" , Some `None
-  ] in
-  let color = Arg.enum enum in
-  let alts = Arg.doc_alts_enum enum in
-  let doc = Arg.info ["color"] ~docs:global_option_section ~docv:"COLOR"
-      ~doc:(Fmt.strf "Colorize the output. $(docv) must be %s." alts)
-  in
-  Arg.(value & opt color None & doc)
-
-(** Argument specification for -v or --verbose *)
-let verbose : Functoria_misc.Log.level Term.t =
-  let log_level_of_verbosity = function
-    | []  -> Functoria_misc.Log.WARN
-    | [_] -> Functoria_misc.Log.INFO
-    | _   -> Functoria_misc.Log.DEBUG
-  in
-  let doc =
-    Arg.info ~docs:global_option_section ~doc:"Be verbose" ["verbose";"v"]
-  in
-  Term.(pure log_level_of_verbosity $ Arg.(value & flag_all doc))
-
 type 'a describe_args = {
   result: 'a;
   dotcmd: string;
@@ -115,6 +98,7 @@ type 'a describe_args = {
 type 'a action =
     Configure of 'a
   | Describe of 'a describe_args
+  | Build of 'a
   | Clean of 'a
   | Help
 
@@ -131,9 +115,8 @@ struct
         `S "DESCRIPTION";
         `P "The $(b,configure) command initializes a fresh $(mname) application."
       ]
-      ~arg:Term.(pure (fun _ _ _ info -> Configure info)
-                 $ verbose
-                 $ color
+      ~arg:Term.(const (fun _ _ info -> Configure info)
+                 $ setup_log
                  $ config_file
                  $ result)
 
@@ -161,16 +144,28 @@ struct
         `I ("App vertices",
             "Represented as diamonds. The bold arrow is the functor part.");
       ]
-      ~arg:Term.(pure (fun _ _ _ _ info output dotcmd dot ->
+      ~arg:Term.(const (fun _ _ _ info output dotcmd dot ->
           Describe { result = info; dotcmd; dot; output })
+                 $ setup_log
                  $ full_eval
-                 $ verbose
-                 $ color
                  $ config_file
                  $ result
                  $ output
                  $ dotcmd
                  $ dot)
+
+  (** The 'build' subcommand *)
+  let build result =
+    let doc = "Build a $(mname) application." in
+    term_info "build" ~doc
+      ~man:[
+        `S "DESCRIPTION";
+        `P doc;
+      ]
+      ~arg:Term.(const (fun _ _ info -> Build info)
+                 $ setup_log
+                 $ config_file
+                 $ result)
 
   (** The 'clean' subcommand *)
   let clean info_ =
@@ -180,9 +175,8 @@ struct
         `S "DESCRIPTION";
         `P doc;
       ]
-      ~arg:Term.(pure (fun _ _ _  info -> Clean info)
-                 $ verbose
-                 $ color
+      ~arg:Term.(const (fun _ _ info -> Clean info)
+                 $ setup_log
                  $ config_file
                  $ info_)
 
@@ -192,7 +186,7 @@ struct
       let doc = Arg.info [] ~docv:"TOPIC" ~doc:"The topic to get help on." in
       Arg.(value & pos 0 (some string) None & doc )
     in
-    let help _verbose _color man_format cmds topic _keys =
+    let help man_format cmds topic _keys =
       match topic with
       | None       -> `Help (`Pager, None)
       | Some topic ->
@@ -201,8 +195,8 @@ struct
         | `Error e -> `Error (false, e)
         | `Ok t when t = "topics" -> List.iter print_endline cmds; `Ok ()
         | `Ok t -> `Help (man_format, Some t) in
-    (Term.(pure (fun () -> Help) $
-           ret (Term.(pure help $ verbose $ color $ Term.man_format $ Term.choice_names
+    (Term.(const (fun () -> Help) $
+           ret (Term.(pure help $ Term.man_format $ Term.choice_names
                       $ topic $ base_context))),
      Term.info "help"
        ~doc:"Display help about $(mname) commands."
@@ -213,9 +207,9 @@ struct
        ])
 
   let default ~name ~version =
-    let usage _verbose _color = `Help (`Plain, None)
+    let usage = `Help (`Plain, None)
     in
-    (Term.(ret (pure usage $ verbose $ color)),
+    (Term.(ret (pure usage)),
      Term.info name
        ~version
        ~sdocs:global_option_section
@@ -235,30 +229,21 @@ end
  * Functions for extracting particular flags from the command line.
  *)
 
-let read_colour_option : string array -> Fmt.style_renderer option =
-  fun argv -> match Term.eval_peek_opts ~argv color with
-    | _, `Ok color -> color
-    | _ -> None
-
 let read_config_file : string array -> string option =
   fun argv -> match Term.eval_peek_opts ~argv config_file with
     | _, `Ok config -> config
     | _ -> None
-
-let read_log_level : string array -> Functoria_misc.Log.level =
-  fun argv -> match Term.eval_peek_opts ~argv verbose with
-    | _, `Ok v -> v
-    | _ -> Functoria_misc.Log.WARN
 
 let read_full_eval : string array -> bool =
   fun argv -> match Term.eval_peek_opts ~argv full_eval with
     | _, `Ok b -> b
     | _ -> false
 
-let parse_args ~name ~version ~configure ~describe ~clean ~help argv =
+let parse_args ~name ~version ~configure ~describe ~build ~clean ~help argv =
   Cmdliner.Term.eval_choice ~argv ~catch:false (Subcommands.default ~name ~version) [
     Subcommands.configure configure;
     Subcommands.describe describe;
+    Subcommands.build build;
     Subcommands.clean clean;
     Subcommands.help help;
   ]

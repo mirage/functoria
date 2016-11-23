@@ -235,14 +235,19 @@ class type ['ty] configurable = object
       calling [mod.connect]) with the arguments [args], in the context
       of the project information [info]. *)
 
-  method configure: Info.t -> (unit, string) Rresult.result
+  method configure: Info.t -> (unit, Rresult.R.msg) Rresult.result
   (** [configure info] is the code to execute in order to configure
       the device. This might involve generating more OCaml code,
-      running bash scripts, etc. *)
+      running shell scripts, etc. *)
 
-  method clean: Info.t -> (unit, string) Rresult.result
+  method build: Info.t -> (unit, Rresult.R.msg) Rresult.result
+  (** [build info] is the code to execute in order to build
+      the device. This might involve generating OCaml code,
+      running shell scripts, etc. *)
+
+  method clean: Info.t -> (unit, Rresult.R.msg) Rresult.result
   (** [clean info] is the code to clean-up what has been generated
-      by {!configure}. *)
+      by {!build}. *)
 
   method keys: key list
   (** [keys] is the list of command-line keys to set-up the
@@ -275,8 +280,9 @@ class base_configurable: object
   method packages: package list value
   method keys: key list
   method connect: Info.t -> string -> string list -> string
-  method configure: Info.t -> (unit, string) Rresult.result
-  method clean: Info.t -> (unit, string) Rresult.result
+  method configure: Info.t -> (unit, Rresult.R.msg) Rresult.result
+  method build: Info.t -> (unit, Rresult.R.msg) Rresult.result
+  method clean: Info.t -> (unit, Rresult.R.msg) Rresult.result
   method deps: abstract_impl list
 end
 
