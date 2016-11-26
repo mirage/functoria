@@ -244,8 +244,9 @@ class type ['ty] configurable = object
   method build: Info.t -> (unit, Rresult.R.msg) Rresult.result
   (** [build info] is the code to execute in order to build
       the device.  During the build phase, you can rely that all
-      {!packages} are available.  This might involve generating
-      OCaml code, running shell scripts, etc. *)
+      {!packages} are installed (via opam).  The code might involve
+      generating more OCaml code (crunching directories), running
+      shell scripts, etc. *)
 
   method clean: Info.t -> (unit, Rresult.R.msg) Rresult.result
   (** [clean info] is the code to clean-up what has been generated
