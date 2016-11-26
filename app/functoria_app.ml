@@ -49,6 +49,21 @@ let sys_argv = impl @@ object
 let src = Logs.Src.create "functoria" ~doc:"functoria library"
 module Log = (val Logs.src_log src : Logs.LOG)
 
+let wrap f err =
+  match f () with
+  | Ok b -> b
+  | Error _ -> R.error_msg err
+
+let with_output f k =
+  wrap
+    (Bos.OS.File.with_oc f k)
+    ("couldn't open output channel " ^ Fpath.to_string f)
+
+let with_current f k err =
+  wrap
+    (Bos.OS.Dir.with_current f k)
+    ("failed to change directory for " ^ err)
+
 (* Keys *)
 
 module Keys = struct
@@ -56,24 +71,21 @@ module Keys = struct
   let configure i =
     let file = String.Ascii.lowercase Key.module_name ^ ".ml" in
     Log.info (fun m -> m "Generating: %s" file);
-    match
-      Bos.OS.File.with_oc Fpath.(v (Info.root i) / file) (fun oc () ->
-          let fmt = Format.formatter_of_out_channel oc in
-          Codegen.append fmt "(* %s *)" (Codegen.generated_header ());
-          Codegen.newline fmt;
-          let keys = Key.Set.of_list @@ Info.keys i in
-          let pp_var k = Key.serialize (Info.context i) k in
-          Fmt.pf fmt "@[<v>%a@]@." (Fmt.iter Key.Set.iter pp_var) keys;
-          let runvars = Key.Set.elements (Key.filter_stage `Run keys) in
-          let pp_runvar ppf v = Fmt.pf ppf "%s_t" (Key.ocaml_name v) in
-          let pp_names ppf v = Fmt.pf ppf "%S" (Key.name v) in
-          Codegen.append fmt "let runtime_keys = List.combine %a %a"
-            Fmt.Dump.(list pp_runvar) runvars Fmt.Dump.(list pp_names) runvars;
-          Codegen.newline fmt;
-          R.ok ()) ()
-    with
-    | Ok b -> b
-    | Error _ -> R.error_msg "couldn't open output channel"
+    with_output Fpath.(v (Info.root i) / file)
+      (fun oc () ->
+         let fmt = Format.formatter_of_out_channel oc in
+         Codegen.append fmt "(* %s *)" (Codegen.generated_header ());
+         Codegen.newline fmt;
+         let keys = Key.Set.of_list @@ Info.keys i in
+         let pp_var k = Key.serialize (Info.context i) k in
+         Fmt.pf fmt "@[<v>%a@]@." (Fmt.iter Key.Set.iter pp_var) keys;
+         let runvars = Key.Set.elements (Key.filter_stage `Run keys) in
+         let pp_runvar ppf v = Fmt.pf ppf "%s_t" (Key.ocaml_name v) in
+         let pp_names ppf v = Fmt.pf ppf "%S" (Key.name v) in
+         Codegen.append fmt "let runtime_keys = List.combine %a %a"
+           Fmt.Dump.(list pp_runvar) runvars Fmt.Dump.(list pp_names) runvars;
+         Codegen.newline fmt;
+         R.ok ())
 
   let clean i =
     let file = String.Ascii.lowercase Key.module_name ^ ".ml" in
@@ -442,36 +454,30 @@ module Make (P: S) = struct
     Log.info (fun m -> m "Using configuration: %s" (get_config_file ()));
     Log.info (fun m -> m "opam: %a" (Info.opam ?name:None) i);
     Log.info (fun m -> m "within: %s" (Info.root i));
-    match
-      Bos.OS.Dir.with_current (Fpath.v (Info.root i))
-        (fun () -> configure_main i jobs) ()
-    with
-    | Ok a -> a
-    | Error _ -> R.error_msg "failed to change directory for configure"
+    with_current
+      (Fpath.v (Info.root i))
+      (fun () -> configure_main i jobs)
+      "configure"
 
   let build i jobs =
     Log.info (fun m -> m "Building: %s" (get_config_file ()));
-    match
-      Bos.OS.Dir.with_current (Fpath.v (Info.root i))
-        (fun () -> Engine.build i jobs) ()
-    with
-    | Ok a -> a
-    | Error _ -> R.error_msg "failed to change directory for build"
+    with_current
+      (Fpath.v (Info.root i))
+      (fun () -> Engine.build i jobs)
+      "build"
 
   let clean i (_init, job) =
     Log.info (fun m -> m "Cleaning: %s" (get_config_file ()));
     let root = Info.root i in
-    match
-      Bos.OS.Dir.with_current (Fpath.v root)
-        (fun () ->
-           clean_main i job >>= fun () ->
-           Bos.OS.Dir.delete ~recurse:true (Fpath.v "_build") >>= fun () ->
-           Bos.OS.File.delete (Fpath.v "log") >>= fun () ->
-           Bos.OS.File.delete (Fpath.v "main.native.o") >>= fun () ->
-           Bos.OS.File.delete (Fpath.v "main.native")) ()
-    with
-    | Ok a -> a
-    | Error _ -> R.error_msg "failed to change directory for configure"
+    with_current
+      (Fpath.v root)
+      (fun () ->
+         clean_main i job >>= fun () ->
+         Bos.OS.Dir.delete ~recurse:true (Fpath.v "_build") >>= fun () ->
+         Bos.OS.File.delete (Fpath.v "log") >>= fun () ->
+         Bos.OS.File.delete (Fpath.v "main.native.o") >>= fun () ->
+         Bos.OS.File.delete (Fpath.v "main.native"))
+      "clean"
 
   (* FIXME: describe init *)
   let describe _info ~dotcmd ~dot ~output (_init, job) =
@@ -483,12 +489,8 @@ module Make (P: S) = struct
         Bos.OS.Cmd.run_in (Bos.Cmd.v dotcmd) (Bos.OS.Cmd.in_string data)
       | None -> Ok (f Fmt.stdout)
       | Some s ->
-        match
-          Bos.OS.File.with_oc (Fpath.v s) (fun oc () ->
-              Ok (f (Format.formatter_of_out_channel oc))) ()
-        with
-        | Ok b -> b
-        | Error _ -> R.error_msg "couldn't open output channel for dot output"
+        with_output (Fpath.v s)
+          (fun oc () -> Ok (f (Format.formatter_of_out_channel oc)))
     in
     with_fmt f
 
@@ -501,21 +503,18 @@ module Make (P: S) = struct
     let root, file = Fpath.(split_base file) in
     let file = Dynlink.adapt_filename (Fpath.to_string file) in
     Bos.OS.Dir.delete ~recurse:true Fpath.(root / "_build") >>= fun () ->
-    match
-      Bos.OS.Dir.with_current root (fun () ->
-          let cmd =
-            Bos.Cmd.(v "ocamlbuild" % "-use-ocamlfind" % "-classic-display" %
-                     "-tags" % "bin_annot,color(always)" % "-pkg" % P.name % file)
-          in
-          Bos.OS.Cmd.run cmd >>= fun _ ->
-          try Ok (Dynlink.loadfile Fpath.(to_string (root / "_build" / file)))
-          with Dynlink.Error err ->
-            Log.err (fun m -> m "Error loading config: %s" (Dynlink.error_message err));
-            Error (`Msg "error loading configuration"))
-        ()
-    with
-    | Ok a -> a
-    | Error e -> Error e
+    with_current root
+      (fun () ->
+         let cmd =
+           Bos.Cmd.(v "ocamlbuild" % "-use-ocamlfind" % "-classic-display" %
+                    "-tags" % "bin_annot,color(always)" % "-pkg" % P.name % file)
+         in
+         Bos.OS.Cmd.run cmd >>= fun _ ->
+         try Ok (Dynlink.loadfile Fpath.(to_string (root / "_build" / file)))
+         with Dynlink.Error err ->
+           Log.err (fun m -> m "Error loading config: %s" (Dynlink.error_message err));
+           Error (`Msg "error loading configuration"))
+      "compile and dynlink"
 
   (* If a configuration file is specified, then use that.
    * If not, then scan the curdir for a `config.ml` file.
