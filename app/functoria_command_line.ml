@@ -22,10 +22,12 @@ let setup_log style_renderer level =
 
 open Cmdliner
 
-let setup_log =
-  Term.(const setup_log $ Fmt_cli.style_renderer () $ Logs_cli.level ())
-
 let global_option_section = "COMMON OPTIONS"
+
+let setup_log =
+  Term.(const setup_log
+        $ Fmt_cli.style_renderer ~docs:global_option_section ()
+        $ Logs_cli.level ~docs:global_option_section ())
 
 let help_sections = [
   `S global_option_section;
@@ -195,8 +197,8 @@ struct
         | `Error e -> `Error (false, e)
         | `Ok t when t = "topics" -> List.iter print_endline cmds; `Ok ()
         | `Ok t -> `Help (man_format, Some t) in
-    (Term.(const (fun () -> Help) $
-           ret (Term.(pure help $ Term.man_format $ Term.choice_names
+    (Term.(const (fun _ () -> Help) $ setup_log $
+           ret (Term.(const help $ Term.man_format $ Term.choice_names
                       $ topic $ base_context))),
      Term.info "help"
        ~doc:"Display help about $(mname) commands."
@@ -209,7 +211,7 @@ struct
   let default ~name ~version =
     let usage = `Help (`Plain, None)
     in
-    (Term.(ret (pure usage)),
+    (Term.(ret (pure usage) $ setup_log),
      Term.info name
        ~version
        ~sdocs:global_option_section
