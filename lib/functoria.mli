@@ -247,7 +247,7 @@ class type ['ty] configurable = object
 
   method clean: Info.t -> (unit, Rresult.R.msg) Rresult.result
   (** [clean info] is the code to clean-up what has been generated
-      by {!build}. *)
+      by {!build} and {!configure}. *)
 
   method keys: key list
   (** [keys] is the list of command-line keys to set-up the
