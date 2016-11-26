@@ -484,7 +484,9 @@ module Make (P: S) = struct
       | None when dot ->
         f Format.str_formatter ;
         let data = Format.flush_str_formatter () in
-        Bos.OS.Cmd.run_in (Bos.Cmd.v dotcmd) (Bos.OS.Cmd.in_string data)
+        Bos.OS.File.tmp ~mode:0o644 "graph%s.dot" >>= fun tmp ->
+        Bos.OS.File.write tmp data >>= fun () ->
+        Bos.OS.Cmd.run Bos.Cmd.(v dotcmd % (Fpath.to_string tmp))
       | None -> Ok (f Fmt.stdout)
       | Some s ->
         with_output (Fpath.v s)
