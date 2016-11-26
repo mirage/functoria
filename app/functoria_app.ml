@@ -474,9 +474,7 @@ module Make (P: S) = struct
       (fun () ->
          clean_main i job >>= fun () ->
          Bos.OS.Dir.delete ~recurse:true (Fpath.v "_build") >>= fun () ->
-         Bos.OS.File.delete (Fpath.v "log") >>= fun () ->
-         Bos.OS.File.delete (Fpath.v "main.native.o") >>= fun () ->
-         Bos.OS.File.delete (Fpath.v "main.native"))
+         Bos.OS.File.delete (Fpath.v "log"))
       "clean"
 
   (* FIXME: describe init *)
