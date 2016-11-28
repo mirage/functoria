@@ -500,9 +500,11 @@ module Make (P: S) = struct
    * side effect to this command. *)
   let compile_and_dynlink file =
     Log.info (fun m -> m "Processing: %a" Fpath.pp file);
-    let root, file = Fpath.(split_base file) in
-    let file = Dynlink.adapt_filename (Fpath.to_string file) in
-    Bos.OS.Dir.delete ~recurse:true Fpath.(root / "_build") >>= fun () ->
+    let root, config = Fpath.(split_base file) in
+    let file = Dynlink.adapt_filename (Fpath.to_string config) in
+    let cfg = Fpath.rem_ext config in
+    Bos.OS.Path.matches Fpath.(root / "_build" // cfg + "$(ext)") >>= fun files ->
+    List.fold_left (fun r p -> r >>= fun () -> Bos.OS.Path.delete p) (R.ok ()) files >>= fun () ->
     with_current root
       (fun () ->
          let cmd =
