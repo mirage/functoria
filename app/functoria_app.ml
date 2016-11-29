@@ -509,7 +509,8 @@ module Make (P: S) = struct
       (fun () ->
          let cmd =
            Bos.Cmd.(v "ocamlbuild" % "-use-ocamlfind" % "-classic-display" %
-                    "-tags" % "bin_annot,color(always)" % "-pkg" % P.name % file)
+                    "-tags" % "bin_annot,color(always)" %
+                    "-X" % "_build-ukvm" % "-pkg" % P.name % file)
          in
          Bos.OS.Cmd.run cmd >>= fun _ ->
          try Ok (Dynlink.loadfile Fpath.(to_string (root / "_build" / file)))
