@@ -243,6 +243,7 @@ let read_config_file : string array -> Fpath.t option =
         Some (Fpath.v config)
       else
         None
+    | _, `Help -> None
     | _ -> invalid_arg "config must be an existing file (single segment)"
 
 let read_full_eval : string array -> bool option =
