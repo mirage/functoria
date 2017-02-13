@@ -23,7 +23,7 @@ type subconf = <
   module_name: string;
   keys       : key list;
   packages   : package list value ;
-  connect    : Info.t -> string -> string list -> string;
+  connect    : Info.t -> string -> string list -> [`Eff of string];
   build      : Info.t -> (unit, Rresult.R.msg) result;
   configure  : Info.t -> (unit, Rresult.R.msg) result;
   clean      : Info.t -> (unit, Rresult.R.msg) result;

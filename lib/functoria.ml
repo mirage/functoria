@@ -224,7 +224,7 @@ module rec Typ: sig
     method module_name: string
     method keys: Key.t list
     method packages: package list Key.value
-    method connect: Info.t -> string -> string list -> string
+    method connect: Info.t -> string -> string list -> [`Eff of string]
     method configure: Info.t -> (unit, R.msg) R.t
     method build: Info.t -> (unit, R.msg) R.t
     method clean: Info.t -> (unit, R.msg) R.t
@@ -248,7 +248,8 @@ class base_configurable = object
   method packages: package list Key.value = Key.pure []
   method keys: Key.t list = []
   method connect (_:Info.t) (_:string) l =
-    Printf.sprintf "return (%s)" (String.concat ~sep:", " l)
+    (`Eff (Printf.sprintf "return (%s)" (String.concat ~sep:", " l))
+        : [`Eff of string])
   method configure (_: Info.t): (unit, R.msg) R.t = R.ok ()
   method build (_: Info.t): (unit, R.msg) R.t = R.ok ()
   method clean (_: Info.t): (unit, R.msg) R.t = R.ok ()
@@ -270,10 +271,11 @@ class ['ty] foreign
     method keys = keys
     method packages = Key.pure packages
     method connect _ modname args =
-      Fmt.strf
-        "@[%s.start@ %a@]"
-        modname
-        Fmt.(list ~sep:sp string)  args
+      `Eff
+        (Fmt.strf
+           "@[%s.start@ %a@]"
+           modname
+           Fmt.(list ~sep:sp string)  args)
     method clean _ = R.ok ()
     method configure _ = R.ok ()
     method build _ = R.ok ()

@@ -254,7 +254,7 @@ class type ['ty] configurable = object
   (** [packages] is the list of OPAM packages which needs to be
       installed before compiling the configurable. *)
 
-  method connect: Info.t -> string -> string list -> string
+  method connect: Info.t -> string -> string list -> [`Eff of string]
   (** [connect info mod args] is the code to execute in order to
       initialize the state associated with the module [mod] (usually
       calling [mod.connect]) with the arguments [args], in the context
@@ -307,7 +307,7 @@ val impl: 'a configurable -> 'a impl
 class base_configurable: object
   method packages: package list value
   method keys: key list
-  method connect: Info.t -> string -> string list -> string
+  method connect: Info.t -> string -> string list -> [`Eff of string]
   method configure: Info.t -> (unit, Rresult.R.msg) result
   method build: Info.t -> (unit, Rresult.R.msg) result
   method clean: Info.t -> (unit, Rresult.R.msg) result

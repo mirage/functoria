@@ -42,7 +42,7 @@ let sys_argv = impl @@ object
     method ty = argv
     method name = "argv"
     method module_name = "Sys"
-    method !connect _info _m _ = "return Sys.argv"
+    method !connect _info _m _ = `Eff "return Sys.argv"
   end
 
 let src = Logs.Src.create "functoria" ~doc:"functoria library"
@@ -104,9 +104,10 @@ let keys (argv: argv impl) = impl @@ object
     method !deps = [ abstract argv ]
     method !connect info modname = function
       | [ argv ] ->
-        Fmt.strf
-          "return (Functoria_runtime.with_argv (List.map fst %s.runtime_keys) %S %s)"
-          modname (Info.name info) argv
+         `Eff
+           (Fmt.strf
+              "return (Functoria_runtime.with_argv (List.map fst %s.runtime_keys) %S %s)"
+              modname (Info.name info) argv)
       | _ -> failwith "The keys connect should receive exactly one argument."
   end
 
@@ -141,7 +142,7 @@ let app_info ?(type_modname="Functoria_info")  ?(gen_modname="Info_gen") () =
     val file = Fpath.(v (String.Ascii.lowercase gen_modname) + "ml")
     method module_name = gen_modname
     method !packages = Key.pure [package "functoria-runtime"]
-    method !connect _ modname _ = Fmt.strf "return %s.info" modname
+    method !connect _ modname _ = `Eff (Fmt.strf "return %s.info" modname)
 
     method !clean _i =
       Bos.OS.Path.delete file >>= fun () ->
@@ -163,7 +164,7 @@ let app_info ?(type_modname="Functoria_info")  ?(gen_modname="Info_gen") () =
 
 module Engine = struct
 
-  type tbl_entry = {name: string}
+  type tbl_entry = {name: string; value: string option}
 
   let if_context =
     let open Graph in
@@ -267,10 +268,10 @@ module Engine = struct
     Graph.fold f job @@ R.ok () >>| fun () ->
     tbl
 
-  let meta_init fmt (connect_name, result_name) =
-    Fmt.pf fmt "let _%s =@[@ Lazy.force %s @]in@ " result_name connect_name.name
-
   let emit_connect fmt (iname, (names : tbl_entry list), connect_string) =
+    let meta_init fmt (connect_name, result_name) =
+      Fmt.pf fmt "let _%s =@[@ Lazy.force %s @]in@ " result_name connect_name.name
+    in
     (* We avoid potential collision between double application
        by prefixing with "_". This also avoid warnings. *)
     let rnames = List.map (fun x -> "_"^x.name) names in
@@ -285,7 +286,7 @@ module Engine = struct
       iname
       Fmt.(list ~sep:nop meta_init) (List.combine names rnames)
       Fmt.(list ~sep:nop bind) rnames
-      (connect_string rnames)
+      (let `Eff e = connect_string rnames in e)
 
   let emit_run init main =
     (* "exit 1" is ok in this code, since cmdliner will print help. *)
@@ -306,7 +307,7 @@ module Engine = struct
       | `Impl (c, `Args args, `Deps deps) ->
         let ident = name c (Graph.hash v) in
         let modname = Graph.Tbl.find modtbl v in
-        Graph.Tbl.add tbl v { name = ident };
+        Graph.Tbl.add tbl v { name = ident; value = None };
         let names = List.map (Graph.Tbl.find tbl) (args @ deps) in
         Codegen.append_main "%a"
           emit_connect (ident, names, c#connect info modname)
