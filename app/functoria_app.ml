@@ -163,6 +163,8 @@ let app_info ?(type_modname="Functoria_info")  ?(gen_modname="Info_gen") () =
 
 module Engine = struct
 
+  type tbl_entry = {name: string}
+
   let if_context =
     let open Graph in
     Graph.collect (module Key.Set) @@ function
@@ -266,12 +268,12 @@ module Engine = struct
     tbl
 
   let meta_init fmt (connect_name, result_name) =
-    Fmt.pf fmt "let _%s =@[@ Lazy.force %s @]in@ " result_name connect_name
+    Fmt.pf fmt "let _%s =@[@ Lazy.force %s @]in@ " result_name connect_name.name
 
-  let emit_connect fmt (iname, names, connect_string) =
+  let emit_connect fmt (iname, (names : tbl_entry list), connect_string) =
     (* We avoid potential collision between double application
        by prefixing with "_". This also avoid warnings. *)
-    let rnames = List.map (fun x -> "_"^x) names in
+    let rnames = List.map (fun x -> "_"^x.name) names in
     let bind ppf name =
       Fmt.pf ppf "_%s >>= fun %s ->@ " name name
     in
@@ -288,14 +290,14 @@ module Engine = struct
   let emit_run init main =
     (* "exit 1" is ok in this code, since cmdliner will print help. *)
     let force ppf name =
-      Fmt.pf ppf "Lazy.force %s >>= fun _ ->@ " name
+      Fmt.pf ppf "Lazy.force %s >>= fun _ ->@ " name.name
     in
     Codegen.append_main
       "@[<v 2>\
        let () =@ \
        let t =@ @[<v 2>%aLazy.force %s@]@ \
        in run t@]"
-      Fmt.(list ~sep:nop force) init main
+      Fmt.(list ~sep:nop force) init main.name
 
   let connect modtbl info (init, job) =
     let tbl = Graph.Tbl.create 17 in
@@ -304,7 +306,7 @@ module Engine = struct
       | `Impl (c, `Args args, `Deps deps) ->
         let ident = name c (Graph.hash v) in
         let modname = Graph.Tbl.find modtbl v in
-        Graph.Tbl.add tbl v ident;
+        Graph.Tbl.add tbl v { name = ident };
         let names = List.map (Graph.Tbl.find tbl) (args @ deps) in
         Codegen.append_main "%a"
           emit_connect (ident, names, c#connect info modname)
