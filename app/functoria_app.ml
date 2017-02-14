@@ -286,7 +286,9 @@ module Engine = struct
       iname
       Fmt.(list ~sep:nop meta_init) (List.combine names rnames)
       Fmt.(list ~sep:nop bind) rnames
-      (let `Eff e = connect_string rnames in e)
+      (match connect_string rnames with
+       | `Eff e -> e
+       | `Val e -> e)
 
   let emit_run init main =
     (* "exit 1" is ok in this code, since cmdliner will print help. *)
