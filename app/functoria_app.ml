@@ -42,7 +42,7 @@ let sys_argv = impl @@ object
     method ty = argv
     method name = "argv"
     method module_name = "Sys"
-    method !connect _info _m _ = `Eff "return Sys.argv"
+    method !connect _info _m _ = `Val "Sys.argv"
   end
 
 let src = Logs.Src.create "functoria" ~doc:"functoria library"
@@ -142,7 +142,7 @@ let app_info ?(type_modname="Functoria_info")  ?(gen_modname="Info_gen") () =
     val file = Fpath.(v (String.Ascii.lowercase gen_modname) + "ml")
     method module_name = gen_modname
     method !packages = Key.pure [package "functoria-runtime"]
-    method !connect _ modname _ = `Eff (Fmt.strf "return %s.info" modname)
+    method !connect _ modname _ = `Val (Fmt.strf "%s.info" modname)
 
     method !clean _i =
       Bos.OS.Path.delete file >>= fun () ->
@@ -288,7 +288,7 @@ module Engine = struct
       Fmt.(list ~sep:nop bind) rnames
       (match connect_string rnames with
        | `Eff e -> e
-       | `Val e -> e)
+       | `Val v -> Fmt.strf "return (%s)" v)
 
   let emit_run init main =
     (* "exit 1" is ok in this code, since cmdliner will print help. *)
