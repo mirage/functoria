@@ -269,23 +269,21 @@ module Engine = struct
     tbl
 
   let emit_connect fmt (iname, (names : tbl_entry list), connect_string) =
-    let meta_init fmt (connect_name, result_name) =
-      Fmt.pf fmt "let _%s =@[@ Lazy.force %s @]in@ " result_name connect_name.name
-    in
     (* We avoid potential collision between double application
        by prefixing with "_". This also avoid warnings. *)
     let rnames = List.map (fun x -> "_"^x.name) names in
-    let bind ppf name =
-      Fmt.pf ppf "_%s >>= fun %s ->@ " name name
+    let bind ppf (connect_name, result_name) =
+      Fmt.pf ppf "let _%s =@[@ Lazy.force %s @]in@ "
+        result_name connect_name.name;
+      Fmt.pf ppf "_%s >>= fun %s ->@ "
+        result_name result_name
     in
     Fmt.pf fmt
       "@[<v 2>let %s = lazy (@ \
        %a\
-       %a\
        %s@ )@]@."
       iname
-      Fmt.(list ~sep:nop meta_init) (List.combine names rnames)
-      Fmt.(list ~sep:nop bind) rnames
+      Fmt.(list ~sep:nop bind) (List.combine names rnames)
       (match connect_string rnames with
        | `Eff e -> e
        | `Val v -> Fmt.strf "return (%s)" v)
