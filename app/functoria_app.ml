@@ -268,7 +268,7 @@ module Engine = struct
     Graph.fold f job @@ R.ok () >>| fun () ->
     tbl
 
-  let emit_connect fmt (iname, (names : tbl_entry list), connect_string) =
+  let emit_connect (iname, (names : tbl_entry list), connect_string) =
     (* We avoid potential collision between double application
        by prefixing with "_". This also avoid warnings. *)
     let rnames = List.map (fun x -> "_"^x.name) names in
@@ -276,13 +276,20 @@ module Engine = struct
       Fmt.pf ppf "@[@[@ Lazy.force@ %s@ @]@ >>=@ fun@ %s@ ->@ @]@."
         connect_name.name result_name
     in
-    Fmt.pf fmt
-      "@[let@ @[%s@ =@ @[lazy@ (@[%a@ @[%t@]@])@,@]@]@]@."
-      iname
-      Fmt.(list ~sep:nop bind) (List.combine names rnames)
-      (fun fmt -> match connect_string rnames with
-       | `Eff e -> Fmt.pf fmt "@[%s@]" e
-       | `Val v -> Fmt.pf fmt "return@[ (%s)@}" v)
+    fun fmt ->
+      match connect_string rnames with
+      | `Eff e ->
+        Fmt.pf fmt
+          "@[let@ @[%s@ =@ @[lazy@ (@[%a@ @[%s@]@])@,@]@]@]@."
+          iname
+          Fmt.(list ~sep:nop bind) (List.combine names rnames)
+          e
+      | `Val v ->
+        Fmt.pf fmt
+          "@[let@ @[%s@ =@ @[lazy@ (@[%a@ @[return@ @[%s@]@]@])@,@]@]@]@."
+          iname
+          Fmt.(list ~sep:nop bind) (List.combine names rnames)
+          v
 
   let emit_run init main =
     (* "exit 1" is ok in this code, since cmdliner will print help. *)
@@ -305,8 +312,8 @@ module Engine = struct
         let modname = Graph.Tbl.find modtbl v in
         Graph.Tbl.add tbl v { name = ident; value = None };
         let names = List.map (Graph.Tbl.find tbl) (args @ deps) in
-        Codegen.append_main "@[<v 2>%a@]"
-          emit_connect (ident, names, c#connect info modname)
+        Codegen.append_main "@[<v 2>%t@]"
+          (emit_connect (ident, names, c#connect info modname))
     in
     Graph.fold (fun v () -> f v) job ();
     let main_name = Graph.Tbl.find tbl @@ Graph.find_root job in
