@@ -106,7 +106,7 @@ let keys (argv: argv impl) = impl @@ object
       | [ argv ] ->
          `Eff
            (Fmt.strf
-              "return (Functoria_runtime.with_argv (List.map fst %s.runtime_keys) %S %s)"
+              "@[return@ @[(Functoria_runtime.with_argv@\n@[(List.map@ fst@ %s.runtime_keys)@]@ %S@ %s)@]@]@,"
               modname (Info.name info) argv)
       | _ -> failwith "The keys connect should receive exactly one argument."
   end
@@ -273,25 +273,21 @@ module Engine = struct
        by prefixing with "_". This also avoid warnings. *)
     let rnames = List.map (fun x -> "_"^x.name) names in
     let bind ppf (connect_name, result_name) =
-      Fmt.pf ppf "let _%s =@[@ Lazy.force %s @]in@ "
-        result_name connect_name.name;
-      Fmt.pf ppf "_%s >>= fun %s ->@ "
-        result_name result_name
+      Fmt.pf ppf "@[@[@ Lazy.force@ %s@ @]@ >>=@ fun@ %s@ ->@ @]@."
+        connect_name.name result_name
     in
     Fmt.pf fmt
-      "@[<v 2>let %s = lazy (@ \
-       %a\
-       %s@ )@]@."
+      "@[let@ @[%s@ =@ @[lazy@ (@[%a@ @[%t@]@])@,@]@]@]@."
       iname
       Fmt.(list ~sep:nop bind) (List.combine names rnames)
-      (match connect_string rnames with
-       | `Eff e -> e
-       | `Val v -> Fmt.strf "return (%s)" v)
+      (fun fmt -> match connect_string rnames with
+       | `Eff e -> Fmt.pf fmt "@[%s@]" e
+       | `Val v -> Fmt.pf fmt "return@[ (%s)@}" v)
 
   let emit_run init main =
     (* "exit 1" is ok in this code, since cmdliner will print help. *)
     let force ppf name =
-      Fmt.pf ppf "Lazy.force %s >>= fun _ ->@ " name.name
+      Fmt.pf ppf "@[Lazy.force %s >>= fun _ ->@ @]@\n" name.name
     in
     Codegen.append_main
       "@[<v 2>\
@@ -309,7 +305,7 @@ module Engine = struct
         let modname = Graph.Tbl.find modtbl v in
         Graph.Tbl.add tbl v { name = ident; value = None };
         let names = List.map (Graph.Tbl.find tbl) (args @ deps) in
-        Codegen.append_main "%a"
+        Codegen.append_main "@[<v 2>%a@]"
           emit_connect (ident, names, c#connect info modname)
     in
     Graph.fold (fun v () -> f v) job ();
@@ -546,7 +542,7 @@ module Make (P: S) = struct
     Codegen.set_main_ml file;
     Codegen.append_main "(* %s *)" (Codegen.generated_header ());
     Codegen.newline_main ();
-    Codegen.append_main "%a" Fmt.text  P.prelude;
+    Codegen.append_main "@[%a@]" Fmt.text  P.prelude;
     Codegen.newline_main ();
     Codegen.append_main "let _ = Printexc.record_backtrace true";
     Codegen.newline_main ();
