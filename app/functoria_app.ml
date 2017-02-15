@@ -271,30 +271,38 @@ module Engine = struct
   let emit_connect (iname, (names : tbl_entry list), connect_string) =
     (* We avoid potential collision between double application
        by prefixing with "_". This also avoid warnings. *)
-    let rnames = List.map (fun x -> "_"^x.name) names in
-    let bind ppf (connect_name, result_name) =
-      Fmt.pf ppf "@[@[@ Lazy.force@ %s@ @]@ >>=@ fun@ %s@ ->@ @]@."
-        connect_name.name result_name
+    let rnames = ListLabels.map names
+        ~f:(function 
+            | { value = Some v; _ } -> v
+            | { name; _ } -> "_"^ name) in
+    let bind ppf = function
+      | { value = None; name = n}, rname ->
+        Fmt.pf ppf "@[@[@ Lazy.force@ %s@ @]@ >>=@ fun@ %s@ ->@ @]@." n rname
+      | { value = Some _; _ }, _ -> ()
     in
-    fun fmt ->
-      match connect_string rnames with
-      | `Eff e ->
-        Fmt.pf fmt
-          "@[let@ @[%s@ =@ @[lazy@ (@[%a@ @[%s@]@])@,@]@]@]@."
-          iname
-          Fmt.(list ~sep:nop bind) (List.combine names rnames)
-          e
-      | `Val v ->
-        Fmt.pf fmt
-          "@[let@ @[%s@ =@ @[lazy@ (@[%a@ @[return@ @[%s@]@]@])@,@]@]@]@."
-          iname
-          Fmt.(list ~sep:nop bind) (List.combine names rnames)
-          v
-
+      match connect_string rnames, List.combine names rnames with
+      | `Eff e, l ->
+        `Eff
+          (fun fmt ->
+             Fmt.pf fmt
+               "@[let@ @[%s@ =@ @[lazy@ (@[%a@ @[%s@]@])@,@]@]@]"
+               iname Fmt.(list ~sep:nop bind) l e)
+      | `Val v, (_ :: _ as l) ->
+        `Eff
+          (fun fmt ->
+             Fmt.pf fmt
+               "@[let@ @[%s@ =@ @[lazy@ (@[%a@ @[return@ @[%s@]@]@])@,@]@]@]"
+               iname Fmt.(list ~sep:nop bind) l v)
+      | `Val v, [] ->
+        `Val v
+          
   let emit_run init main =
     (* "exit 1" is ok in this code, since cmdliner will print help. *)
-    let force ppf name =
-      Fmt.pf ppf "@[Lazy.force %s >>= fun _ ->@ @]@\n" name.name
+    let force ppf n =
+      match n.value with
+      | None ->
+        Fmt.pf ppf "@[Lazy.force %s >>= fun _ ->@ @]@\n" n.name
+      | Some _ -> () (* are the forced values ever used here? *)
     in
     Codegen.append_main
       "@[<v 2>\
@@ -312,8 +320,11 @@ module Engine = struct
         let modname = Graph.Tbl.find modtbl v in
         Graph.Tbl.add tbl v { name = ident; value = None };
         let names = List.map (Graph.Tbl.find tbl) (args @ deps) in
-        Codegen.append_main "@[<v 2>%t@]"
-          (emit_connect (ident, names, c#connect info modname))
+        match emit_connect (ident, names, c#connect info modname) with
+        | `Eff f ->
+          Codegen.append_main "@[<v 2>%t@]" f
+        | `Val rhs ->
+          Graph.Tbl.add tbl v { name = ident; value = Some rhs };
     in
     Graph.fold (fun v () -> f v) job ();
     let main_name = Graph.Tbl.find tbl @@ Graph.find_root job in

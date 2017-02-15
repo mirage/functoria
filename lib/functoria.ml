@@ -249,9 +249,10 @@ class base_configurable = object
   method packages: package list Key.value = Key.pure []
   method keys: Key.t list = []
   method connect (_:Info.t) (_:string) l =
-    (`Eff (Printf.sprintf "return (%s)" (String.concat ~sep:", " l))
-        : [`Eff of string
-          |`Val of string])
+    (* The `Val here assumes that the expressions in `l` are pure *)
+    (`Val (Printf.sprintf "(%s)" (String.concat ~sep:", " l))
+     : [`Eff of string
+       |`Val of string])
   method configure (_: Info.t): (unit, R.msg) R.t = R.ok ()
   method build (_: Info.t): (unit, R.msg) R.t = R.ok ()
   method clean (_: Info.t): (unit, R.msg) R.t = R.ok ()
