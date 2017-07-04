@@ -17,7 +17,7 @@ build: [
   ["jbuilder" "build" "-p" name "-j" jobs]
 ]
 build-test: [
-  ["jbuilder" "runtest"]
+  ["jbuilder" "runtest" "-p" name "-j" jobs]
 ]
 depends: [
   "jbuilder" {build & >="1.0+beta10"}
