@@ -107,6 +107,9 @@ module Make (P: S): sig
       to run the application builder: command-line arguments will be
       parsed, and some code will be generated and compiled. *)
 
+  val run_with_argv: string array -> unit
+  (** [run_with_argv a] is the same as {!run} but parsesOA [a]
+      instead of the process command line argurments. *)
 end
 
 module type DSL = module type of struct include Functoria end

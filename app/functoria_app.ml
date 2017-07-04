@@ -475,12 +475,17 @@ module Make (P: S) = struct
   module Log = (val Logs.src_log src : Logs.LOG)
 
   let configuration = ref None
-  let config_file = Fpath.(v "config.ml")
+  let config_file = ref Fpath.(v "config.ml")
 
-  let get_root () =
+  let get_cwd () =
     match Bos.OS.Dir.current () with
     | Ok p -> p
     | Error e -> R.error_msg_to_invalid_arg (Error e)
+
+  let get_root () =
+    if Fpath.(is_abs !config_file) then Fpath.(parent !config_file)
+    else
+      Fpath.(get_cwd () // parent !config_file)
 
   let register ?packages ?keys ?(init=[]) name jobs =
     let root = get_root () in
@@ -513,7 +518,7 @@ module Make (P: S) = struct
     Bos.OS.File.delete Fpath.(v "main.ml")
 
   let configure i jobs =
-    Log.info (fun m -> m "Using configuration: %a" Fpath.pp config_file);
+    Log.info (fun m -> m "Using configuration: %a" Fpath.pp !config_file);
     Log.info (fun m -> m "output: %a" Fmt.(option string) (Info.output i));
     Log.info (fun m -> m "within: %a" Fpath.pp (Info.root i));
     with_current
@@ -522,14 +527,14 @@ module Make (P: S) = struct
       "configure"
 
   let build i jobs =
-    Log.info (fun m -> m "Building: %a" Fpath.pp config_file);
+    Log.info (fun m -> m "Building: %a" Fpath.pp !config_file);
     with_current
       (Info.root i)
       (fun () -> Engine.build i jobs)
       "build"
 
   let clean i (_init, job) =
-    Log.info (fun m -> m "Cleaning: %a" Fpath.pp config_file);
+    Log.info (fun m -> m "Cleaning: %a" Fpath.pp !config_file);
     with_current
       (Info.root i)
       (fun () ->
@@ -563,35 +568,42 @@ module Make (P: S) = struct
     and cfg = Fpath.rem_ext file
     and root = get_root ()
     in
-    Bos.OS.Path.matches Fpath.(root / "_build" // cfg + "$(ext)") >>= fun files ->
-    List.fold_left (fun r p -> r >>= fun () -> Bos.OS.Path.delete p) (R.ok ()) files >>= fun () ->
-    with_current root
-      (fun () ->
-         let cmd =
-           Bos.Cmd.(v "ocamlbuild" % "-use-ocamlfind" % "-classic-display" %
-                    "-tags" % "bin_annot" % "-quiet" %
-                    "-X" % "_build-ukvm" % "-pkg" % P.name % file)
-         in
-         Bos.OS.Cmd.run_out cmd |> Bos.OS.Cmd.out_string >>= fun (out, status) ->
-         match snd status with
-         | `Exited 0 ->  Ok ()
-         | `Exited _
-         | `Signaled _ ->
-           Format.fprintf Format.str_formatter "error while executing %a\n%s"
-             Bos.Cmd.pp cmd out ;
-           let err = Format.flush_str_formatter () in
-           Error (`Invalid_config_ml err))
-      "compile configuration"
+    Bos.OS.Path.matches Fpath.(get_cwd () / "_build" // cfg + "$(ext)")
+    >>= fun files ->
+    List.fold_left (fun r p ->
+        r >>= fun () -> Bos.OS.Path.delete p
+      ) (R.ok ()) files >>= fun () ->
+    let jbuild =
+      Fmt.strf
+        "(jbuild_version 1)\n\
+         \n\
+         (library\n\
+        \   ((name      %s)\n\
+        \    (modules   (%s))\n\
+        \    (libraries (%s))))\n\
+        " Fpath.(filename cfg)  Fpath.(filename cfg) P.name
+    in
+    Bos.OS.File.write Fpath.(root / "jbuild") jbuild >>= fun () ->
+    let cmd = Bos.Cmd.(v "jbuilder" % "build" % file) in
+    Bos.OS.Cmd.run_out cmd |> Bos.OS.Cmd.out_string >>= fun (out, status) ->
+    match snd status with
+    | `Exited 0 ->  Ok ()
+    | `Exited _
+    | `Signaled _ ->
+      Format.fprintf Format.str_formatter "error while executing %a\n%s"
+        Bos.Cmd.pp cmd out ;
+      let err = Format.flush_str_formatter () in
+      Error (`Invalid_config_ml err)
 
   (* attempt to dynlink the configuration file.
    * It is responsible for registering an application via
    * [register] in order to have an observable
    * side effect to this command *)
   let dynlink file =
-    let file = Dynlink.adapt_filename (Fpath.to_string file)
-    and root = get_root ()
-    in
-    try Ok (Dynlink.loadfile Fpath.(to_string (root / "_build" / file)))
+    let file = Dynlink.adapt_filename (Fpath.to_string file) in
+    let file = Fpath.v file in
+    let file = Fpath.(get_cwd () / "_build" / "default" // file) in
+    try Ok (Dynlink.loadfile @@ Fpath.to_string file)
     with Dynlink.Error err ->
       let err = Dynlink.error_message err in
       let msg = Printf.sprintf
@@ -640,6 +652,7 @@ module Make (P: S) = struct
     | Error (`Msg m) ->
       R.pp_msg Format.std_formatter (`Msg m) ;
       print_newline ();
+      flush_all ();
       exit 1
 
   let with_output i = function
@@ -689,6 +702,8 @@ module Make (P: S) = struct
     let module Cmd = Functoria_command_line in
     (* 1. (a) Pre-parse the arguments set the log level. *)
     ignore (Cmdliner.Term.eval_peek_opts ~argv Cmd.setup_log);
+    ignore (Cmdliner.Term.eval_peek_opts ~argv @@
+            Cmd.config_file (fun c -> config_file := c));
 
     (*    (b) whether to fully evaluate the graph *)
     let full_eval = Cmd.read_full_eval argv in
@@ -700,7 +715,7 @@ module Make (P: S) = struct
          3. an attempt is made to access the base keys at this point.
             when they weren't loaded *)
 
-      match load' config_file with
+      match load' !config_file with
       | Error (`Invalid_config_ml err) -> exit_err (Error (`Msg err))
       | Error (`Msg _ as err) -> handle_parse_args_no_config err argv
       | Ok config ->
