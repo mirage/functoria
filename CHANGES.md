@@ -1,3 +1,5 @@
+* Activate tests in Travis CI.
+
 ## 2.1.0 (03/07/2017)
 
 * port build to Jbuilder (#115 @djs55)
