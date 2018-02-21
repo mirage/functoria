@@ -204,6 +204,7 @@ module rec Typ: sig
     | Impl: 'ty Typ.configurable -> 'ty impl (* base implementation *)
     | App: ('a, 'b) app -> 'b impl   (* functor application *)
     | If: bool Key.value * 'a impl * 'a impl -> 'a impl
+    | Proj : ('a -> 'b) typ * string -> ('a -> 'b) impl
 
   and ('a, 'b) app = {
     f: ('a -> 'b) impl;  (* functor *)
@@ -233,6 +234,7 @@ let ($) f x = App { f; x }
 let impl x = Impl x
 let abstract x = Abstract x
 let if_impl b x y = If(b,x,y)
+let proj ty s = Proj (ty, s)
 
 let rec match_impl kv ~default = function
   | [] -> default
@@ -290,9 +292,12 @@ let rec equal
       (* Key.value is a functional value (it contains a closure for eval).
          There is no prettier way than physical equality. *)
       cond1 == cond2 && equal t1 t2 && equal e1 e2
-    | Impl _, (If _ | App _)
+    | Proj (_, s), Proj (_, s') -> s = s'            
+    | Impl _, (If _ | App _ )
     | App _ , (If _ | Impl _)
     | If _  , (App _ | Impl _) -> false
+    | Proj _, _ -> false
+    | _, Proj _ -> false
 
 and equal_any (Abstract x) (Abstract y) = equal x y
 
@@ -303,6 +308,7 @@ let rec hash: type t . t impl -> int = function
   | App { f; x } -> Hashtbl.hash (`Bla (hash f, hash x))
   | If (cond, t, e) ->
     Hashtbl.hash (`If (cond, hash t, hash e))
+  | Proj (_, s) -> Hashtbl.hash s
 
 and hash_any (Abstract x) = hash x
 
@@ -312,10 +318,11 @@ module ImplTbl = Hashtbl.Make (struct
     let equal = equal_any
   end)
 
-let explode x = match x with
+let explode (type a) (x : a impl) = match x with
   | Impl c -> `Impl c
   | App { f; x } -> `App (Abstract f, Abstract x)
   | If (cond, x, y) -> `If (cond, x, y)
+  | Proj (_, s) -> `Proj s
 
 type key = Functoria_key.t
 type context = Functoria_key.context

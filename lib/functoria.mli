@@ -95,6 +95,7 @@ val match_impl: 'b value -> default:'a impl -> ('b * 'a impl) list ->  'a impl
     [cases] by matching the [v]'s value. [default] is chosen if no
     value matches. *)
 
+val proj: ('a -> 'b) typ -> string -> ('a -> 'b) impl
 
 module type KEY =
   module type of Functoria_key
@@ -347,4 +348,5 @@ module ImplTbl: Hashtbl.S with type key = abstract_impl
 val explode: 'a impl ->
   [ `App of abstract_impl * abstract_impl
   | `If of bool value * 'a impl * 'a impl
-  | `Impl of 'a configurable ]
+  | `Impl of 'a configurable
+  | `Proj of string ]

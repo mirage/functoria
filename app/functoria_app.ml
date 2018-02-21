@@ -164,14 +164,14 @@ module Engine = struct
     let open Graph in
     Graph.collect (module Key.Set) @@ function
     | If cond      -> Key.deps cond
-    | App | Impl _ -> Key.Set.empty
+    | App | Impl _ | Proj _ -> Key.Set.empty
 
   let keys =
     let open Graph in
     Graph.collect (module Key.Set) @@ function
     | Impl c  -> Key.Set.of_list c#keys
     | If cond -> Key.deps cond
-    | App     -> Key.Set.empty
+    | App | Proj _ -> Key.Set.empty
 
   module M = struct
     type t = package list Key.value
@@ -183,12 +183,12 @@ module Engine = struct
     let open Graph in
     Graph.collect (module M) @@ function
     | Impl c     -> c#packages
-    | If _ | App -> M.empty
+    | If _ | App | Proj _ -> M.empty
 
   (* Return a unique variable name holding the state of the given
      module construction. *)
   let name c id =
-    let prefix = Name.ocamlify c#name in
+    let prefix = Name.ocamlify c in
     Name.create (Fmt.strf "%s%i" prefix id) ~prefix
 
   (* [module_expresion tbl c args] returns the module expression of
@@ -197,13 +197,13 @@ module Engine = struct
     Fmt.pf fmt "%s%a"
       c#module_name
       Fmt.(list (parens @@ of_to_string @@ Graph.Tbl.find tbl))
-      args
-
+      args      
+  
   (* [module_name tbl c args] return the module name of the result of
      the functor application. If [args = []], it returns
      [c#module_name]. *)
   let module_name c id args =
-    let base = c#module_name in
+    let base = c in
     if args = [] then base
     else
       let prefix = match String.cut ~sep:"." base with
@@ -221,12 +221,13 @@ module Engine = struct
       | `Impl c              -> c#name
       | `App (Abstract x, _) -> name x
       | `If (b, x, y)        -> if Key.eval ctx b then name x else name y
+      | `Proj s              -> ("."^s)
     in
     let name = name impl in
     let open Graph in
     let p = function
       | Impl c     -> c#name = name
-      | App | If _ -> false
+      | App | If _ | Proj _ -> false
     in
     match Graph.find_all g p with
     | []  -> invalid_arg "Functoria.find_device: no device"
@@ -235,7 +236,7 @@ module Engine = struct
 
   let build info (_init, job) =
     let f v = match Graph.explode job v with
-      | `App _ | `If _ -> R.ok ()
+      | `App _ | `If _ | `Proj _ | `PrimProj _ -> R.ok ()
       | `Impl (c, _, _) -> c#build info
     in
     let f v res = res >>= fun () -> f v in
@@ -244,9 +245,9 @@ module Engine = struct
   let configure info (_init, job) =
     let tbl = Graph.Tbl.create 17 in
     let f v = match Graph.explode job v with
-      | `App _ | `If _ -> assert false
+      | `App _ | `If _  | `PrimProj _ -> assert false
       | `Impl (c, `Args args, `Deps _) ->
-        let modname = module_name c (Graph.hash v) args in
+        let modname = module_name c#module_name (Graph.hash v) args in
         Graph.Tbl.add tbl v modname;
         c#configure info >>| fun () ->
         if args = [] then ()
@@ -257,6 +258,15 @@ module Engine = struct
             (module_expression tbl) (c,args);
           Codegen.newline_main ();
         end
+      | `Proj (s, n) ->
+        let name_n = Graph.Tbl.find tbl n in
+        let modname = module_name (name_n ^ s) (Graph.hash v) [] in
+        Graph.Tbl.add tbl v modname;
+        Codegen.append_main
+          "@[<2>module %s =@ %s.%s@]"
+          modname name_n s;
+        Codegen.newline_main ();
+        R.ok ()
     in
     let f v res = res >>= fun () -> f v in
     Graph.fold f job @@ R.ok () >>| fun () ->
@@ -297,14 +307,19 @@ module Engine = struct
   let connect modtbl info (init, job) =
     let tbl = Graph.Tbl.create 17 in
     let f v = match Graph.explode job v with
-      | `App _ | `If _ -> assert false
+      | `App _ | `If _  | `PrimProj _ -> assert false
       | `Impl (c, `Args args, `Deps deps) ->
-        let ident = name c (Graph.hash v) in
+        let ident = name c#name (Graph.hash v) in
         let modname = Graph.Tbl.find modtbl v in
         Graph.Tbl.add tbl v ident;
         let names = List.map (Graph.Tbl.find tbl) (args @ deps) in
         Codegen.append_main "%a"
           emit_connect (ident, names, c#connect info modname)
+      | `Proj (s, n) ->
+        let name_n = Graph.Tbl.find tbl n in
+        let ident = name (name_n ^ s) (Graph.hash v) in
+        Graph.Tbl.add tbl v ident;
+        Codegen.append_main "@[<v 2>let %s = %s@]" ident name_n
     in
     Graph.fold (fun v () -> f v) job ();
     let main_name = Graph.Tbl.find tbl @@ Graph.find_root job in
