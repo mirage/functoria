@@ -65,7 +65,7 @@ module C = struct
       method ty = Functoria.job
       method name = "test_app"
       method module_name = "Test_app"
-      method! connect _ _ _ = "()"
+      method! connect _ _ _ = `Val "()"
       method! keys = [
         Functoria_key.(abstract vote);
         Functoria_key.(abstract warn_error);
