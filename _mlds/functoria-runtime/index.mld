@@ -1,0 +1,3 @@
+{2 Library functoria-runtime}
+This library exposes the following toplevel modules:
+{!modules:Functoria_info Functoria_runtime}
