@@ -1,6 +1,0 @@
-{2 Library functoria}
-This library exposes the following toplevel modules:
-{!modules:Functoria Functoria_key Functoria_misc}
-{2 Library functoria.app}
-This library exposes the following toplevel modules:
-{!modules:Functoria_app Functoria_command_line Functoria_graph}
