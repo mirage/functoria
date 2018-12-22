@@ -236,7 +236,7 @@ module Engine = struct
     | [x] -> x
     | _   -> invalid_arg "Functoria.find_device: too many devices."
 
-  let build info (_init, job) =
+  let build info job =
     let f v = match Graph.explode job v with
       | `App _ | `If _ -> R.ok ()
       | `Impl (c, _, _) -> c#build info
@@ -244,7 +244,7 @@ module Engine = struct
     let f v res = res >>= fun () -> f v in
     Graph.fold f job @@ R.ok ()
 
-  let configure info (_init, job) =
+  let configure info job =
     let tbl = Graph.Tbl.create 17 in
     let f v = match Graph.explode job v with
       | `App _ | `If _ -> assert false
@@ -291,7 +291,7 @@ module Engine = struct
        run (Lazy.force %s)@]"
       main
 
-  let connect modtbl info (_init, job) =
+  let connect modtbl info job =
     let tbl = Graph.Tbl.create 17 in
     let f v = match Graph.explode job v with
       | `App _ | `If _ -> assert false
@@ -354,13 +354,13 @@ module Config = struct
     { packages; keys; name; build_dir; init; jobs }
 
   let eval ~partial context
-      { name = n; build_dir; packages; keys; jobs; init }
+      { name = n; build_dir; packages; keys; jobs; _ }
     =
     let e = Graph.eval ~partial ~context jobs in
     let packages = Key.(pure List.append $ packages $ Engine.packages e) in
     let keys = Key.Set.elements (Key.Set.union keys @@ Engine.keys e) in
     Key.(pure (fun packages _ context ->
-        ((init, e),
+        (e,
          Info.create
            ~packages
            ~keys ~context ~name:n ~build_dir))
@@ -585,7 +585,7 @@ module Make (P: S) = struct
       (fun () -> Engine.build i jobs)
       "build"
 
-  let clean i (_init, job) =
+  let clean i job =
     Log.info (fun m -> m "Cleaning: %a" Fpath.pp !config_file);
     with_current
       (Info.build_dir i)
@@ -596,8 +596,7 @@ module Make (P: S) = struct
          Bos.OS.File.delete (Fpath.v "log"))
       "clean"
 
-  (* FIXME: describe init *)
-  let describe _info ~dotcmd ~dot ~output (_init, job) =
+  let describe _info ~dotcmd ~dot ~output job =
     let f fmt = (if dot then Config.pp_dot else Config.pp) fmt job in
     let with_fmt f = match output with
       | None when dot ->
