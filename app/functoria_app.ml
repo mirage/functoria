@@ -265,25 +265,23 @@ module Engine = struct
     Graph.fold f job @@ R.ok () >>| fun () ->
     tbl
 
-  let meta_init fmt (connect_name, result_name) =
-    Fmt.pf fmt "let _%s =@[@ Lazy.force %s @]in@ " result_name connect_name
-
   let emit_connect fmt (iname, names, connect_string) =
-    (* We avoid potential collision between double application
-       by prefixing with "_". This also avoid warnings. *)
-    let rnames = List.map (fun x -> "_"^x) names in
+    let eval_names =
+      List.rev
+        (List.fold_left
+           (fun acc n -> if List.mem n acc then acc else n :: acc)
+           [] names)
+    in
     let bind ppf name =
-      Fmt.pf ppf "_%s >>= fun %s ->@ " name name
+      Fmt.pf ppf "Lazy.force %s >>= fun %s' ->@ " name name
     in
     Fmt.pf fmt
       "@[<v 2>let %s = lazy (@ \
        %a\
-       %a\
        %s@ )@]@."
       iname
-      Fmt.(list ~sep:nop meta_init) (List.combine names rnames)
-      Fmt.(list ~sep:nop bind) rnames
-      (connect_string rnames)
+      Fmt.(list ~sep:nop bind) eval_names
+      (connect_string (List.map (fun m -> m ^ "'") names))
 
   let emit_run init main =
     (* "exit 1" is ok in this code, since cmdliner will print help. *)
@@ -319,6 +317,7 @@ module Engine = struct
 
   let configure_and_connect info g =
     configure info g >>| fun modtbl ->
+    Codegen.append_main "[@@@@@@ocaml.warning \"-27\"]@.";
     connect modtbl info g
 
   let clean i g =
