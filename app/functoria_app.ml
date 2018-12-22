@@ -283,19 +283,15 @@ module Engine = struct
       Fmt.(list ~sep:nop bind) eval_names
       (connect_string (List.map (fun m -> m ^ "'") names))
 
-  let emit_run init main =
+  let emit_run main =
     (* "exit 1" is ok in this code, since cmdliner will print help. *)
-    let force ppf name =
-      Fmt.pf ppf "Lazy.force %s >>= fun _ ->@ " name
-    in
     Codegen.append_main
       "@[<v 2>\
        let () =@ \
-       let t =@ @[<v 2>%aLazy.force %s@]@ \
-       in run t@]"
-      Fmt.(list ~sep:nop force) init main
+       run (Lazy.force %s)@]"
+      main
 
-  let connect modtbl info (init, job) =
+  let connect modtbl info (_init, job) =
     let tbl = Graph.Tbl.create 17 in
     let f v = match Graph.explode job v with
       | `App _ | `If _ -> assert false
@@ -309,10 +305,7 @@ module Engine = struct
     in
     Graph.fold (fun v () -> f v) job ();
     let main_name = Graph.Tbl.find tbl @@ Graph.find_root job in
-    let init_names =
-      List.map (fun name -> Graph.Tbl.find tbl @@ find_device info job name) init
-    in
-    emit_run init_names main_name;
+    emit_run main_name;
     ()
 
   let configure_and_connect info g =
