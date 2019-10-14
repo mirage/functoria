@@ -1,3 +1,9 @@
+## v2.2.5 (2019-10-14)
+
+* Functoria_runtime.with_argv now uses (#179, by @hannesm)
+  - exit 63 when `Help or `Version is requested (used to exit with 0)
+  - exit 64 when Term.eval returns with an error (used to raise an exception)
+
 ## v2.2.4 (2019-05-27)
 
 * fix app_info - executing "opam list --installed" (#170, by @hannesm)
