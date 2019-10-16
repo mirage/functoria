@@ -42,7 +42,7 @@ let sys_argv = impl @@ object
     method ty = argv
     method name = "argv"
     method module_name = "Sys"
-    method !connect _info _m _ = "return Sys.argv"
+    method !connect _info _m _ = `Val "Sys.argv"
   end
 
 let src = Logs.Src.create "functoria" ~doc:"functoria library"
@@ -104,9 +104,10 @@ let keys (argv: argv impl) = impl @@ object
     method !deps = [ abstract argv ]
     method !connect info modname = function
       | [ argv ] ->
-        Fmt.strf
-          "return (Functoria_runtime.with_argv (List.map fst %s.runtime_keys) %S %s)"
-          modname (Info.name info) argv
+         `Eff
+           (Fmt.strf
+              "@[return@ @[(Functoria_runtime.with_argv@\n@[(List.map@ fst@ %s.runtime_keys)@]@ %S@ %s)@]@]@,"
+              modname (Info.name info) argv)
       | _ -> failwith "The keys connect should receive exactly one argument."
   end
 
@@ -141,7 +142,7 @@ let app_info ?(type_modname="Functoria_info")  ?(gen_modname="Info_gen") () =
     val file = Fpath.(v (String.Ascii.lowercase gen_modname) + "ml")
     method module_name = gen_modname
     method !packages = Key.pure [package "functoria-runtime"]
-    method !connect _ modname _ = Fmt.strf "return %s.info" modname
+    method !connect _ modname _ = `Val (Fmt.strf "%s.info" modname)
 
     method !clean _i =
       Bos.OS.Path.delete file >>= fun () ->
@@ -163,6 +164,8 @@ let app_info ?(type_modname="Functoria_info")  ?(gen_modname="Info_gen") () =
   end
 
 module Engine = struct
+
+  type tbl_entry = {name: string; value: string option}
 
   let if_context =
     let open Graph in
@@ -266,37 +269,48 @@ module Engine = struct
     Graph.fold f job @@ R.ok () >>| fun () ->
     tbl
 
-  let meta_init fmt (connect_name, result_name) =
-    Fmt.pf fmt "let _%s =@[@ Lazy.force %s @]in@ " result_name connect_name
-
-  let emit_connect fmt (iname, names, connect_string) =
+  let emit_connect (iname, (names : tbl_entry list), connect_string) =
     (* We avoid potential collision between double application
        by prefixing with "_". This also avoid warnings. *)
-    let rnames = List.map (fun x -> "_"^x) names in
-    let bind ppf name =
-      Fmt.pf ppf "_%s >>= fun %s ->@ " name name
+    let rnames = ListLabels.map names
+        ~f:(function 
+            | { value = Some v; _ } -> v
+            | { name; _ } -> "_"^ name) in
+    let bind ppf = function
+      | { value = None; name = n}, rname ->
+        Fmt.pf ppf "@[@[@ Lazy.force@ %s@ @]@ >>=@ fun@ %s@ ->@ @]@." n rname
+      | { value = Some _; _ }, _ -> ()
     in
-    Fmt.pf fmt
-      "@[<v 2>let %s = lazy (@ \
-       %a\
-       %a\
-       %s@ )@]@."
-      iname
-      Fmt.(list ~sep:nop meta_init) (List.combine names rnames)
-      Fmt.(list ~sep:nop bind) rnames
-      (connect_string rnames)
-
+      match connect_string rnames, List.combine names rnames with
+      | `Eff e, l ->
+        `Eff
+          (fun fmt ->
+             Fmt.pf fmt
+               "@[let@ @[%s@ =@ @[lazy@ (@[%a@ @[%s@]@])@,@]@]@]"
+               iname Fmt.(list ~sep:nop bind) l e)
+      | `Val v, (_ :: _ as l) ->
+        `Eff
+          (fun fmt ->
+             Fmt.pf fmt
+               "@[let@ @[%s@ =@ @[lazy@ (@[%a@ @[return@ @[%s@]@]@])@,@]@]@]"
+               iname Fmt.(list ~sep:nop bind) l v)
+      | `Val v, [] ->
+        `Val v
+          
   let emit_run init main =
     (* "exit 1" is ok in this code, since cmdliner will print help. *)
-    let force ppf name =
-      Fmt.pf ppf "Lazy.force %s >>= fun _ ->@ " name
+    let force ppf n =
+      match n.value with
+      | None ->
+        Fmt.pf ppf "@[Lazy.force %s >>= fun _ ->@ @]@\n" n.name
+      | Some _ -> () (* are the forced values ever used here? *)
     in
     Codegen.append_main
       "@[<v 2>\
        let () =@ \
        let t =@ @[<v 2>%aLazy.force %s@]@ \
        in run t@]"
-      Fmt.(list ~sep:nop force) init main
+      Fmt.(list ~sep:nop force) init main.name
 
   let connect modtbl info (init, job) =
     let tbl = Graph.Tbl.create 17 in
@@ -305,10 +319,13 @@ module Engine = struct
       | `Impl (c, `Args args, `Deps deps) ->
         let ident = name c (Graph.hash v) in
         let modname = Graph.Tbl.find modtbl v in
-        Graph.Tbl.add tbl v ident;
+        Graph.Tbl.add tbl v { name = ident; value = None };
         let names = List.map (Graph.Tbl.find tbl) (args @ deps) in
-        Codegen.append_main "%a"
-          emit_connect (ident, names, c#connect info modname)
+        match emit_connect (ident, names, c#connect info modname) with
+        | `Eff f ->
+          Codegen.append_main "@[<v 2>%t@]" f
+        | `Val rhs ->
+          Graph.Tbl.add tbl v { name = ident; value = Some rhs };
     in
     Graph.fold (fun v () -> f v) job ();
     let main_name = Graph.Tbl.find tbl @@ Graph.find_root job in
@@ -783,7 +800,7 @@ module Make (P: S) = struct
     Codegen.set_main_ml file;
     Codegen.append_main "(* %s *)" (Codegen.generated_header ());
     Codegen.newline_main ();
-    Codegen.append_main "%a" Fmt.text  P.prelude;
+    Codegen.append_main "@[%a@]" Fmt.text  P.prelude;
     Codegen.newline_main ();
     Codegen.append_main "let _ = Printexc.record_backtrace true";
     Codegen.newline_main ();
