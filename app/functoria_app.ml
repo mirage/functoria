@@ -664,6 +664,7 @@ module Make (P: S) = struct
     let target_dir = relativize ~root:project_root build_dir in
     let command =
       Bos.Cmd.(v "dune" % "exec"
+               % "-j" % "1" (* run sequentially, see #187 *)
                % "--root" % p project_root
                % "--" % p Fpath.(target_dir / "config.exe") %% args)
     in
