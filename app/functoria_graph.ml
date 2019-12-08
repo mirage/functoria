@@ -23,10 +23,10 @@
 *)
 
 open Graph
-open Functoria_misc
+open Functoria.Misc
 open Functoria
 
-module Key = Functoria_key
+module Key = Functoria.Key
 
 (* {2 Utility} *)
 

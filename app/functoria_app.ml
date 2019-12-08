@@ -19,10 +19,10 @@ open Rresult
 open Astring
 
 open Functoria
-include Functoria_misc
+include Misc
 
 module Graph = Functoria_graph
-module Key = Functoria_key
+module Key = Functoria.Key
 module Cmd = Functoria_command_line
 
 (* Noop, the job that does nothing. *)
