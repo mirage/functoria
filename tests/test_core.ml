@@ -1,4 +1,4 @@
-module Cmd = Functoria_command_line
+module Cmd = Functoria_app.Cmd
 
 let result_t =
   let pp ppf = function
