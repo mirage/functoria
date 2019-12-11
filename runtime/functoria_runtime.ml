@@ -82,3 +82,5 @@ let with_argv keys s argv =
     | `Ok _ -> initialized := true; ()
     | `Error _ -> exit 64
     | `Help | `Version -> exit 63
+
+module Info = Info
