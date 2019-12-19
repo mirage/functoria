@@ -1,3 +1,7 @@
+**This repository is deprecated -- check [mirage/mirage](https://github.com/mirage/mirage) instead**
+
+---
+
 # Functoria - A DSL to organize functor applications
 
 [![Build Status](https://travis-ci.org/mirage/functoria.svg?branch=master)](https://travis-ci.org/mirage/functoria)
