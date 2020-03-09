@@ -1,3 +1,8 @@
+## v3.1.0 (2020-03-09)
+
+* Always use `-warn-error -A` when compiling `config.ml`. This allows
+  to use deprecated devices without failing (#193, @samoht)
+
 ## v3.0.3 (2019-12-17)
 
 * Fix equality for `'a impl` values, which caused issue in `mirage configure`
