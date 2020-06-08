@@ -1,3 +1,4 @@
+module Key = Functoria_key
 module Cmd = Functoria_command_line
 
 let result_t =
@@ -12,6 +13,21 @@ let result_t =
       Fmt.pf ppf "ok %a" pp action
   in
   Alcotest.testable pp (=)
+
+let key = Alcotest.testable Key.pp Key.equal
+
+let test_keys () =
+  let k1 =
+    Key.(abstract @@ create "foo" Arg.(opt int 1 (info ["foo"])))
+  in
+  let k2 =
+    Key.(abstract @@ create "foo" Arg.(opt int 2 (info ["foo"])))
+  in
+  let k3 =
+    Key.(abstract @@ create "foo" Arg.(opt int 1 (info ["foo"])))
+  in
+  Alcotest.(check @@ neg key) "different defaults" k1 k2;
+  Alcotest.(check @@ key) "same defaults" k1 k3
 
 let test_configure () =
   let extra_term = Cmdliner.(Term.(
@@ -169,6 +185,7 @@ let test_generated_header () =
   Alcotest.check Alcotest.string "generated_header" expected got
 
 let suite = [
+  "keys"          , `Quick, test_keys;
   "read_full_eval", `Quick, test_read_full_eval;
   "configure"     , `Quick, test_configure;
   "describe"      , `Quick, test_describe;

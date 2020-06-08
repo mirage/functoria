@@ -272,7 +272,7 @@ and equal_any (Abstract x) (Abstract y) = equal x y
 let rec hash: type t . t impl -> int = function
   | Impl c ->
     Hashtbl.hash
-      (c#name, Hashtbl.hash c#keys, List.map hash_any c#deps)
+      (c#name, List.map Key.hash c#keys, List.map hash_any c#deps)
   | App { f; x } -> Hashtbl.hash (`Bla (hash f, hash x))
   | If (cond, t, e) ->
     Hashtbl.hash (`If (cond, hash t, hash e))
