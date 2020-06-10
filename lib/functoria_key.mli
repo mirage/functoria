@@ -183,7 +183,10 @@ val abstract: 'a key -> t
 (** [hide k] is the [k] with its type hidden. *)
 
 val equal : t -> t -> bool
-(** [equa] is the equality function of untyped keys. *)
+(** [equal] is the equality function of untyped keys. *)
+
+val hash: t -> int
+(** [hash] is the hash function for untyped keys. *)
 
 val compare: t -> t -> int
 (** [compare] compares untyped keys. *)

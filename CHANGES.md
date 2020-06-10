@@ -1,3 +1,12 @@
+## v3.1.1 (20120-06-10)
+
+* Ensure that keys with different defaults are distinguished by functoria.
+  `Functoria.Key.equal` has been introduced in #188 but it was not precise
+  enough when two keys were sharing the same name (e.g. `interface`)
+  but with different default values (e.g. `tap0` or `service`).
+  This was causing non-deterministic bugs where some devices were
+  not configured properly (mirage/mirage#1157, fixed by #194 by @samoht)
+
 ## v3.1.0 (2020-03-09)
 
 * Always use `-warn-error -A` when compiling `config.ml`. This allows
