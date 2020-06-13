@@ -618,13 +618,13 @@ module Make (P: S) = struct
         {|%s
 
 %a(executable
-  (name config)
+  (name %s)
   (flags (:standard -warn-error -A))
   (modules %s)
   (libraries %s))
 |}
         auto_generated Fmt.(list ~sep:(unit "") string) copy_rules
-        config_file pkgs
+        config_file config_file pkgs
     in
     generate ~file ~contents
 
@@ -682,10 +682,11 @@ module Make (P: S) = struct
     >>= fun () ->
     let args = Bos.Cmd.of_list (List.tl (Array.to_list argv)) in
     let target_dir = relativize ~root:project_root build_dir in
+    let config_exe = Fpath.(basename (rem_ext config_file)) ^ ".exe" in
     let command =
       Bos.Cmd.(v "dune" % "exec"
                % "--root" % p project_root
-               % "--" % p Fpath.(target_dir / "config.exe") %% args)
+               % "--" % p Fpath.(target_dir / config_exe) %% args)
     in
     match help_ppf, err_ppf with
     | None, None -> Bos.OS.Cmd.run command
