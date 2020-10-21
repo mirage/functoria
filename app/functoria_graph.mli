@@ -42,6 +42,7 @@ type label =
   | If of If.path value
   | Impl of subconf
   | App
+  | Proj of string
 
 module Tbl: Hashtbl.S with type key = vertex
 
@@ -81,7 +82,9 @@ val explode:
   | `If of If.path value * (If.path * vertex) list
   | `Impl of subconf
              * [> `Args of vertex list ]
-             * [> `Deps of vertex list ] ]
+             * [> `Deps of vertex list ]
+  | `PrimProj of string
+  | `Proj of string * vertex ]
 (** [explode g v] deconstructs the vertex [v] in the graph [g]
     into it's possible components.
     It also checks that the local invariants are respected. *)

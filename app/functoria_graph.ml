@@ -69,6 +69,7 @@ type label =
   | If of If.path Key.value
   | Impl of subconf
   | App
+  | Proj of string
 
 type edge_label =
   | Parameter of int
@@ -174,6 +175,11 @@ let add_app graph ~f ~args =
   |> add_edge v Functor f
   |> fold_lefti (fun i -> add_edge v (Parameter i)) args
 
+let add_proj ?arg graph s =
+  let v = G.V.create (Proj s) in
+  let g = G.add_vertex graph v in
+  v, (match arg with Some a -> add_edge v (Parameter 0) a g | None -> g)
+
 let create impl =
   let module H = ImplTbl in
   let tbl = H.create 50 in
@@ -198,6 +204,8 @@ let create impl =
             let f, g = aux g f in
             let x, g = aux g x in
             add_app g ~f ~args:[x]
+          | `Proj s ->
+            add_proj g s
         in
         H.add tbl (abstract impl) v;
         v, g
@@ -206,7 +214,7 @@ let create impl =
 
 let is_impl v = match G.V.label v with
   | Impl _ -> true
-  | App | If _ -> false
+  | App | If _ | Proj _ -> false
 
 (* {2 Graph destruction/extraction} *)
 
@@ -245,7 +253,9 @@ let explode g v =
   | Impl i , (args      , deps    , [], None  ) -> `Impl (i, args, deps)
   | If cond, (`Args []  , `Deps [], l , None  ) -> `If (cond, l)
   | App    , (`Args args, `Deps [], [], Some f) -> `App (f, args)
-  | (Impl _ | If _ | App), _ -> assert false
+  | Proj s , (`Args [a] , `Deps [], [], None  ) -> `Proj (s, a)
+  | Proj s , (`Args []  , `Deps [], [], None  ) -> `PrimProj s
+  | (Impl _ | If _ | App | Proj _), _ -> assert false
 
 let fold f g z =
   if Dfs.has_cycle g then
@@ -308,6 +318,13 @@ module RemovePartialApp = struct
         | `App (f, args') ->
           let add g = add_app g ~f ~args:(args' @ args) in
           Some (v, v', add)
+        | `PrimProj s ->
+          let arg = match args with
+            | [a] -> a
+            | _ -> assert false
+          in
+          let add g = add_proj ~arg g s in
+          Some (v, v', add)
         | _ -> None
       end
     | _ -> None
@@ -337,7 +354,8 @@ module MergeNode = struct
           match G.V.label v with
           | If cond' -> set_equal cond cond'
           | App
-          | Impl _   -> false
+          | Impl _
+          | Proj _ -> false
         ) l
       then Some (v, cond, l)
       else None
@@ -366,7 +384,7 @@ module EvalIf = struct
 
   let predicate ~partial ~context _ v = match G.V.label v with
     | If cond when not partial || Key.mem context cond -> Some v
-    | If _ | App | Impl _ -> None
+    | If _ | App | Impl _ | Proj _ -> None
 
   let extract path l =
     let rec aux = function
@@ -432,6 +450,7 @@ module Dot = Graphviz.Dot(struct
             f#keys
         in
         [ `Label label; `Shape `Box; ]
+      | Proj s -> [ `Label ("."^s); `Shape `Circle ]
 
     let get_subgraph _g = None
 
@@ -444,7 +463,7 @@ module Dot = Graphviz.Dot(struct
       | Condition path ->
         let cond =
           match V.label @@ E.src e with
-          | If cond -> cond | App | Impl _ -> assert false
+          | If cond -> cond | App | Impl _ | Proj _ -> assert false
         in
         let l = [ `Style `Dotted; `Headport `N ] in
         if Key.default cond = path then `Style `Bold :: l else l
