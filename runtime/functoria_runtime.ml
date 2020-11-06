@@ -33,7 +33,7 @@ module Arg = struct
     | None -> required c i
     | Some d -> opt c d i
 
-  let default (type a) (t : a t) = match t.kind with
+  let default (type a) (t : a t) : a option = match t.kind with
     | Opt (d,_) -> Some d
     | Flag -> Some false
     | Required _ -> None
