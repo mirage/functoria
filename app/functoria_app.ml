@@ -17,17 +17,16 @@
 
 open Rresult
 open Astring
-
 open Functoria
+
 include Functoria_misc
 
-module Graph = Functoria_graph
 module Key = Functoria_key
 module Cmd = Functoria_command_line
 
 (* Noop, the job that does nothing. *)
 let noop = impl @@ object
-    inherit base_configurable
+    inherit [_] base_configurable
     method ty = job
     method name = "noop"
     method module_name = "Pervasives"
@@ -38,7 +37,7 @@ type argv = ARGV
 let argv = Type ARGV
 
 let sys_argv = impl @@ object
-    inherit base_configurable
+    inherit [_] base_configurable
     method ty = argv
     method name = "argv"
     method module_name = "Sys"
@@ -94,7 +93,7 @@ module Keys = struct
 end
 
 let keys (argv: argv impl) = impl @@ object
-    inherit base_configurable
+    inherit [_] base_configurable
     method ty = job
     method name = Keys.name
     method module_name = Key.module_name
@@ -135,7 +134,7 @@ let pp_dump_pkgs module_name fmt (name, pkg, libs) =
 
 let app_info ?(type_modname="Functoria_info")  ?(gen_modname="Info_gen") () =
   impl @@ object
-    inherit base_configurable
+    inherit [_] base_configurable
     method ty = info
     method name = "info"
     val file = Fpath.(v (String.Ascii.lowercase gen_modname) + "ml")
@@ -183,18 +182,20 @@ let app_info ?(type_modname="Functoria_info")  ?(gen_modname="Info_gen") () =
 
 module Engine = struct
 
-  let if_context =
-    let open Graph in
-    Graph.collect (module Key.Set) @@ function
-    | If cond      -> Key.deps cond
-    | App | Impl _ -> Key.Set.empty
+  let if_keys x =
+    collect
+      (module Key.Set)
+      (function If cond -> Key.deps cond | App | Dev _ -> Key.Set.empty)
+      x
 
-  let keys =
-    let open Graph in
-    Graph.collect (module Key.Set) @@ function
-    | Impl c  -> Key.Set.of_list c#keys
-    | If cond -> Key.deps cond
-    | App     -> Key.Set.empty
+  let all_keys x =
+    collect
+      (module Key.Set)
+      (function
+       | Dev c -> Key.Set.of_list c#keys
+       | If cond -> Key.deps cond
+       | App -> Key.Set.empty)
+      x
 
   module M = struct
     type t = package list Key.value
@@ -203,87 +204,47 @@ module Engine = struct
   end
 
   let packages =
-    let open Graph in
-    Graph.collect (module M) @@ function
-    | Impl c     -> c#packages
+    collect (module M) @@ function
+    | Dev c     -> c#packages
     | If _ | App -> M.empty
 
-  (* Return a unique variable name holding the state of the given
-     module construction. *)
-  let name c id =
-    let prefix = Name.ocamlify c#name in
-    Name.create (Fmt.strf "%s%i" prefix id) ~prefix
-
-  (* [module_expresion tbl c args] returns the module expression of
+  (* [module_expresion ppf (c, args)] is the module expression of
      the functor [c] applies to [args]. *)
-  let module_expression tbl fmt (c, args) =
-    Fmt.pf fmt "%s%a"
-      c#module_name
-      Fmt.(list (parens @@ of_to_string @@ Graph.Tbl.find tbl))
-      args
+  let module_expression fmt (c, args) =
+  Fmt.pf fmt "%s%a" c#module_name
+    Fmt.(list (parens @@ of_to_string @@ Graph.impl_name))
+    args
 
-  (* [module_name tbl c args] return the module name of the result of
-     the functor application. If [args = []], it returns
-     [c#module_name]. *)
-  let module_name c id args =
-    let base = c#module_name in
-    if args = [] then base
-    else
-      let prefix = match String.cut ~sep:"." base with
-        | Some (l, _) -> l
-        | None -> base
-      in
-      let prefix = Name.ocamlify prefix in
-      Name.create (Fmt.strf "%s%i" prefix id) ~prefix
-
-  (* FIXME: Can we do better than lookup by name? *)
-  let find_device info g impl =
+  let find_all_devices info g impl =
     let ctx = Info.context info in
-    let rec name: type a . a impl -> string = fun impl ->
-      match explode impl with
-      | `Impl c              -> c#name
-      | `App (Abstract x, _) -> name x
-      | `If (b, x, y)        -> if Key.eval ctx b then name x else name y
+    let id = with_left_most_device ctx impl { f = Functoria.id } in
+    let f x l =
+      let Graph.D { dev; _ } = x in
+      if Functoria.id dev = id then x :: l else l
     in
-    let name = name impl in
-    let open Graph in
-    let p = function
-      | Impl c     -> c#name = name
-      | App | If _ -> false
-    in
-    match Graph.find_all g p with
-    | []  -> invalid_arg "Functoria.find_device: no device"
-    | [x] -> x
-    | _   -> invalid_arg "Functoria.find_device: too many devices."
+    Graph.fold f g []
 
-  let build info (_init, job) =
-    let f v = match Graph.explode job v with
-      | `App _ | `If _ -> R.ok ()
-      | `Impl (c, _, _) -> c#build info
-    in
+  let iter_actions f t =
     let f v res = res >>= fun () -> f v in
-    Graph.fold f job @@ R.ok ()
+    Graph.fold f t (Ok ())
 
-  let configure info (_init, job) =
-    let tbl = Graph.Tbl.create 17 in
-    let f v = match Graph.explode job v with
-      | `App _ | `If _ -> assert false
-      | `Impl (c, `Args args, `Deps _) ->
-        let modname = module_name c (Graph.hash v) args in
-        Graph.Tbl.add tbl v modname;
-        c#configure info >>| fun () ->
-        if args = [] then ()
-        else begin
-          Codegen.append_main
-            "@[<2>module %s =@ %a@]"
-            modname
-            (module_expression tbl) (c,args);
-          Codegen.newline_main ();
-        end
+  let build info t =
+    let f (Graph.D { dev; _ }) = dev#build info in
+    iter_actions f t
+
+  let configure info t =
+    let f v =
+      let Graph.D { dev; args; _ } = v in
+      dev#configure info >>= fun () ->
+      if args = [] then Ok ()
+      else (
+        Codegen.append_main "@[<2>module %s =@ %a@]@."
+          (Graph.impl_name v) module_expression (dev, args);
+        Codegen.newline_main ();
+        Ok ()
+      )
     in
-    let f v res = res >>= fun () -> f v in
-    Graph.fold f job @@ R.ok () >>| fun () ->
-    tbl
+    iter_actions f t
 
   let meta_init fmt (connect_name, result_name) =
     Fmt.pf fmt "let _%s =@[@ Lazy.force %s @]in@ " result_name connect_name
@@ -317,37 +278,36 @@ module Engine = struct
        in run t@]"
       Fmt.(list ~sep:nop force) init main
 
-  let connect modtbl info (init, job) =
-    let tbl = Graph.Tbl.create 17 in
-    let f v = match Graph.explode job v with
-      | `App _ | `If _ -> assert false
-      | `Impl (c, `Args args, `Deps deps) ->
-        let ident = name c (Graph.hash v) in
-        let modname = Graph.Tbl.find modtbl v in
-        Graph.Tbl.add tbl v ident;
-        let names = List.map (Graph.Tbl.find tbl) (args @ deps) in
-        Codegen.append_main "%a"
-          emit_connect (ident, names, c#connect info modname)
+  let connect ?(init = []) info t =
+    let f v =
+      let Graph.D { dev; args; deps; _ } = v in
+      let var_name = Graph.var_name v in
+      let impl_name = Graph.impl_name v in
+      let arg_names = List.map Graph.var_name (args @ deps) in
+      Codegen.append_main "%a" emit_connect
+        (var_name, arg_names, dev#connect info impl_name);
+      Codegen.newline_main ();
+      Ok ()
     in
-    Graph.fold (fun v () -> f v) job ();
-    let main_name = Graph.Tbl.find tbl @@ Graph.find_root job in
+    iter_actions f t >>= fun () ->
+    let main_name = Graph.var_name t in
     let init_names =
-      List.map (fun name -> Graph.Tbl.find tbl @@ find_device info job name) init
+      List.fold_left
+        (fun acc i ->
+           match find_all_devices info t i with
+           | [] -> assert false
+           | ds -> List.map Graph.var_name ds @ acc)
+        [] init
+      |> List.rev
     in
-    emit_run init_names main_name;
-    ()
+    Ok (emit_run init_names main_name)
 
-  let configure_and_connect info g =
-    configure info g >>| fun modtbl ->
-    connect modtbl info g
-
-  let clean i g =
-    let f v = match Graph.explode g v with
-      | `Impl (c,_,_) -> c#clean i
-      | _ -> R.ok ()
+  let clean i t =
+    let f v =
+      let Graph.D { dev; _ } = v in
+      dev#clean i
     in
-    let f v res = res >>= fun () -> f v in
-    Graph.fold f g @@ R.ok ()
+    iter_actions f t
 
 end
 
@@ -359,14 +319,21 @@ module Config = struct
     packages : package list Key.value;
     keys     : Key.Set.t;
     init     : job impl list;
-    jobs     : Graph.t;
+    jobs     : abstract_impl;
+  }
+
+  type out = {
+    init : job impl list;
+    jobs : abstract_impl;
+    info : Info.t;
+    device_graph : Graph.t;
   }
 
   (* In practice, we get all the keys associated to [if] cases, and
      all the keys that have a setter to them. *)
   let get_if_context jobs =
-    let all_keys = Engine.keys jobs in
-    let skeys = Engine.if_context jobs in
+    let all_keys = Engine.all_keys jobs in
+    let skeys = Engine.if_keys jobs in
     let f k s =
       if Key.Set.is_empty @@ Key.Set.inter (Key.aliases k) skeys
       then s
@@ -374,40 +341,27 @@ module Config = struct
     in
     Key.Set.fold f all_keys skeys
 
-  let make ?(keys=[]) ?(packages=[]) ?(init=[]) name build_dir main_dev =
+  let make ?(keys=[]) ?(packages=[]) ?(init=[]) name build_dir jobs =
     let name = Name.ocamlify name in
-    let jobs = Graph.create main_dev in
     let packages = Key.pure @@ packages in
+    let jobs = abstract jobs in
     let keys = Key.Set.(union (of_list keys) (get_if_context jobs)) in
     { packages; keys; name; build_dir; init; jobs }
 
-  let eval ~partial context
+  let eval ~full context
       { name = n; build_dir; packages; keys; jobs; init }
     =
-    let e = Graph.eval ~partial ~context jobs in
-    let packages = Key.(pure List.append $ packages $ Engine.packages e) in
-    let keys = Key.Set.elements (Key.Set.union keys @@ Engine.keys e) in
-    Key.(pure (fun packages _ context ->
-        ((init, e),
-         Info.create
-           ~packages
-           ~keys ~context ~name:n ~build_dir))
-         $ packages
-         $ of_deps (Set.of_list keys))
-
-  (* Extract all the keys directly. Useful to pre-resolve the keys
-     provided by the specialized DSL. *)
-  let extract_keys impl =
-    Engine.keys @@ Graph.create impl
+    let jobs = simplify ~full ~context jobs in
+    let device_graph = eval ~context jobs in
+    let packages = Key.(pure List.append $ packages $ Engine.packages jobs) in
+    let keys = Key.Set.elements (Key.Set.union keys @@ Engine.all_keys jobs) in
+    let mk packages _ context =
+      let info = Info.create ~packages ~keys ~context ~build_dir ~name:n in
+      { init; jobs; info; device_graph }
+    in
+    Key.(pure mk $ packages $ of_deps (Set.of_list keys))
 
   let keys t = t.keys
-
-  let gen_pp pp fmt jobs =
-    pp fmt @@ Graph.simplify jobs
-
-  let pp = gen_pp Graph.pp
-  let pp_dot = gen_pp Graph.pp_dot
-
 end
 
 (** Cached configuration in [.mirage.config].
@@ -708,7 +662,7 @@ module Make (P: S) = struct
 
   let handle_parse_args_no_config ?help_ppf ?err_ppf error argv =
     let open Cmdliner in
-    let base_keys = Config.extract_keys (P.create []) in
+    let base_keys = Engine.all_keys (abstract (P.create [])) in
     let base_context =
       Key.context base_keys ~with_required:false ~stage:`Configure
     in
@@ -759,9 +713,9 @@ module Make (P: S) = struct
       let verbose = Logs.level () >= level in
       f "@[<v>%a@]" (Info.pp verbose) info
 
-    let eval_cached ~partial cached_context t =
+    let eval_cached ~full cached_context t =
       let f c =
-        let info = Config.eval ~partial c t in
+        let info = Config.eval ~full c t in
         let keys = Key.deps info in
         let term = Key.context ~stage:`Configure ~with_required:false keys in
         match Cache.get_context t.Config.build_dir term with
@@ -771,8 +725,8 @@ module Make (P: S) = struct
       in
       Cmdliner.Term.(ret (pure f $ ret @@ pure @@ Cache.require cached_context))
 
-    let eval ~partial ~with_required context t =
-      let info = Config.eval ~partial context t in
+    let eval ~full ~with_required context t =
+      let info = Config.eval ~full context t in
       let context =
         Key.context ~with_required ~stage:`Configure (Key.deps info)
       in
@@ -783,7 +737,9 @@ module Make (P: S) = struct
   let set_output config term =
     match Cache.get_output config.Config.build_dir with
     | `Ok (Some o) ->
-      let update_output (r, i) = r, Info.with_output i o in
+      let update_output out =
+        { out with Config.info = Info.with_output out.Config.info o }
+      in
       Cmdliner.Term.(app (const update_output) term)
     | _ -> term
 
@@ -796,8 +752,9 @@ module Make (P: S) = struct
       exit 1
 
   (* FIXME: describe init *)
-  let describe _info ~dotcmd ~dot ~output (_init, job) =
-    let f fmt = (if dot then Config.pp_dot else Config.pp) fmt job in
+  let describe ~dotcmd ~dot ~output result =
+    let { Config.jobs; _ } = result in
+    let f fmt = (if dot then pp_dot else Fmt.nop) fmt jobs in
     let with_fmt f = match output with
       | None when dot ->
         f Format.str_formatter ;
@@ -828,32 +785,36 @@ module Make (P: S) = struct
     Codegen.append_main "let _ = Printexc.record_backtrace true";
     Codegen.newline_main ();
     Cache.save ~argv (Info.build_dir i) >>= fun () ->
-    Engine.configure_and_connect i jobs >>| fun () ->
+    Engine.configure i jobs >>= fun () ->
+    Engine.connect i jobs >>| fun () ->
     Codegen.newline_main ()
 
   let clean_main i jobs =
     Engine.clean i jobs >>= fun () ->
     Bos.OS.File.delete Fpath.(v "main.ml")
 
-  let configure ~argv i jobs =
+  let configure ~argv result =
+    let { Config.info; device_graph; _ } = result in
     let source_dir = get_relative_source_dir () in
     Log.debug (fun l -> l "source-dir=%a" Fpath.pp source_dir);
     Log.info (fun m -> m "Configuration: %a" Fpath.pp !config_file);
-    Log.info (fun m -> m "Output       : %a" Fmt.(option string) (Info.output i));
-    Log.info (fun m -> m "Build-dir    : %a" Fpath.pp (Info.build_dir i));
+    Log.info (fun m -> m "Output       : %a" Fmt.(option string) (Info.output info));
+    Log.info (fun m -> m "Build-dir    : %a" Fpath.pp (Info.build_dir info));
     with_current
-      (Info.build_dir i)
-      (fun () -> configure_main ~argv i jobs)
+      (Info.build_dir info)
+      (fun () -> configure_main ~argv info device_graph)
       "configure"
 
-  let build i jobs =
+  let build result =
+    let { Config.info; device_graph; _ } = result in
     Log.info (fun m -> m "Building: %a" Fpath.pp !config_file);
     with_current
-      (Info.build_dir i)
-      (fun () -> Engine.build i jobs)
+      (Info.build_dir info)
+      (fun () -> Engine.build info device_graph)
       "build"
 
-  let clean i (_init, job) =
+  let clean result =
+    let { Config.info; device_graph; _ } = result in
     Log.info (fun m -> m "Cleaning: %a" Fpath.pp !config_file);
     let clean_file file =
       can_overwrite file >>= function
@@ -861,16 +822,16 @@ module Make (P: S) = struct
       | true -> Bos.OS.File.delete file
     in
     clean_file Fpath.(v "dune-project") >>= fun () ->
-    Cache.clean (Info.build_dir i) >>= fun () ->
+    Cache.clean (Info.build_dir info) >>= fun () ->
     (match Sys.getenv "INSIDE_FUNCTORIA_TESTS" with
      | "1" -> Ok ()
      | exception Not_found -> Bos.OS.Dir.delete ~recurse:true Fpath.(v "_build")
      | _ -> Bos.OS.Dir.delete ~recurse:true Fpath.(v "_build")
     ) >>= fun () ->
     with_current
-      (Info.build_dir i)
+      (Info.build_dir info)
       (fun () ->
-         clean_main i job >>= fun () ->
+         clean_main info device_graph >>= fun () ->
          clean_file Fpath.(v "dune") >>= fun () ->
          clean_file Fpath.(v "dune.config") >>= fun () ->
          clean_file Fpath.(v "dune.build") >>= fun () ->
@@ -880,19 +841,21 @@ module Make (P: S) = struct
   let handle_parse_args_result argv = function
     | `Error _ -> exit 1
     | `Ok Cmd.Help -> ()
-    | `Ok (Cmd.Configure { result = (jobs, info); output }) ->
-      let info = with_output info output in
-      Log.info (fun m -> Config'.pp_info m (Some Logs.Debug) info);
-      exit_err (configure ~argv info jobs)
-    | `Ok (Cmd.Build (jobs, info)) ->
-      Log.info (fun m -> Config'.pp_info m (Some Logs.Debug) info);
-      exit_err (build info jobs)
-    | `Ok (Cmd.Describe { result = (jobs, info); dotcmd; dot; output }) ->
-      Config'.pp_info Fmt.(pf stdout) (Some Logs.Info) info;
-      R.error_msg_to_invalid_arg (describe info jobs ~dotcmd ~dot ~output)
-    | `Ok (Cmd.Clean (jobs, info)) ->
-      Log.info (fun m -> Config'.pp_info m (Some Logs.Debug) info);
-      exit_err (clean info jobs)
+    | `Ok (Cmd.Configure { result; output }) ->
+      let result =
+        { result with Config.info = with_output result.Config.info output }
+      in
+      Log.info (fun m -> Config'.pp_info m (Some Logs.Debug) result.info);
+      exit_err (configure ~argv result)
+    | `Ok (Cmd.Build result) ->
+      Log.info (fun m -> Config'.pp_info m (Some Logs.Debug) result.info);
+      exit_err (build result)
+    | `Ok (Cmd.Describe { result; dotcmd; dot; output }) ->
+      Config'.pp_info Fmt.(pf stdout) (Some Logs.Info) result.info;
+      R.error_msg_to_invalid_arg (describe result ~dotcmd ~dot ~output)
+    | `Ok (Cmd.Clean result) ->
+      Log.info (fun m -> Config'.pp_info m (Some Logs.Debug) result.info);
+      exit_err (clean result)
     | `Version
     | `Help -> ()
 
@@ -918,24 +881,23 @@ module Make (P: S) = struct
     (* 3. Parse the command-line and handle the result. *)
 
     let configure =
-      Config'.eval ~with_required:true ~partial:false context config
+      Config'.eval ~with_required:true ~full:true context config
     and describe =
       let context = Cache.merge ~cache:cached_context context in
-      let partial = match full_eval with
-        | Some true  -> false
-        | Some false -> true
-        | None -> not (Cache.present cached_context)
+      let full = match full_eval with
+        | Some b  -> b
+        | None -> Cache.present cached_context
       in
-      Config'.eval ~with_required:false ~partial context config
+      Config'.eval ~with_required:false ~full context config
     and build =
-      Config'.eval_cached ~partial:false cached_context config
+      Config'.eval_cached ~full:true cached_context config
       |> set_output config
     and clean =
-      Config'.eval_cached ~partial:false cached_context config
+      Config'.eval_cached ~full:true cached_context config
       |> set_output config
     and help =
       let context = Cache.merge ~cache:cached_context context in
-      let info = Config.eval ~partial:false context config in
+      let info = Config.eval ~full:true context config in
       let keys = Key.deps info in
       Key.context ~stage:`Configure ~with_required:false keys
     in

@@ -61,7 +61,7 @@ module C = struct
   let ignore_dirs = []
 
   let create jobs = Functoria.impl @@ object (self)
-      inherit Functoria.base_configurable
+      inherit [_] Functoria.base_configurable
       method ty = Functoria.job
       method name = "test_app"
       method module_name = "Test_app"

@@ -232,12 +232,18 @@ module Info: sig
 
 end
 
+type 'a id
+(** The type for unique identifiers. *)
+
 (** Signature for configurable module implementations. A
     [configurable] is a module implementation which contains a runtime
     state which can be set either at configuration time (by the
     application builder) or at runtime, using command-line
     arguments. *)
 class type ['ty] configurable = object
+
+  method id: 'ty id
+  (** [id] is the identifier of the configurable. *)
 
   method ty: 'ty typ
   (** [ty] is the module type of the configurable. *)
@@ -285,9 +291,31 @@ class type ['ty] configurable = object
   (** [deps] is the list of {{!abstract_impl} abstract
       implementations} that must be initialized before calling
       {!connect}. *)
-
 end
 
+(** {1 Device graphs} *)
+
+module Graph : sig
+  (** A graph of devices, annotated with their arguments, dependencies, and a
+      unique identifier.
+      Warning: this is truly a DAG: sharing {b must} be preserved. Manual walks
+      are discouraged, please use {!fold} instead. *)
+  type t =
+    | D : { dev : _ configurable; args : t list; deps : t list; id : int } -> t
+
+  val fold : (t -> 'a -> 'a) -> t -> 'a -> 'a
+  (** [fold f g z] applies [f] on each device in topological order. *)
+
+  val var_name : t -> string
+  (** [var_name t] returns the name identifying [t] which is a valid OCaml
+      variable identifier. *)
+
+  val impl_name : t -> string
+  (** [impl_name t] returns the name identifying [t]'s module implementation. *)
+end
+
+val id : 'a configurable -> int
+(** [id tid] returns a integer that uniquely identify [tid]. *)
 
 val impl: 'a configurable -> 'a impl
 (** [impl c] is the implementation of the configurable [c]. *)
@@ -304,7 +332,8 @@ val impl: 'a configurable -> 'a impl
       end
     ]}
 *)
-class base_configurable: object
+class ['a] base_configurable: object
+  method id: 'a id
   method packages: package list value
   method keys: key list
   method connect: Info.t -> string -> string list -> string
@@ -343,12 +372,32 @@ val hash: 'a impl -> int
 val equal: 'a impl -> 'a impl -> bool
 (** [equal] is the equality over implementations. *)
 
-module ImplTbl: Hashtbl.S with type key = abstract_impl
-(** Hashtbl of implementations. *)
+val pp_dot: abstract_impl Fmt.t
+(** [pp_dot] outputs the dot representation of module implementations. *)
 
-(**/**)
+type 'b f_dev = { f : 'a. 'a configurable -> 'b }
+(** The type for iterators on devices. *)
 
-val explode: 'a impl ->
-  [ `App of abstract_impl * abstract_impl
-  | `If of bool value * 'a impl * 'a impl
-  | `Impl of 'a configurable ]
+val with_left_most_device : context -> _ impl -> 'a f_dev -> 'a
+(** [with_left_most_device ctx t f] applies [f] on the left-most device in [f].
+    [If] node are resolved using [ctx]. *)
+
+val simplify : full:bool -> context:context -> abstract_impl -> abstract_impl
+(** [simplify ~full ~context impl] simplifies the implementation [impl]
+    according to keys present in the [context].
+    If [full] is [true], then the default values of keys are used in their
+    absence. Otherwise, absent keys are left un-simplified. *)
+
+val eval : context:context -> abstract_impl -> Graph.t
+(** [eval ~context impl] fully evaluates the implementation [impl] according to
+    keys present in the [context]. It returns a graph composed only of devices. *)
+
+(** Collections *)
+
+(** The description of a vertex *)
+type label = If : _ value -> label | Dev : _ configurable -> label | App
+
+val collect :
+  (module Functoria_misc.Monoid with type t = 'ty) -> (label -> 'ty) -> abstract_impl -> 'ty
+(** [collect (module M) f g] collects the content of [f v] for each vertex [v]
+    in [g]. *)
