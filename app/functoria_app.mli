@@ -48,9 +48,9 @@ val info : info typ
 val app_info : ?type_modname:string -> ?gen_modname:string -> unit -> info impl
 (** [app_info] is the module implementation whose state contains all the
     information available at configure-time. The type of the generated value
-    lives in the module [type_modname]: if not set, it is [Functoria_info]. The
-    value is stored into a generated module name [gen_modname]: if not set, it
-    is [Info_gen]. *)
+    lives in the module [type_modname]: if not set, it is
+    [Functoria_runtime.Info]. The value is stored into a generated module name
+    [gen_modname]: if not set, it is [Info_gen]. *)
 
 (** {1 Builders} *)
 

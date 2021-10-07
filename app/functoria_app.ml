@@ -135,7 +135,8 @@ let pp_dump_pkgs module_name fmt (name, pkg, libs) =
     module_name name pp_packages (String.Set.elements pkg) pp_libraries
     (String.Set.elements libs)
 
-let app_info ?(type_modname = "Functoria_info") ?(gen_modname = "Info_gen") () =
+let app_info ?(type_modname = "Functoria_runtime.Info")
+    ?(gen_modname = "Info_gen") () =
   impl
   @@ object
        inherit base_configurable
