@@ -70,13 +70,15 @@ val abstract : _ impl -> abstract_impl
 
 (** {1:keys Keys} *)
 
-type key = Functoria_key.t
+module Key = Key
+
+type key = Key.t
 (** The type for command-line keys. See {!Functoria_key.t}. *)
 
-type context = Functoria_key.context
+type context = Key.context
 (** The type for keys' parsing context. See {!Functoria_key.context}. *)
 
-type 'a value = 'a Functoria_key.value
+type 'a value = 'a Key.value
 (** The type for values parsed from the command-line. See
     {!Functoria_key.value}. *)
 
@@ -90,16 +92,16 @@ val match_impl : 'b value -> default:'a impl -> ('b * 'a impl) list -> 'a impl
 
 (** The signature for run-time and configure-time command-line keys. *)
 module type KEY =
-  module type of Functoria_key
-    with type 'a Arg.converter = 'a Functoria_key.Arg.converter
-     and type 'a Arg.t = 'a Functoria_key.Arg.t
-     and type Arg.info = Functoria_key.Arg.info
-     and type 'a value = 'a Functoria_key.value
-     and type 'a key = 'a Functoria_key.key
-     and type t = Functoria_key.t
-     and type Set.t = Functoria_key.Set.t
-     and type 'a Alias.t = 'a Functoria_key.Alias.t
-     and type context = Functoria_key.context
+  module type of Key
+    with type 'a Arg.converter = 'a Key.Arg.converter
+     and type 'a Arg.t = 'a Key.Arg.t
+     and type Arg.info = Key.Arg.info
+     and type 'a value = 'a Key.value
+     and type 'a key = 'a Key.key
+     and type t = Key.t
+     and type Set.t = Key.Set.t
+     and type 'a Alias.t = 'a Key.Alias.t
+     and type context = Key.context
 
 (** {1:pkg Package dependencies}
 
@@ -327,6 +329,8 @@ val equal : 'a impl -> 'a impl -> bool
 
 module ImplTbl : Hashtbl.S with type key = abstract_impl
 (** Hashtbl of implementations. *)
+
+module Name = Name
 
 (**/**)
 

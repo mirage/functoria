@@ -18,9 +18,10 @@
 open Rresult
 open Astring
 open Functoria
-include Functoria_misc
-module Key = Functoria_key
+module Key = Functoria.Key
 module Graph = Device_graph
+module Codegen = Codegen
+module Name = Functoria.Name
 module Cmd = Cmd
 
 (* Noop, the job that does nothing. *)

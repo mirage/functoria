@@ -1,4 +1,4 @@
-module Key = Functoria_key
+module Key = Functoria.Key
 module Cmd = Functoria_app.Cmd
 
 let result_t =

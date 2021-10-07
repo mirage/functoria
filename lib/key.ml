@@ -14,8 +14,6 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *)
 
-open Functoria_misc
-
 module Serialize = struct
   let string fmt s = Format.fprintf fmt "%S" s
   let option x = Fmt.(parens @@ Dump.option x)

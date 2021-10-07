@@ -23,9 +23,16 @@
 *)
 
 open Graph
-open Functoria_misc
+
+module type Monoid = sig
+  type t
+
+  val empty : t
+  val union : t -> t -> t
+end
+
 open Functoria
-module Key = Functoria_key
+module Key = Functoria.Key
 
 (* {2 Utility} *)
 

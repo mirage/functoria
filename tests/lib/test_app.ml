@@ -1,5 +1,5 @@
 open Rresult
-module Key = Functoria_key
+module Key = Functoria.Key
 
 let warn_error =
   let doc = "Enable -warn-error when compiling OCaml sources." in
@@ -63,12 +63,7 @@ module C = struct
          method name = "test_app"
          method module_name = "Test_app"
          method! connect _ _ _ = "()"
-
-         method! keys =
-           [
-             Functoria_key.(abstract vote); Functoria_key.(abstract warn_error);
-           ]
-
+         method! keys = Key.[ abstract vote; abstract warn_error ]
          method! packages = Key.pure [ Functoria.package "fmt" ]
 
          method! configure i =

@@ -78,8 +78,14 @@ val explode :
 (** [explode g v] deconstructs the vertex [v] in the graph [g] into it's
     possible components. It also checks that the local invariants are respected. *)
 
-val collect :
-  (module Functoria_misc.Monoid with type t = 'ty) -> (label -> 'ty) -> t -> 'ty
+module type Monoid = sig
+  type t
+
+  val empty : t
+  val union : t -> t -> t
+end
+
+val collect : (module Monoid with type t = 'ty) -> (label -> 'ty) -> t -> 'ty
 (** [collect (module M) f g] collects the content of [f v] for each vertex [v]
     in [g]. *)
 
