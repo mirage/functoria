@@ -150,21 +150,21 @@ module Info = struct
 
   let pp verbose ppf ({ name; build_dir; keys; context; output; _ } as t) =
     let show name = Fmt.pf ppf "@[<2>%s@ %a@]@," name in
-    let list = Fmt.iter ~sep:(Fmt.unit ",@ ") List.iter Fmt.string in
+    let list = Fmt.iter ~sep:(Fmt.any ",@ ") List.iter Fmt.string in
     show "Name      " Fmt.string name;
     show "Build-dir " Fpath.pp build_dir;
     show "Keys      " (Key.pps context) keys;
     show "Output    " Fmt.(option string) output;
     if verbose then show "Libraries " list (libraries t);
     if verbose then
-      show "Packages  " (pp_packages ?surround:None ~sep:(Fmt.unit ",@ ")) t
+      show "Packages  " (pp_packages ?surround:None ~sep:(Fmt.any ",@ ")) t
 
   let opam ?name ppf t =
     let name = match name with None -> t.name | Some x -> x in
     Fmt.pf ppf "opam-version: \"2.0\"@.";
     Fmt.pf ppf "name: \"%s\"@." name;
     Fmt.pf ppf "depends: [ @[<hv>%a@]@ ]@."
-      (pp_packages ~surround:"\"" ~sep:(Fmt.unit "@ "))
+      (pp_packages ~surround:"\"" ~sep:(Fmt.any "@ "))
       t;
     match pins t with
     | [] -> ()
@@ -173,7 +173,7 @@ module Info = struct
           Fmt.pf ppf "[\"%s.dev\" %S]" package url
         in
         Fmt.pf ppf "pin-depends: [ @[<hv>%a@]@ ]@."
-          Fmt.(list ~sep:(unit "@ ") pp_pin)
+          Fmt.(list ~sep:(any "@ ") pp_pin)
           pin_depends
 end
 
@@ -254,7 +254,7 @@ class ['ty] foreign ?(packages = []) ?(keys = []) ?(deps = []) module_name ty :
     method packages = Key.pure packages
 
     method connect _ modname args =
-      Fmt.strf "@[%s.start@ %a@]" modname Fmt.(list ~sep:sp string) args
+      Fmt.str "@[%s.start@ %a@]" modname Fmt.(list ~sep:sp string) args
 
     method clean _ = R.ok ()
     method configure _ = R.ok ()

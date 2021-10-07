@@ -52,13 +52,13 @@ module Arg = struct
   let list d =
     conv
       ~conv:(Cmdliner.Arg.list (converter d))
-      ~runtime_conv:(Fmt.strf "(Cmdliner.Arg.list %s)" (runtime_conv d))
+      ~runtime_conv:(Fmt.str "(Cmdliner.Arg.list %s)" (runtime_conv d))
       ~serialize:(Serialize.list (serialize d))
 
   let some d =
     conv
       ~conv:(Cmdliner.Arg.some (converter d))
-      ~runtime_conv:(Fmt.strf "(Cmdliner.Arg.some %s)" (runtime_conv d))
+      ~runtime_conv:(Fmt.str "(Cmdliner.Arg.some %s)" (runtime_conv d))
       ~serialize:(Serialize.option (serialize d))
 
   (** {1 Information about arguments} *)
@@ -160,7 +160,7 @@ module Arg = struct
   let make_opt_cmdliner wrap i default f desc =
     let none =
       match default with
-      | Some d -> Some (Fmt.strf "%a" (pp_conv desc) d)
+      | Some d -> Some (Fmt.str "%a" (pp_conv desc) d)
       | None -> None
     in
     let f_desc v z = match v with Some v -> f v z | None -> z in
@@ -262,7 +262,7 @@ module Set = struct
       else set
     else add k set
 
-  let pp = Fmt.iter ~sep:(Fmt.unit ",@ ") iter
+  let pp = Fmt.iter ~sep:(Fmt.any ",@ ") iter
 end
 
 module Alias = struct
@@ -356,7 +356,7 @@ let pp_deps fmt v = Set.pp pp fmt v.deps
 
 let pps p =
   let pp' fmt k v =
-    let default = if mem_u p k then Fmt.nop else Fmt.unit " (default)" in
+    let default = if mem_u p k then Fmt.nop else Fmt.any " (default)" in
     Fmt.pf fmt "%a=%a%a"
       Fmt.(styled `Bold string)
       k.name (Arg.pp k.arg) v default ()
@@ -378,9 +378,9 @@ let info_alias setters =
   match setters with
   | [] -> ""
   | [ _ ] ->
-      Fmt.strf "Will automatically set %a." (Set.pp f) (Alias.keys setters)
+      Fmt.str "Will automatically set %a." (Set.pp f) (Alias.keys setters)
   | _ ->
-      Fmt.strf "Will automatically set the following keys: %a." (Set.pp f)
+      Fmt.str "Will automatically set the following keys: %a." (Set.pp f)
         (Alias.keys setters)
 
 let info_arg (type a) (arg : a Arg.kind) =

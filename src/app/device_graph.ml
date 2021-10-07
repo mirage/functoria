@@ -401,11 +401,11 @@ module Dot = Graphviz.Dot (struct
   let vertex_attributes v =
     match V.label v with
     | App -> [ `Label "$"; `Shape `Diamond ]
-    | If cond -> [ `Label (Fmt.strf "If\n%a" Key.pp_deps cond) ]
+    | If cond -> [ `Label (Fmt.str "If\n%a" Key.pp_deps cond) ]
     | Impl f ->
         let label =
-          Fmt.strf "%s\n%s\n%a" f#name f#module_name
-            Fmt.(list ~sep:(unit ", ") Key.pp)
+          Fmt.str "%s\n%s\n%a" f#name f#module_name
+            Fmt.(list ~sep:(any ", ") Key.pp)
             f#keys
         in
         [ `Label label; `Shape `Box ]
