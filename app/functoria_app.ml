@@ -648,7 +648,7 @@ module Make (P: S) = struct
   (* Generate a `dune-project` file at the project root. *)
   let generate_dune_project ~project_root =
     let file = Fpath.(project_root / "dune-project") in
-    let contents = Fmt.strf "(lang dune 1.1)\n%s\n" auto_generated in
+    let contents = Fmt.strf "(lang dune 2.0)\n%s\n" auto_generated in
     generate ~file ~contents
 
   (* Generate the configuration files in the the build directory *)
