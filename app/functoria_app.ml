@@ -833,8 +833,11 @@ module Make (P: S) = struct
     Codegen.newline_main ()
 
   let clean_main i jobs =
+    let main =
+      match Info.output i with None -> "main.ml" | Some o -> o ^ ".ml"
+    in
     Engine.clean i jobs >>= fun () ->
-    Bos.OS.File.delete Fpath.(v "main.ml")
+    Bos.OS.File.delete Fpath.(v main)
 
   let configure ~argv i jobs =
     let source_dir = get_relative_source_dir () in
