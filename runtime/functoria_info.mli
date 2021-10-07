@@ -17,17 +17,14 @@
 (** Information about Functoria applications. *)
 
 type info = {
-  name: string;
-  libraries: string list;
-  packages: (string * string) list;
+  name : string;
+  libraries : string list;
+  packages : (string * string) list;
 }
 (** The type for information about applications.
 
-    {ul
-    {- [name] is the name of the application.}
-    {- [libraries] is the list of OCamlfind libraries linked to form the
-       application.}
-    {- [packages] is the list of package name and version used to create
-       the application.}
-    }
-*)
+    - [name] is the name of the application.
+    - [libraries] is the list of OCamlfind libraries linked to form the
+      application.
+    - [packages] is the list of package name and version used to create the
+      application. *)

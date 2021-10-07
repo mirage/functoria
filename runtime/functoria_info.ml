@@ -14,7 +14,7 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *)
 type info = {
-  name: string;
-  libraries: string list;
-  packages: (string * string) list;
+  name : string;
+  libraries : string list;
+  packages : (string * string) list;
 }
