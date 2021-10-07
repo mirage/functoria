@@ -2,5 +2,4 @@
  (name functoria_app)
  (public_name functoria.app)
  (libraries functoria dynlink cmdliner rresult fmt.tty fmt.cli ocamlgraph
-   astring fpath bos logs logs.cli logs.fmt)
- (wrapped false))
+   astring fpath bos logs logs.cli logs.fmt))

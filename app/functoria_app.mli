@@ -161,3 +161,5 @@ module Codegen : sig
   val newline_main : unit -> unit
   (** Add a newline to [main.ml]. *)
 end
+
+module Cmd = Cmd

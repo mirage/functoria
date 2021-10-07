@@ -19,9 +19,9 @@ open Rresult
 open Astring
 open Functoria
 include Functoria_misc
-module Graph = Functoria_graph
 module Key = Functoria_key
-module Cmd = Functoria_command_line
+module Graph = Device_graph
+module Cmd = Cmd
 
 (* Noop, the job that does nothing. *)
 let noop =
@@ -201,13 +201,11 @@ let app_info ?(type_modname = "Functoria_info") ?(gen_modname = "Info_gen") () =
 
 module Engine = struct
   let if_context =
-    let open Graph in
     Graph.collect (module Key.Set) @@ function
     | If cond -> Key.deps cond
     | App | Impl _ -> Key.Set.empty
 
   let keys =
-    let open Graph in
     Graph.collect (module Key.Set) @@ function
     | Impl c -> Key.Set.of_list c#keys
     | If cond -> Key.deps cond
@@ -221,7 +219,6 @@ module Engine = struct
   end
 
   let packages =
-    let open Graph in
     Graph.collect (module M) @@ function
     | Impl c -> c#packages
     | If _ | App -> M.empty
@@ -263,8 +260,7 @@ module Engine = struct
       | `If (b, x, y) -> if Key.eval ctx b then name x else name y
     in
     let name = name impl in
-    let open Graph in
-    let p = function Impl c -> c#name = name | App | If _ -> false in
+    let p = function Graph.Impl c -> c#name = name | App | If _ -> false in
     match Graph.find_all g p with
     | [] -> invalid_arg "Functoria.find_device: no device"
     | [ x ] -> x
