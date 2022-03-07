@@ -22,6 +22,7 @@ let list_files dir =
   match l with
   | Error (`Msg e) -> Fmt.kstr (fun s -> Alcotest.fail s) "list_files: %s" e
   | Ok l ->
+    List.filter (fun f -> not (String.equal ".merlin" f)) @@
     List.sort String.compare @@
     List.rev_map (fun x ->
         match Fpath.relativize ~root:dir x with
@@ -94,7 +95,7 @@ let test_configure () =
   Alcotest.(check files) "new files should be created in the source dir"
     ["app.ml"; "config.ml";
      "key_gen.ml"; "main.ml"; ".mirage.config";
-     ".merlin"; "dune"; "dune.config"; "dune.build"]
+     "dune"; "dune.config"; "dune.build"]
     (list_files root);
  clean_app ();
 
@@ -110,7 +111,7 @@ let test_configure () =
   Alcotest.(check files) "other files should be created in custom_build_"
     ["main.ml"; "key_gen.ml";
      ".mirage.config";
-     ".merlin"; "dune"; "dune.config"; "dune.build";
+     "dune"; "dune.config"; "dune.build";
    (* FIXME: add a .mirage-ignore file to avoid this *) ]
     (list_files Fpath.(v "custom_build_"));
   clean_build ();
