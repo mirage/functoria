@@ -1,4 +1,10 @@
-## v3.1.1 (20120-06-10)
+## v3.1.2 (2022-03-07)
+
+* Support cmdliner 1.1.0, alcotest 1.4.0 and avoid fmt 0.8.7 deprecations
+  (#201 @hannesm)
+* Disable deprecation alerts in dune files to allow CI to pass (#201 @hannesm)
+
+## v3.1.1 (2020-06-10)
 
 * Ensure that keys with different defaults are distinguished by functoria.
   `Functoria.Key.equal` has been introduced in #188 but it was not precise

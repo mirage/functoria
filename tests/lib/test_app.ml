@@ -75,7 +75,7 @@ module C = struct
         ]
 
       method! configure i =
-        let dune = Fmt.strf
+        let dune = Fmt.str
             "(executable\n\
             \   (name      %s)\n\
             \   (modules (:standard \\ config))\n\

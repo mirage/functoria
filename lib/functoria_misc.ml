@@ -132,6 +132,6 @@ module Univ = struct
   let dump =
     let pp_elt ppf (k, v) = Fmt.pf ppf "%s: %a@ " k Fmt.exn v in
     let map_iter f = Map.iter (fun k v -> f (k, v)) in
-    Fmt.(iter ~sep:(unit ", ")) map_iter pp_elt
+    Fmt.(iter ~sep:(any ", ")) map_iter pp_elt
 
 end

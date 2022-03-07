@@ -104,7 +104,7 @@ let keys (argv: argv impl) = impl @@ object
     method !deps = [ abstract argv ]
     method !connect info modname = function
       | [ argv ] ->
-        Fmt.strf
+        Fmt.str
           "return (Functoria_runtime.with_argv (List.map fst %s.runtime_keys) %S %s)"
           modname (Info.name info) argv
       | _ -> failwith "The keys connect should receive exactly one argument."
@@ -117,11 +117,11 @@ let info = Type Info
 
 let pp_libraries fmt l =
   Fmt.pf fmt "[@ %a]"
-    Fmt.(iter ~sep:(unit ";@ ") List.iter @@ fmt "%S") l
+    Fmt.(iter ~sep:(any ";@ ") List.iter @@ fmt "%S") l
 
 let pp_packages fmt l =
   Fmt.pf fmt "[@ %a]"
-    Fmt.(iter ~sep:(unit ";@ ") List.iter @@
+    Fmt.(iter ~sep:(any ";@ ") List.iter @@
          (fun fmt x -> pf fmt "%S, \"%%{%s:version}%%\"" x x)
         ) l
 
@@ -141,7 +141,7 @@ let app_info ?(type_modname="Functoria_info")  ?(gen_modname="Info_gen") () =
     val file = Fpath.(v (String.Ascii.lowercase gen_modname) + "ml")
     method module_name = gen_modname
     method !packages = Key.pure [package "functoria-runtime"]
-    method !connect _ modname _ = Fmt.strf "return %s.info" modname
+    method !connect _ modname _ = Fmt.str "return %s.info" modname
 
     method !clean _i =
       Bos.OS.Path.delete file >>= fun () ->
@@ -160,8 +160,8 @@ let app_info ?(type_modname="Functoria_info")  ?(gen_modname="Info_gen") () =
         Log.debug (fun m -> m
                       "opam_deps %d args %d collected\nargs: %a\ncollected: %a"
                       (String.Set.cardinal args) (String.Set.cardinal collected)
-                      (String.Set.pp ~sep:(Fmt.unit ",") Fmt.string) args
-                      (String.Set.pp ~sep:(Fmt.unit ",") Fmt.string) collected);
+                      (String.Set.pp ~sep:(Fmt.any ",") Fmt.string) args
+                      (String.Set.pp ~sep:(Fmt.any ",") Fmt.string) collected);
         if String.Set.is_empty args then Ok collected
         else
           let pkgs = String.concat ~sep:"," (String.Set.elements args) in
@@ -212,7 +212,7 @@ module Engine = struct
      module construction. *)
   let name c id =
     let prefix = Name.ocamlify c#name in
-    Name.create (Fmt.strf "%s%i" prefix id) ~prefix
+    Name.create (Fmt.str "%s%i" prefix id) ~prefix
 
   (* [module_expresion tbl c args] returns the module expression of
      the functor [c] applies to [args]. *)
@@ -234,7 +234,7 @@ module Engine = struct
         | None -> base
       in
       let prefix = Name.ocamlify prefix in
-      Name.create (Fmt.strf "%s%i" prefix id) ~prefix
+      Name.create (Fmt.str "%s%i" prefix id) ~prefix
 
   (* FIXME: Can we do better than lookup by name? *)
   let find_device info g impl =
@@ -607,13 +607,13 @@ module Make (P: S) = struct
         let root = Fpath.(project_root // root) in
         let src = relativize ~root file in
         let file = Fpath.basename file in
-        Fmt.strf "(rule (copy %a %s))\n\n" Fpath.pp src file
+        Fmt.str "(rule (copy %a %s))\n\n" Fpath.pp src file
     in
     list_files Fpath.(project_root // source_dir) >>= fun files ->
     let copy_rules = List.map copy_rule files in
     let config_file = Fpath.(basename (rem_ext !config_file)) in
     let contents =
-      Fmt.strf
+      Fmt.str
         {|%s
 
 %a(executable
@@ -622,7 +622,7 @@ module Make (P: S) = struct
   (modules %s)
   (libraries %s))
 |}
-        auto_generated Fmt.(list ~sep:(unit "") string) copy_rules
+        auto_generated Fmt.(list ~sep:(any "") string) copy_rules
         config_file pkgs
     in
     generate ~file ~contents
@@ -637,7 +637,7 @@ module Make (P: S) = struct
   let generate_dune () =
     let file = Fpath.v "dune" in
     let contents =
-      Fmt.strf "%s
+      Fmt.str "%s
 
 (include dune.config)\n\n(include dune.build)\n"
         auto_generated
@@ -647,7 +647,7 @@ module Make (P: S) = struct
   (* Generate a `dune-project` file at the project root. *)
   let generate_dune_project ~project_root =
     let file = Fpath.(project_root / "dune-project") in
-    let contents = Fmt.strf "(lang dune 1.1)\n%s\n" auto_generated in
+    let contents = Fmt.str "(lang dune 1.1)\n%s\n" auto_generated in
     generate ~file ~contents
 
   (* Generate the configuration files in the the build directory *)
