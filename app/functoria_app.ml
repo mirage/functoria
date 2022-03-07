@@ -414,14 +414,13 @@ end
     Currently, we cache Sys.argv directly
 *)
 module Cache : sig
-  open Cmdliner
   val save : argv:string array -> Fpath.t -> (unit, [> Rresult.R.msg ]) result
   val clean : Fpath.t -> (unit, [> Rresult.R.msg ]) result
-  val get_context : Fpath.t -> context Term.t ->
+  val get_context : Fpath.t -> context Cmdliner.Term.t ->
     [> `Error of bool * string | `Ok of context option ]
   val get_output: Fpath.t -> [> `Error of bool * string | `Ok of string option ]
-  val require :
-    [< `Error of bool * string | `Ok of context option ] -> context Term.ret
+  val require : [< `Error of bool * string | `Ok of context option ] ->
+    context Cmdliner.Term.ret
   val merge :
     cache:[< `Error of bool * string | `Ok of context option ] ->
     context -> context
@@ -707,17 +706,16 @@ module Make (P: S) = struct
       exit 1
 
   let handle_parse_args_no_config ?help_ppf ?err_ppf error argv =
-    let open Cmdliner in
     let base_keys = Config.extract_keys (P.create []) in
     let base_context =
       Key.context base_keys ~with_required:false ~stage:`Configure
     in
     let result =
       Cmd.parse_args ?help_ppf ?err_ppf ~name:P.name ~version:P.version
-        ~configure:(Term.pure ())
-        ~describe:(Term.pure ())
-        ~build:(Term.pure ())
-        ~clean:(Term.pure ())
+        ~configure:(Cmdliner.Term.pure ())
+        ~describe:(Cmdliner.Term.pure ())
+        ~build:(Cmdliner.Term.pure ())
+        ~clean:(Cmdliner.Term.pure ())
         ~help:base_context
         argv
     in
