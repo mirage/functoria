@@ -20,7 +20,7 @@ module Cmd = Functoria_command_line
 let list_files dir =
   let l = Bos.OS.Path.matches ~dotfiles:true Fpath.(dir / "$(file)") in
   match l with
-  | Error (`Msg e) -> Fmt.kstrf Alcotest.fail "list_files: %s" e
+  | Error (`Msg e) -> Fmt.kstr (fun s -> Alcotest.fail s) "list_files: %s" e
   | Ok l ->
     List.sort String.compare @@
     List.rev_map (fun x ->
@@ -58,7 +58,7 @@ let clean_build () =
   get_ok @@ Bos.OS.Dir.delete ~recurse:true dir
 
 let test ?err_ppf ?help_ppf fmt =
-  Fmt.kstrf (fun l ->
+  Fmt.kstr (fun l ->
       let l = String.cuts ~sep:" " l in
       Test_app.run_with_argv ?err_ppf ?help_ppf (Array.of_list ("" :: l))
     ) fmt

@@ -3,4 +3,5 @@
  (public_name functoria)
  (libraries unix cmdliner rresult fmt astring fpath ptime.clock.os)
  (wrapped false)
+ (flags (:standard (-w -3)))
 )
