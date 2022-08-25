@@ -19,7 +19,7 @@
 (** [Arg] defines command-line arguments which can be set at runtime.
     This module is the runtime companion of {!Functoria_key}. It
     exposes a subset of
-    {{:http://erratique.ch/software/cmdliner/doc/Cmdliner.Arg.html}
+    {{:http://erratique.ch/software/cmdliner/doc/Cmdliner/Arg/index.html}
     Cmdliner.Arg}. *)
 module Arg: sig
 
